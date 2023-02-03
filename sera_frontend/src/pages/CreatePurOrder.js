@@ -59,6 +59,7 @@ const CreateContract = () => {
         );
       })
       .catch(async (error) => {
+        console.log("------", error);
         let msg = error.error !== undefined ? error.error.data.message : "";
         if (msg.includes("allowance")) {
           let contract = await TrackContract.shipments(contract_id);
