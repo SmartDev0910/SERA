@@ -1,0 +1,297 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_address", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "string", "name": "name", "type": "string" },
+      { "internalType": "string", "name": "phone_number", "type": "string" },
+      { "internalType": "string", "name": "city", "type": "string" },
+      { "internalType": "string", "name": "state", "type": "string" },
+      {
+        "internalType": "string",
+        "name": "country_of_origin",
+        "type": "string"
+      },
+      { "internalType": "string", "name": "type_of_goods", "type": "string" }
+    ],
+    "name": "addSupplier",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "allSuppliers",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "phone_number",
+            "type": "string"
+          },
+          { "internalType": "string", "name": "city", "type": "string" },
+          { "internalType": "string", "name": "state", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "country_of_origin",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "type_of_goods",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reputation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum Reputation.ActionStatus",
+            "name": "action_status",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct Reputation.Supplier[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "recipient", "type": "address" }
+    ],
+    "name": "checkReputation",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "type_of_goods", "type": "string" }
+    ],
+    "name": "filterByGoodsType",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "phone_number",
+            "type": "string"
+          },
+          { "internalType": "string", "name": "city", "type": "string" },
+          { "internalType": "string", "name": "state", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "country_of_origin",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "type_of_goods",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reputation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum Reputation.ActionStatus",
+            "name": "action_status",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct Reputation.Supplier[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "reputation", "type": "uint256" }
+    ],
+    "name": "filterByReputation",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "phone_number",
+            "type": "string"
+          },
+          { "internalType": "string", "name": "city", "type": "string" },
+          { "internalType": "string", "name": "state", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "country_of_origin",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "type_of_goods",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reputation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum Reputation.ActionStatus",
+            "name": "action_status",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct Reputation.Supplier[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "recipient", "type": "address" }
+    ],
+    "name": "findSupplier",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "phone_number",
+            "type": "string"
+          },
+          { "internalType": "string", "name": "city", "type": "string" },
+          { "internalType": "string", "name": "state", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "country_of_origin",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "type_of_goods",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reputation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum Reputation.ActionStatus",
+            "name": "action_status",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct Reputation.Supplier",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "recipient", "type": "address" }
+    ],
+    "name": "removeSupplier",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "suppliers",
+    "outputs": [
+      { "internalType": "string", "name": "name", "type": "string" },
+      { "internalType": "string", "name": "phone_number", "type": "string" },
+      { "internalType": "string", "name": "city", "type": "string" },
+      { "internalType": "string", "name": "state", "type": "string" },
+      {
+        "internalType": "string",
+        "name": "country_of_origin",
+        "type": "string"
+      },
+      { "internalType": "string", "name": "type_of_goods", "type": "string" },
+      { "internalType": "uint256", "name": "reputation", "type": "uint256" },
+      {
+        "internalType": "enum Reputation.ActionStatus",
+        "name": "action_status",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "updateReputations",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

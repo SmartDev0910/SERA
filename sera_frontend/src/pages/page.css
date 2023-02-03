@@ -1,0 +1,242 @@
+.auth-page-background {
+  height: 310px;
+  margin: 0 auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-color: #2e2e38;
+}
+
+.auth-lock-default {
+  font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, Roboto,
+    Helvetica, sans-serif;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  right: 0;
+  z-index: 1;
+}
+
+.auth-lock-content {
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+}
+
+.auth-pane {
+  width: 28%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.auth0-lock-header {
+  font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, Roboto,
+    Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+  pointer-events: auto;
+  font-size: 1rem;
+  text-align: center;
+  padding: 11px;
+  position: relative;
+  opacity: unset;
+  background: #1a1a24;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  color: #f6f6fa;
+  width: 100%;
+}
+
+.auth0-lock-header-welcome {
+  font-size: 18px;
+  position: relative;
+}
+
+.auth0-lock-header-logo {
+  width: auto;
+  height: 58px;
+  display: inline-block;
+  margin: 0 0 11px;
+  vertical-align: middle;
+}
+
+.auth0-lock-name {
+  font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, Roboto,
+    Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+  pointer-events: auto;
+  text-align: center;
+  color: #f6f6fa;
+  box-sizing: initial;
+  font-size: 22px;
+  padding: 0 10px;
+  line-height: 30px;
+}
+
+.auth0-lock-content {
+  width: 100%;
+  background-color: white;
+  border-color: #0540f2;
+}
+
+.auth0-lock-footer {
+  width: 100%;
+  height: 78px;
+  text-align: center;
+  font-size: 16px;
+  background: #0112e5 !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 18px;
+  border-radius: none;
+  text-transform: capitalize;
+  border-radius: 0px 0px 5px 5px;
+  border: 0px;
+}
+
+.title-style {
+  color: #0540f2;
+  font-weight: 600;
+  font-size: 28px;
+}
+
+.tab-style {
+  width: 100%;
+  padding: 10px;
+}
+
+.auth-input-style {
+  font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, Roboto,
+    Helvetica, sans-serif;
+  border-color: #1a1a24;
+  height: 42px;
+  font-size: 16px;
+  margin-top: 10px;
+  border-radius: 0px;
+}
+
+.auth-wallet-button {
+  font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, Roboto,
+    Helvetica, sans-serif;
+  border-color: #1a1a24;
+  border-radius: 0px;
+  font-size: 16px;
+  margin-top: 10px;
+  width: 100%;
+  height: 42px;
+}
+
+.margin-top-20 {
+  margin-top: 20px;
+}
+
+.margin-bottom-20 {
+  margin-bottom: 20px;
+}
+
+.margin-top-10 {
+  margin-top: 10px;
+}
+
+.margin-left-8 {
+  margin-left: 8px;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.width-60 {
+  width: 60%;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.inline-block {
+  display: inline-block;
+  width: 60%;
+}
+
+.search-input {
+  margin-left: 8px;
+  width: 200px;
+}
+
+.black-button {
+  background-color: black;
+  color: white;
+  border-radius: 0px;
+}
+
+.black-button:hover {
+  background-color: white;
+  color: black;
+}
+
+.org-select {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.contract-btn {
+  background-color: #4bf0d3;
+  color: white;
+  float: right;
+  border-radius: 0px;
+  border: none;
+  height: 50px;
+  font-size: 18px;
+}
+
+.contract-header {
+  width: 100%;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.contract-search-input {
+  margin-left: 8px;
+  width: 500px;
+}
+
+.contract-select {
+  width: 500px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.datepicker {
+  width: 400px;
+}
+
+.contract-material-select {
+  width: 100%;
+}
+
+.yellow-btn {
+  background-color: #4bf0d3;
+  color: white;
+  border-radius: 0px;
+  border: none;
+}
