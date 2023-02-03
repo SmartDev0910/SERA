@@ -13,6 +13,7 @@ import {
   Collapse,
   Spin,
   message,
+  Alert,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
@@ -29,7 +30,8 @@ const CreateContract = () => {
   const [contract_id, setContractId] = useState("");
   const [loading, setLoading] = useState(false);
   const [isApproved, setApproved] = useState(true);
-
+  const [total_amount, setTotalAmount] = useState(0);
+  const { chainId, active, account } = useWeb3React();
   const navigate = useNavigate();
   let TrackContract = null;
 
@@ -66,6 +68,8 @@ const CreateContract = () => {
           let net_value =
             contract.quantity1 * contract.price1 +
             contract.quantity2 * contract.price2;
+          setTotalAmount(Number(net_value));
+
           message.error(
             "You need to approve " +
               Number(net_value) +
@@ -143,6 +147,17 @@ const CreateContract = () => {
           value: i,
         });
       await setContractOp(tmp);
+      let USDCContract = new ethers.Contract(
+        process.env.REACT_APP_USDC_CONTRACT_ADDRESS,
+        usdcAbi,
+        myProvider.getSigner()
+      );
+      let amounts = await USDCContract.allowance(
+        account,
+        process.env.REACT_APP_USDC_CONTRACT_ADDRESS
+      );
+      if (amounts) setApproved(true);
+      else setApproved(false);
     }
     fetchData();
   }, []);
@@ -177,6 +192,16 @@ const CreateContract = () => {
               }}
               options={contractOp}
             />
+            {isApproved && total_amount ? (
+              <Alert
+                message={`You will be paying ${total_amount} USDC. This money will be hold in smart contract until the obligation is met.`}
+                type="info"
+                showIcon
+                className="margin-top-20"
+              />
+            ) : (
+              ""
+            )}
           </Col>
         </Row>
         <Divider />
