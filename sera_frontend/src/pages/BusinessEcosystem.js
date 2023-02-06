@@ -67,10 +67,13 @@ const BusinessEcosystem = () => {
   };
   const handleOk = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/addpartner", {
-        wallet_address1: account,
-        wallet_address2: buspartner,
-      });
+      const res = await axios.post(
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/addpartner`,
+        {
+          wallet_address1: account,
+          wallet_address2: buspartner,
+        }
+      );
 
       if (res.data.status_code === 200) {
         let tmp = [
@@ -97,7 +100,9 @@ const BusinessEcosystem = () => {
     }
     async function fetchData() {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/getlist");
+        const res = await axios.get(
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/getlist`
+        );
         let tmp = [];
         res.data.data.map((item) => {
           if (item.Wallet_address !== account)
@@ -109,7 +114,7 @@ const BusinessEcosystem = () => {
         setOrgOp(tmp);
         tmp = [];
         const res1 = await axios.post(
-          "http://localhost:8000/api/v1/getpartner",
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/getpartner`,
           {
             wallet_address1: account,
           }

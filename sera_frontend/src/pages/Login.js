@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Row, Tabs, Button, Input, message } from "antd";
+import { Layout, Row, Tabs, Button, Input, message, Form } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../utils/connector";
@@ -38,13 +38,27 @@ const Login = () => {
     setActiveKey(key);
   };
 
+  const validateMessages = {
+    required: "${label} is required!",
+    types: {
+      email: "${label} is not a valid email!",
+      number: "${label} is not a valid number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
+  };
+
   const handleSubmit = async () => {
     if (activeKey === "tab_signin") {
       try {
-        const res = await axios.post("http://localhost:8000/api/v1/signin", {
-          email: state.email,
-          password: state.password,
-        });
+        const res = await axios.post(
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/signin`,
+          {
+            email: state.email,
+            password: state.password,
+          }
+        );
         if (res.data.status_code === 200) {
           message.success("Login successfully.");
           navigate("/business-ecosystem");
@@ -52,28 +66,31 @@ const Login = () => {
           message.error(res.data.msg);
         }
       } catch (e) {
-        message.error(e.response.data.status_code + ": " + e.response.data.msg);
+        message.error(e.response.data.msg);
       }
     } else if (activeKey === "tab_signup") {
       try {
-        const res = await axios.post("http://localhost:8000/api/v1/signup", {
-          email: state.email,
-          password: state.password,
-          trade_name: state.trade_name,
-          legal_name: state.legal_name,
-          country: state.country,
-          state_town: state.state_town,
-          building_number: state.building_number,
-          phone_number: state.phone_number,
-          wallet_address: account,
-        });
+        const res = await axios.post(
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/signup`,
+          {
+            email: state.email,
+            password: state.password,
+            trade_name: state.trade_name,
+            legal_name: state.legal_name,
+            country: state.country,
+            state_town: state.state_town,
+            building_number: state.building_number,
+            phone_number: state.phone_number,
+            wallet_address: account,
+          }
+        );
         if (res.data.status_code === 200) {
           message.success("Sign Up successfully.");
         } else {
           message.error(res.data.msg);
         }
       } catch (e) {
-        message.error(e.response.data.status_code + ": " + e.response.data.msg);
+        message.error(e.response.data.msg);
       }
       dispatch({
         type: ADD_PRODUCER,
@@ -118,14 +135,24 @@ const Login = () => {
       key: "tab_signin",
       label: `Sign In`,
       children: (
-        <div>
-          <Input
-            placeholder="Email Address"
-            className="auth-input-style"
-            name="email"
-            value={state.email}
-            onChange={handleInputChange}
-          />
+        <Form validateMessages={validateMessages}>
+          <Form.Item
+            name={["Email"]}
+            rules={[
+              {
+                type: "email",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input
+              placeholder="Email"
+              className="auth-input-style"
+              name="email"
+              value={state.email}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
           <Input.Password
             placeholder="input password"
             className="auth-input-style"
@@ -134,14 +161,14 @@ const Login = () => {
             onChange={handleInputChange}
           />
           {renderButton}
-        </div>
+        </Form>
       ),
     },
     {
       key: "tab_signup",
       label: `Create an account`,
       children: (
-        <div>
+        <Form validateMessages={validateMessages}>
           {renderButton}
           <Input
             placeholder="Company trade name"
@@ -185,21 +212,32 @@ const Login = () => {
             value={state.phone_number}
             onChange={handleInputChange}
           />
-          <Input
-            placeholder="Email"
-            className="auth-input-style"
-            name="email"
-            value={state.email}
-            onChange={handleInputChange}
-          />
+          <Form.Item
+            name={["Email"]}
+            rules={[
+              {
+                type: "email",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input
+              placeholder="Email"
+              className="auth-input-style"
+              name="email"
+              value={state.email}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
           <Input.Password
             placeholder="input password"
             className="auth-input-style"
+            style={{ marginTop: "0px; !important" }}
             name="password"
             value={state.password}
             onChange={handleInputChange}
           />
-        </div>
+        </Form>
       ),
     },
   ];

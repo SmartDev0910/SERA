@@ -181,7 +181,7 @@ const AuthParties = () => {
       try {
         let tmp = [];
         const res = await axios.post(
-          "http://localhost:8000/api/v1/getpartner",
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/getpartner`,
           {
             wallet_address1: account,
           }
