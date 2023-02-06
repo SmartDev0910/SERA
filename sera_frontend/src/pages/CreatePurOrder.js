@@ -82,7 +82,7 @@ const CreateContract = () => {
         } else if (msg.includes("You do not have enough tokens.")) {
           message.error("You do not have enough tokens.", 5);
         } else {
-          message.error("You rejected transaction", 5);
+          message.error("Rejected transaction", 5);
         }
         setLoading(false);
       });
