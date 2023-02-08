@@ -160,7 +160,7 @@ const BusinessEcosystem = () => {
       <Row>
         <Title level={4}>Business Partner</Title>
       </Row>
-      <Row justify="left">
+      <Row justify="space-between">
         <Button className="black-button" onClick={showModal}>
           Add Business Partner
         </Button>
@@ -173,6 +173,7 @@ const BusinessEcosystem = () => {
       <Table
         className="margin-top-20"
         columns={columns}
+        scroll={{ x: true }}
         dataSource={
           data &&
           (search_text === ""

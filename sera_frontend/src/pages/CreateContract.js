@@ -159,63 +159,68 @@ const CreateContract = () => {
         </Text>
         <Divider />
         <Row>
-          <Text strong className="float-left">
-            Business Partner
-          </Text>
-        </Row>
-        <Row>
-          <Select
-            className="contract-select"
-            value={buspartner}
-            onChange={(value) => setbuspartner(value)}
-            placeholder="Business Partner"
-            options={orgOp}
-          />
-        </Row>
-        <Row>
-          <Text strong className="float-left">
-            Contract Type
-          </Text>
-        </Row>
-        <Row>
-          <Select
-            className="contract-select"
-            value={contract_type}
-            onChange={(value) => setContractType(value)}
-            placeholder="Volume-based tiered pricing"
-            options={[
-              {
-                label: "Smart Contract",
-                value: "Smart Contract",
-              },
-            ]}
-          />
-        </Row>
-        <Row>
-          <Text strong className="float-left">
-            Validity Period
-          </Text>
-        </Row>
-        <Row className="margin-top-10 width-60">
-          <Col span="12" align="left">
-            <DatePicker
-              className="datepicker"
-              placeholder="Start Date"
-              format="YYYY/MM/DD"
-              onChange={(date, dateString) => {
-                setStartDate(dateString);
-              }}
-            />
-          </Col>
-          <Col span="12" align="left">
-            <DatePicker
-              className="datepicker"
-              placeholder="End Date"
-              format="YYYY/MM/DD"
-              onChange={(date, dateString) => {
-                setEndDate(dateString);
-              }}
-            />
+          <Col xs={24} sm={16} ls={10} md={10} lg={7}>
+            <Row>
+              <Text strong className="float-left">
+                Business Partner
+              </Text>
+            </Row>
+            <Row>
+              <Select
+                className="contract-select"
+                value={buspartner}
+                onChange={(value) => setbuspartner(value)}
+                placeholder="Business Partner"
+                options={orgOp}
+              />
+            </Row>
+            <Row>
+              <Text strong className="float-left">
+                Contract Type
+              </Text>
+            </Row>
+            <Row>
+              <Select
+                className="contract-select"
+                value={contract_type}
+                onChange={(value) => setContractType(value)}
+                placeholder="Volume-based tiered pricing"
+                options={[
+                  {
+                    label: "Smart Contract",
+                    value: "Smart Contract",
+                  },
+                ]}
+              />
+            </Row>
+            <Row>
+              <Text strong className="float-left">
+                Validity Period
+              </Text>
+            </Row>
+            <Row className="margin-top-10 validityperiod">
+              <Col span={11}>
+                <DatePicker
+                  className="datepicker"
+                  placeholder="Start Date"
+                  format="YYYY/MM/DD"
+                  onChange={(date, dateString) => {
+                    setStartDate(dateString);
+                  }}
+                />
+              </Col>
+              <Col span={2}></Col>
+              <Col span={11}>
+                <DatePicker
+                  className="datepicker"
+                  placeholder="End Date"
+                  format="YYYY/MM/DD"
+                  onChange={(date, dateString) => {
+                    setEndDate(dateString);
+                  }}
+                />
+              </Col>
+            </Row>
           </Col>
         </Row>
         <Divider />
@@ -243,7 +248,7 @@ const CreateContract = () => {
                       onRemoveMaterial(matItem.id);
                     }}
                   >
-                    Remove Material
+                    Remove
                   </Button>
                 </Row>
               }

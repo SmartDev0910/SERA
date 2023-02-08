@@ -180,7 +180,7 @@ const Materials = () => {
           <span className="title-style">Materials</span>
         </Row>
         <Divider />
-        <Row justify="left">
+        <Row justify="space-between">
           <Button className="black-button" onClick={showModal}>
             Add Material
           </Button>
@@ -193,6 +193,7 @@ const Materials = () => {
         <Table
           className="margin-top-20"
           columns={columns}
+          scroll={{ x: true }}
           dataSource={
             data &&
             (search_text === ""

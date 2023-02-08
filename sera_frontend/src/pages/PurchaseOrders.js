@@ -187,7 +187,7 @@ const PurchaseOrders = () => {
           </Link>
         </Row>
         <Divider />
-        <Row justify="left">
+        <Row justify="space-between">
           <Search
             placeholder="Search Purchase Orders"
             className="contract-search-input"
@@ -197,6 +197,7 @@ const PurchaseOrders = () => {
         <Table
           className="margin-top-20"
           columns={columns}
+          scroll={{ x: true }}
           dataSource={
             data &&
             (search_text === ""

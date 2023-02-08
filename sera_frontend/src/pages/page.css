@@ -28,7 +28,6 @@
 }
 
 .auth-pane {
-  width: 28%;
   text-align: center;
   box-sizing: border-box;
 }
@@ -87,6 +86,8 @@
   width: 100%;
   background-color: white;
   border-color: #0540f2;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .auth0-lock-footer {
@@ -179,7 +180,7 @@
 
 .search-input {
   margin-left: 8px;
-  width: 200px;
+  width: 160px;
 }
 
 .black-button {
@@ -205,7 +206,7 @@
   border-radius: 0px;
   border: none;
   height: 50px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .contract-header {
@@ -227,11 +228,18 @@
 }
 
 .datepicker {
-  width: 400px;
+  width: 100%;
 }
 
+.validityperiod {
+  width: 100%;
+}
 .contract-material-select {
   width: 100%;
+}
+
+.mSetting {
+  width: 500px;
 }
 
 .yellow-btn {

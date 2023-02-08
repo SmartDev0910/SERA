@@ -193,7 +193,7 @@ const Invoices = () => {
         </Row>
         <Divider />
         <Tabs defaultActiveKey="all" items={items} onChange={onChange} />
-        <Row justify="left">
+        <Row justify="space-between">
           <Search
             placeholder="Search Invoices"
             className="contract-search-input"
@@ -203,6 +203,7 @@ const Invoices = () => {
         <Table
           className="margin-top-20"
           columns={columns}
+          scroll={{ x: true }}
           dataSource={
             data &&
             (search_text === ""
