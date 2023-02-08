@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./routes";
 import Menubar from "./layouts/Menubar";
-import { Layout, Avatar, Row, Button, notification } from "antd";
+import { Layout, Avatar, Row, Button, notification, Drawer } from "antd";
+import { MenuOutlined } from "@ant-design/icons";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "./utils/connector";
 
@@ -32,6 +33,7 @@ const logoTitleStyle = {
 
 const App = () => {
   const { chainId, active, activate, deactivate, account } = useWeb3React();
+  const [visible, setVisible] = useState(false);
   async function connect(injected) {
     activate(injected);
   }
@@ -73,19 +75,39 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <Row className="App-header" align="middle">
+        <Button
+          className="menu"
+          type="primary"
+          icon={<MenuOutlined />}
+          onClick={() => setVisible(true)}
+        />
+        <Avatar shape="square" src={logo} style={logoStyle} />
+        {renderButton}
+        <Drawer
+          title="Menu"
+          placement="left"
+          onClick={() => setVisible(false)}
+          onClose={() => setVisible(false)}
+          visible={visible}
+        >
+          <Menubar />
+        </Drawer>
+      </Row>
       <Layout>
-        <Row className="App-header" align="middle">
-          <Avatar shape="square" src={logo} style={logoStyle} />
-          {renderButton}
-        </Row>
-        <Layout>
-          <Sider theme="light" width={240}>
-            <Menubar />
-          </Sider>
-          <Content style={contentStyle}>
-            <Router />
-          </Content>
-        </Layout>
+        <Sider
+          className="sidebar"
+          theme="light"
+          width={240}
+          breakpoint={"lg"}
+          collapsedWidth={0}
+          trigger={null}
+        >
+          <Menubar />
+        </Sider>
+        <Content style={contentStyle}>
+          <Router />
+        </Content>
       </Layout>
     </BrowserRouter>
   );
