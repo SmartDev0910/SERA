@@ -11,6 +11,7 @@ import logo from "./logo.jpg";
 
 const Login = () => {
   const [activeKey, setActiveKey] = useState("tab_signin");
+  const [isValid, setValid] = useState(false);
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -50,6 +51,10 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
+    if (!active) {
+      setValid(true);
+      return;
+    }
     if (activeKey === "tab_signin") {
       try {
         const res = await axios.post(
@@ -123,6 +128,7 @@ const Login = () => {
         <Button
           className="auth-wallet-button"
           onClick={() => connect(injected)}
+          danger={isValid}
         >
           Connect Wallet
         </Button>
