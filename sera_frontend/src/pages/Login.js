@@ -176,48 +176,108 @@ const Login = () => {
       children: (
         <Form validateMessages={validateMessages}>
           {renderButton}
-          <Input
-            placeholder="Company trade name"
-            className="auth-input-style"
-            name="trade_name"
-            value={state.trade_name}
-            onChange={handleInputChange}
-          />
-          <Input
-            placeholder="Company legal name"
-            className="auth-input-style"
-            name="legal_name"
-            value={state.legal_name}
-            onChange={handleInputChange}
-          />
-          <Input
-            placeholder="Country"
-            className="auth-input-style"
-            name="country"
-            value={state.country}
-            onChange={handleInputChange}
-          />
-          <Input
-            placeholder="State town"
-            className="auth-input-style"
-            name="state_town"
-            value={state.state_town}
-            onChange={handleInputChange}
-          />
-          <Input
-            placeholder="Building number"
-            className="auth-input-style"
-            name="building_number"
-            value={state.building_number}
-            onChange={handleInputChange}
-          />
-          <Input
-            placeholder="Phone number"
-            className="auth-input-style"
-            name="phone_number"
-            value={state.phone_number}
-            onChange={handleInputChange}
-          />
+          <Form.Item
+            name={["trade_name"]}
+            rules={[
+              {
+                type: "text",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input
+              placeholder="Company trade name"
+              className="auth-input-style"
+              name="trade_name"
+              value={state.trade_name}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item
+            name={["legal_name"]}
+            rules={[
+              {
+                type: "text",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input
+              placeholder="Company legal name"
+              className="auth-input-style"
+              name="legal_name"
+              value={state.legal_name}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item
+            name={["country"]}
+            rules={[
+              {
+                type: "text",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input
+              placeholder="Country"
+              className="auth-input-style"
+              name="country"
+              value={state.country}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item
+            name={["state_town"]}
+            rules={[
+              {
+                type: "text",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input
+              placeholder="State town"
+              className="auth-input-style"
+              name="state_town"
+              value={state.state_town}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item
+            name={["building_number"]}
+            rules={[
+              {
+                type: "text",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input
+              placeholder="Building number"
+              className="auth-input-style"
+              name="building_number"
+              value={state.building_number}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item
+            name={["phone_number"]}
+            rules={[
+              {
+                type: "text",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input
+              placeholder="Phone number"
+              className="auth-input-style"
+              name="phone_number"
+              value={state.phone_number}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
           <Form.Item
             name={["Email"]}
             rules={[

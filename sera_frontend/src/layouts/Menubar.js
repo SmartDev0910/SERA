@@ -59,7 +59,7 @@ const items = [
   ),
 ];
 
-const Menubar = () => {
+const Menubar = ({ clickEvent }) => {
   const menuStyle = {
     fontSize: "15px",
     marginTop: "15px",
@@ -71,6 +71,7 @@ const Menubar = () => {
       mode="inline"
       items={items}
       style={menuStyle}
+      onClick={() => clickEvent()}
     />
   );
 };
