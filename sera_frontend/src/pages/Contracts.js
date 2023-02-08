@@ -220,7 +220,7 @@ const Contracts = () => {
         <Table
           className="margin-top-20"
           columns={columns}
-          scroll={{ x: true }}
+          scroll={{ x: 1300 }}
           dataSource={
             data &&
             (search_text === ""
