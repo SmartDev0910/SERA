@@ -153,7 +153,6 @@ const PurchaseOrders = () => {
     {
       title: "Delivery term",
       dataIndex: "delivery_term",
-      width: 150,
     },
     {
       title: "Payment term",
@@ -198,7 +197,7 @@ const PurchaseOrders = () => {
         <Table
           className="margin-top-20"
           columns={columns}
-          scroll={{ x: 1300 }}
+          scroll={{ x: 2000 }}
           dataSource={
             data &&
             (search_text === ""

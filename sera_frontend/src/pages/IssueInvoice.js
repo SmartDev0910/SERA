@@ -108,49 +108,59 @@ const IssueInvoice = () => {
         </Row>
         <Divider />
         <Row>
-          <Text strong className="float-left">
-            Purchase Order
-          </Text>
-        </Row>
-        <Row>
-          <Select
-            className="contract-select"
-            placeholder="Select the purchase order"
-            value={pur_id}
-            onChange={(value) => {
-              setPurId(value);
-            }}
-            options={purOrderOp}
-          />
-        </Row>
+          <Col xs={24} sm={16} ls={10} md={10} lg={7}>
+            <Row>
+              <Text strong className="float-left">
+                Purchase Order
+              </Text>
+            </Row>
+            <Row>
+              <Select
+                className="contract-select"
+                placeholder="Select the purchase order"
+                value={pur_id}
+                onChange={(value) => {
+                  setPurId(value);
+                }}
+                options={purOrderOp}
+              />
+            </Row>
 
-        <Row className="margin-top-10 width-60">
-          <Col span="12" align="left">
-            <DatePicker
-              className="datepicker"
-              placeholder="Invoice Date"
-              format="YYYY/MM/DD"
-              onChange={(date, dateString) => {
-                setStartDate(dateString);
-              }}
-            />
-          </Col>
-          <Col span="12" align="left">
-            <DatePicker
-              className="datepicker"
-              placeholder="Due Date"
-              format="YYYY/MM/DD"
-              onChange={(date, dateString) => {
-                setEndDate(dateString);
-              }}
-            />
+            <Row className="margin-top-10">
+              <Col span="11">
+                <DatePicker
+                  className="datepicker"
+                  placeholder="Invoice Date"
+                  format="YYYY/MM/DD"
+                  onChange={(date, dateString) => {
+                    setStartDate(dateString);
+                  }}
+                />
+              </Col>
+              <Col span="2"></Col>
+              <Col span="11">
+                <DatePicker
+                  className="datepicker"
+                  placeholder="Due Date"
+                  format="YYYY/MM/DD"
+                  onChange={(date, dateString) => {
+                    setEndDate(dateString);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Divider />
+            <Row className="panelFooter">
+              <Button className="float-left">Cancel</Button>
+              <Button
+                className="float-left margin-left-8"
+                onClick={handleSubmit}
+              >
+                Issue Invoice
+              </Button>
+            </Row>
           </Col>
         </Row>
-        <Divider />
-        <Button className="float-left">Cancel</Button>
-        <Button className="float-left margin-left-8" onClick={handleSubmit}>
-          Issue Invoice
-        </Button>
       </Spin>
     </>
   );
