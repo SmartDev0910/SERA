@@ -73,6 +73,7 @@ const Contracts = () => {
     {
       title: "Delivery term",
       dataIndex: "delivery_term",
+      width: 150,
     },
     {
       title: "Payment term",

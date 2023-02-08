@@ -229,93 +229,58 @@ const CreateContract = () => {
             Materials
           </Text>
         </Row>
-        <Collapse
-          className="text-align-left margin-top-20"
-          defaultActiveKey={["1"]}
-          ghost
-        >
-          {materialItems.map((matItem, index) => (
-            <Panel
-              header={
-                <Row className="inline-block">
-                  <Text strong className="float-left">
-                    Material {index + 1}
-                  </Text>
-                  <Button
-                    className="float-right"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRemoveMaterial(matItem.id);
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </Row>
-              }
-              key={matItem.id}
+
+        <Row>
+          <Col xs={24} sm={16} ls={10} md={10} lg={7}>
+            <Collapse
+              className="text-align-left margin-top-20"
+              defaultActiveKey={["1"]}
+              ghost
             >
-              <Row>
-                <Select
-                  className="width-60"
-                  placeholder="Material"
-                  value={matItem.material}
-                  onChange={(value) => {
-                    setMaterialItems(
-                      materialItems.map((it) =>
-                        it.id !== matItem.id
-                          ? it
-                          : {
-                              ...it,
-                              material: value,
-                            }
-                      )
-                    );
-                  }}
-                  options={materialOp}
-                />
-              </Row>
-              <Row>
-                <Input
-                  className="width-60 margin-top-10"
-                  value={matItem.material_description}
-                  onChange={(event) => {
-                    setMaterialItems(
-                      materialItems.map((it) =>
-                        it.id !== matItem.id
-                          ? it
-                          : {
-                              ...it,
-                              material_description: event.target.value,
-                            }
-                      )
-                    );
-                  }}
-                  placeholder="Material Description"
-                />
-              </Row>
-              <Row>
-                <Text strong className="float-left margin-top-10">
-                  Material1 tier prices
-                </Text>
-              </Row>
-              <Row className="width-60">
-                <Row className="margin-top-20 width-100">
-                  <Col span="12">
-                    <Text strong className="float-left">
-                      Quantity
-                    </Text>
-                  </Col>
-                  <Col span="12">
-                    <Text strong className="float-left">
-                      Pricing
-                    </Text>
-                  </Col>
-                </Row>
-                <Row className="margin-top-20 width-100" gutter={12}>
-                  <Col span="12">
+              {materialItems.map((matItem, index) => (
+                <Panel
+                  header={
+                    <Row className="inline-block">
+                      <Text strong className="float-left">
+                        Material {index + 1}
+                      </Text>
+                      <Button
+                        className="float-right"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemoveMaterial(matItem.id);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Row>
+                  }
+                  key={matItem.id}
+                >
+                  <Row>
+                    <Select
+                      className="contract-select"
+                      placeholder="Material"
+                      value={matItem.material}
+                      onChange={(value) => {
+                        setMaterialItems(
+                          materialItems.map((it) =>
+                            it.id !== matItem.id
+                              ? it
+                              : {
+                                  ...it,
+                                  material: value,
+                                }
+                          )
+                        );
+                      }}
+                      options={materialOp}
+                    />
+                  </Row>
+                  <Row>
                     <Input
-                      className="contract-material-select"
-                      value={matItem.quantity}
+                      className="margin-top-10"
+                      value={matItem.material_description}
                       onChange={(event) => {
                         setMaterialItems(
                           materialItems.map((it) =>
@@ -323,38 +288,78 @@ const CreateContract = () => {
                               ? it
                               : {
                                   ...it,
-                                  quantity: event.target.value,
+                                  material_description: event.target.value,
                                 }
                           )
                         );
                       }}
-                      placeholder="Qty & above"
+                      placeholder="Material Description"
                     />
-                  </Col>
-                  <Col span="12">
-                    <Input
-                      className="contract-material-select"
-                      value={matItem.price}
-                      onChange={(event) => {
-                        setMaterialItems(
-                          materialItems.map((it) =>
-                            it.id !== matItem.id
-                              ? it
-                              : {
-                                  ...it,
-                                  price: event.target.value,
-                                }
-                          )
-                        );
-                      }}
-                      placeholder="Price"
-                    />
-                  </Col>
-                </Row>
-              </Row>
-            </Panel>
-          ))}
-        </Collapse>
+                  </Row>
+                  <Row>
+                    <Text strong className="float-left margin-top-10">
+                      Material1 tier prices
+                    </Text>
+                  </Row>
+                  <Row>
+                    <Row className="margin-top-20 width-100">
+                      <Col span="12">
+                        <Text strong className="float-left">
+                          Quantity
+                        </Text>
+                      </Col>
+                      <Col span="12">
+                        <Text strong className="float-left">
+                          Pricing
+                        </Text>
+                      </Col>
+                    </Row>
+                    <Row className="margin-top-20 width-100" gutter={12}>
+                      <Col span="12">
+                        <Input
+                          className="contract-material-select"
+                          value={matItem.quantity}
+                          onChange={(event) => {
+                            setMaterialItems(
+                              materialItems.map((it) =>
+                                it.id !== matItem.id
+                                  ? it
+                                  : {
+                                      ...it,
+                                      quantity: event.target.value,
+                                    }
+                              )
+                            );
+                          }}
+                          placeholder="Qty & above"
+                        />
+                      </Col>
+                      <Col span="12">
+                        <Input
+                          className="contract-material-select"
+                          value={matItem.price}
+                          onChange={(event) => {
+                            setMaterialItems(
+                              materialItems.map((it) =>
+                                it.id !== matItem.id
+                                  ? it
+                                  : {
+                                      ...it,
+                                      price: event.target.value,
+                                    }
+                              )
+                            );
+                          }}
+                          placeholder="Price"
+                        />
+                      </Col>
+                    </Row>
+                  </Row>
+                </Panel>
+              ))}
+            </Collapse>
+          </Col>
+        </Row>
         <Divider />
         <Button
           className="black-button float-left margin-bottom-20"

@@ -28,6 +28,7 @@
 }
 
 .auth-pane {
+  /* width: 80%; */
   text-align: center;
   box-sizing: border-box;
 }

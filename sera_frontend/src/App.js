@@ -91,7 +91,7 @@ const App = () => {
           onClose={() => setVisible(false)}
           visible={visible}
         >
-          <Menubar />
+          <Menubar clickEvent={() => setVisible(false)} />
         </Drawer>
       </Row>
       <Layout>
