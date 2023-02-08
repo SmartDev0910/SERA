@@ -175,15 +175,15 @@ const CreateContract = () => {
         </Row>
         <Divider />
 
-        <Row className="margin-top-10 width-60" gutter={12}>
-          <Col span="12" align="left">
+        <Row className="margin-top-10">
+          <Col xs={24} sm={16} ls={10} md={10} lg={7}>
             <Row>
               <Text strong className="float-left margin-bottom-20">
                 Contract ID
               </Text>
             </Row>
             <Select
-              className="width-100"
+              className="org-select"
               placeholder="Contract ID"
               name="contract_id"
               value={contract_id}
@@ -202,24 +202,26 @@ const CreateContract = () => {
             ) : (
               ""
             )}
+            <Divider />
+            <Row className="panelFooter">
+              <Button className="float-left">Cancel</Button>
+              <Button
+                className="float-left margin-left-8 yellow-btn"
+                onClick={handleSubmit}
+              >
+                Submit PO
+              </Button>
+              <Button
+                type="primary"
+                disabled={isApproved}
+                className="float-left margin-left-8"
+                onClick={handleApprove}
+              >
+                Approve
+              </Button>
+            </Row>
           </Col>
         </Row>
-        <Divider />
-        <Button className="float-left">Cancel</Button>
-        <Button
-          className="float-left margin-left-8 yellow-btn"
-          onClick={handleSubmit}
-        >
-          Submit PO
-        </Button>
-        <Button
-          type="primary"
-          disabled={isApproved}
-          className="float-left margin-left-8"
-          onClick={handleApprove}
-        >
-          Approve
-        </Button>
       </Spin>
     </>
   );
