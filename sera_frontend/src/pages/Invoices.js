@@ -40,6 +40,8 @@ const Invoices = () => {
         return data.filter((i) =>
           JSON.stringify(i.bus_partner).includes(account)
         );
+      case "received":
+        return data.filter((i) => i.sender === account);
     }
   }, [data, tabKey, account]);
 
@@ -82,6 +84,7 @@ const Invoices = () => {
                 {bus_partner.name} <br /> {contract.recipient}
               </>
             ),
+            sender: contract.sender,
             delivery_term: (
               <Row className="width-100">
                 <Row gutter={4} className="width-100">
