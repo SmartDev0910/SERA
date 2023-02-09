@@ -4,6 +4,7 @@ import (
 	"example/task/database"
 	"example/task/model"
 	"net/http"
+    "fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -47,7 +48,7 @@ func AddPartner(c *gin.Context) {
 
 func GetPartner(c *gin.Context) {
     var partner model.Partner
-    var users model.User
+    var users[] model.User
 
     if err := c.Bind(&partner); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{
@@ -61,10 +62,14 @@ func GetPartner(c *gin.Context) {
         return
     } 
 
+
+
     result := database.Database.Raw("SELECT U.* FROM partners PP LEFT JOIN users U ON U.wallet_address = PP.wallet_address2 WHERE PP.wallet_address1 = ?", partner.Wallet_address1).Find(&users)
-    if result.Error != nil || len(partner.Wallet_address1) == 0 || users.Email == "" {
+    fmt.Println("**********", users)
+
+    if result.Error != nil || len(partner.Wallet_address1) == 0 || len(users) == 0 {
         result1 := database.Database.Raw("SELECT U.* FROM partners PP LEFT JOIN users U ON U.wallet_address = PP.wallet_address1 WHERE PP.wallet_address2 = ?", partner.Wallet_address1).Find(&users)
-        if result1.Error != nil || users.Email == "" {
+        if result1.Error != nil || len(users) == 0 {
             c.JSON(http.StatusOK, gin.H{
                 "status_code": 204,
                 "api_version": "v1",
