@@ -24,9 +24,9 @@ const { Search } = Input;
 const Contracts = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isWalletIntalled, setIsWalletInstalled] = useState(false);
+  // const [isWalletIntalled, setIsWalletInstalled] = useState(false);
   const [search_text, setSearchText] = useState("");
-  const [provider, setProvider] = useState();
+  // const [provider, setProvider] = useState();
   const { chainId, active, account } = useWeb3React();
   let TrackContract = null;
   const validNetwork =
