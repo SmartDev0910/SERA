@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   Row,
@@ -27,9 +27,22 @@ const Invoices = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [provider, setProvider] = useState();
+  const [tabKey, setTabKey] = useState("all");
   const [search_text, setSearchText] = useState("");
   const [isWalletIntalled, setIsWalletInstalled] = useState(false);
   const { chainId, active, account } = useWeb3React();
+
+  const dataSource = useMemo(() => {
+    switch (tabKey) {
+      case "all":
+        return data;
+      case "issued":
+        return data.filter((i) =>
+          JSON.stringify(i.bus_partner).includes(account)
+        );
+    }
+  }, [data, tabKey, account]);
+
   const validNetwork =
     chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
   let TrackContract = null;
@@ -113,7 +126,7 @@ const Invoices = () => {
   }, [account]);
 
   const onChange = (key) => {
-    console.log(key);
+    setTabKey(key);
   };
 
   const items = [
@@ -204,17 +217,7 @@ const Invoices = () => {
           className="margin-top-20"
           columns={columns}
           scroll={{ x: 2000 }}
-          dataSource={
-            data &&
-            (search_text === ""
-              ? data
-              : data.filter(
-                  (i) =>
-                    i.buyer.includes(search_text) ||
-                    i.supplier.includes(search_text) ||
-                    i.material.includes(search_text)
-                ))
-          }
+          dataSource={dataSource}
           onChange={onChange}
           pagination={false}
         />

@@ -2,8 +2,16 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./routes";
 import Menubar from "./layouts/Menubar";
-import { Layout, Avatar, Row, Button, notification, Drawer } from "antd";
-import { MenuOutlined } from "@ant-design/icons";
+import {
+  Layout,
+  Avatar,
+  Row,
+  Button,
+  notification,
+  Drawer,
+  Dropdown,
+} from "antd";
+import { MenuOutlined, DownOutlined } from "@ant-design/icons";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "./utils/connector";
 
@@ -41,15 +49,54 @@ const App = () => {
   async function disConnect(injected) {
     deactivate(injected);
   }
+
+  const items = [
+    {
+      label: "SERA Company",
+      key: "0",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: "0 BNB",
+      key: "1",
+    },
+
+    {
+      type: "divider",
+    },
+    {
+      label: (
+        <a href="" onClick={() => disConnect(injected)}>
+          Disconnect
+        </a>
+      ),
+      key: "2",
+    },
+    {
+      label: <a href="/">Sign Out</a>,
+      key: "3",
+    },
+  ];
+
   const renderButton = (
     <>
       {active ? (
-        <Button
-          className="btn btn-green btn-launch-app"
-          onClick={() => disConnect(injected)}
+        <Dropdown
+          menu={{
+            items,
+          }}
+          trigger={["click"]}
         >
-          {account.substring(0, 5) + "..." + account.substring(38)}
-        </Button>
+          <Button
+            className="btn btn-green btn-launch-app"
+            onClick={(e) => e.preventDefault()}
+          >
+            {account.substring(0, 5) + " ... " + account.substring(38)}{" "}
+            <DownOutlined />
+          </Button>
+        </Dropdown>
       ) : (
         <Button
           className="btn btn-green btn-launch-app"

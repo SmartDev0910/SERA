@@ -12,6 +12,7 @@ import {
   Tag,
   Select,
   message,
+  Spin,
 } from "antd";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
@@ -27,6 +28,7 @@ const BusinessEcosystem = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buspartner, setBusPartner] = useState("");
   const [orgOp, setOrgOp] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [isWalletIntalled, setIsWalletInstalled] = useState(false);
   const [search_text, setSearchText] = useState("");
   const [provider, setProvider] = useState();
@@ -40,19 +42,67 @@ const BusinessEcosystem = () => {
 
   const columns = [
     {
-      title: "Business Partner",
-      dataIndex: "b_partner",
+      title: "No",
+      dataIndex: "index",
+    },
+    {
+      title: "Trade Name",
+      dataIndex: "t_name",
       sorter: {
-        compare: (a, b) => a.b_partner - b.b_partner,
+        compare: (a, b) => a.t_name - b.t_name,
         multiple: 1,
       },
     },
     {
-      title: "Contract Status",
-      dataIndex: "c_status",
+      title: "Legal Name",
+      dataIndex: "l_name",
       sorter: {
-        compare: (a, b) => a.c_status - b.c_status,
+        compare: (a, b) => a.l_name - b.l_name,
         multiple: 2,
+      },
+    },
+    {
+      title: "Country",
+      dataIndex: "country",
+      sorter: {
+        compare: (a, b) => a.country - b.country,
+        multiple: 3,
+      },
+    },
+    {
+      title: "State/town",
+      dataIndex: "state_town",
+      sorter: {
+        compare: (a, b) => a.state_town - b.state_town,
+        multiple: 4,
+      },
+    },
+    {
+      title: "Building Number",
+      dataIndex: "b_number",
+      sorter: {
+        compare: (a, b) => a.b_number - b.b_number,
+        multiple: 5,
+      },
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phone",
+    },
+    {
+      title: "Wallet Address",
+      dataIndex: "w_address",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      sorter: {
+        compare: (a, b) => a.status - b.status,
+        multiple: 6,
       },
     },
   ];
@@ -79,8 +129,8 @@ const BusinessEcosystem = () => {
         let tmp = [
           ...data,
           {
-            b_partner: buspartner,
-            c_status: <Tag color="magenta">Active</Tag>,
+            w_address: buspartner,
+            status: <Tag color="magenta">Active</Tag>,
           },
         ];
         setData(tmp);
@@ -98,40 +148,57 @@ const BusinessEcosystem = () => {
     if (window.ethereum) {
       setIsWalletInstalled(true);
     }
+    setLoading(true);
     async function fetchData() {
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_IP_ADDRESS}/v1/getlist`
         );
-        let tmp = [];
-        res.data.data.map((item) => {
-          if (item.Wallet_address !== account)
+        let tmp = [],
+          tmp1 = [];
+        res.data.data.map((item, index) => {
+          if (item.Wallet_address !== account) {
             tmp.push({
               label: item.Wallet_address,
               value: item.Wallet_address,
             });
+            tmp1.push({
+              index: index,
+              t_name: item.Trade_name,
+              l_name: item.Legal_name,
+              country: item.Country,
+              state_town: item.State_town,
+              b_number: item.Building_number,
+              email: item.Email,
+              phone: item.Phone_number,
+              w_address: item.Wallet_address,
+              status: <Tag color="magenta">Active</Tag>,
+            });
+          }
         });
         setOrgOp(tmp);
-        tmp = [];
-        const res1 = await axios.post(
-          `${process.env.REACT_APP_IP_ADDRESS}/v1/getpartner`,
-          {
-            wallet_address1: account,
-          }
-        );
-        res1.data.data.map((item) => {
-          if (item.Wallet_address !== account)
-            tmp.push({
-              b_partner: item.Wallet_address,
-              c_status: <Tag color="magenta">Active</Tag>,
-            });
-        });
-        setData(tmp);
+        setData(tmp1);
+        // tmp = [];
+        // const res1 = await axios.post(
+        //   `${process.env.REACT_APP_IP_ADDRESS}/v1/getpartner`,
+        //   {
+        //     wallet_address1: account,
+        //   }
+        // );
+        // res1.data.data.map((item) => {
+        //   if (item.Wallet_address !== account)
+        //     tmp.push({
+        //       w_address: item.Wallet_address,
+        //       status: <Tag color="magenta">Active</Tag>,
+        //     });
+        // });
+        // setData(tmp);
       } catch (e) {
         message.error("Server Error\n" + e, 5);
       }
     }
     fetchData();
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -148,42 +215,38 @@ const BusinessEcosystem = () => {
 
   return (
     <>
-      <Row>
-        <Link to="/">
-          <Button> {"<"} Sign Out</Button>
-        </Link>
-      </Row>
-      <Row className="margin-top-20">
-        <span className="title-style">Business Ecosystem</span>
-      </Row>
-      <Divider />
-      <Row>
-        <Title level={4}>Business Partner</Title>
-      </Row>
-      <Row justify="space-between">
-        <Button className="black-button" onClick={showModal}>
-          Add Business Partner
-        </Button>
-        <Search
-          placeholder="Search Business Partner"
-          className="search-input"
-          onSearch={onSearch}
+      <Spin spinning={loading} tip="Loading...">
+        <Row className="margin-top-20">
+          <span className="title-style">Business Ecosystem</span>
+        </Row>
+        <Divider />
+        <Row>
+          <Title level={4}>Business Partner</Title>
+        </Row>
+        <Row justify="space-between">
+          <Button className="black-button" onClick={showModal}>
+            Add Business Partner
+          </Button>
+          <Search
+            placeholder="Search Business Partner"
+            className="search-input"
+            onSearch={onSearch}
+          />
+        </Row>
+        <Table
+          className="margin-top-20"
+          columns={columns}
+          scroll={{ x: 1300 }}
+          dataSource={
+            data &&
+            (search_text === ""
+              ? data
+              : data.filter((i) => i.w_address.includes(search_text)))
+          }
+          onChange={onChange}
+          pagination={false}
         />
-      </Row>
-      <Table
-        className="margin-top-20"
-        columns={columns}
-        scroll={{ x: true }}
-        dataSource={
-          data &&
-          (search_text === ""
-            ? data
-            : data.filter((i) => i.b_partner.includes(search_text)))
-        }
-        onChange={onChange}
-        pagination={false}
-      />
-      {/* <Pagination
+        {/* <Pagination
         total={85}
         showTotal={(total, range) =>
           `${range[0]}-${range[1]} of ${total} items`
@@ -192,22 +255,23 @@ const BusinessEcosystem = () => {
         defaultCurrent={1}
         className="margin-top-20"
       /> */}
-      <Modal
-        title={<Title level={4}>Add Business Partner</Title>}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Select
-          className="width-100 margin-top-20"
-          value={buspartner}
-          placeholder="Organization Wallet Address"
-          onChange={(value) => {
-            setBusPartner(value);
-          }}
-          options={orgOp}
-        />
-      </Modal>
+        <Modal
+          title={<Title level={4}>Add Business Partner</Title>}
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <Select
+            className="width-100 margin-top-20"
+            value={buspartner}
+            placeholder="Organization Wallet Address"
+            onChange={(value) => {
+              setBusPartner(value);
+            }}
+            options={orgOp}
+          />
+        </Modal>
+      </Spin>
     </>
   );
 };
