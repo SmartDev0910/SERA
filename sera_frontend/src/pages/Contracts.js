@@ -35,6 +35,8 @@ const Contracts = () => {
         return data;
       case "issued":
         return data.filter((i) => JSON.stringify(i.buyer).includes(account));
+      case "received":
+        return data.filter((i) => JSON.stringify(i.supplier).includes(account));
     }
   }, [data, tabKey, account]);
 
