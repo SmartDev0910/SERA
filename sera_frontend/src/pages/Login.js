@@ -329,12 +329,12 @@ const Login = () => {
                 className="auth0-lock-name"
                 title={
                   activeKey === "tab_signin"
-                    ? "Sign in to SERA Blockchain"
+                    ? "Sign in to SERA"
                     : "Ready for the next move?"
                 }
               >
                 {activeKey === "tab_signin"
-                  ? "Sign in to SERA Blockchain"
+                  ? "Sign in to SERA"
                   : "Ready for the next move?"}
               </div>
             </div>
