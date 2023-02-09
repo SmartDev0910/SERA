@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   Row,
@@ -28,6 +28,16 @@ const Contracts = () => {
   const [search_text, setSearchText] = useState("");
   // const [provider, setProvider] = useState();
   const { chainId, active, account } = useWeb3React();
+  const [tabKey, setTabKey] = useState("all");
+  const dataSource = useMemo(() => {
+    switch (tabKey) {
+      case "all":
+        return data;
+      case "issued":
+        return data.filter((i) => JSON.stringify(i.buyer).includes(account));
+    }
+  }, [data, tabKey, account]);
+
   let TrackContract = null;
   const validNetwork =
     chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
@@ -194,7 +204,7 @@ const Contracts = () => {
   }, []);
 
   const onChange = (key) => {
-    console.log(key);
+    setTabKey(key);
   };
   return (
     <>
@@ -220,19 +230,7 @@ const Contracts = () => {
           className="margin-top-20"
           columns={columns}
           scroll={{ x: 2000 }}
-          dataSource={
-            data &&
-            (search_text === ""
-              ? data
-              : data.filter(
-                  (i) =>
-                    i.buyer.toString().includes(search_text) ||
-                    i.supplier.toString().includes(search_text) ||
-                    i.material.toString().includes(search_text) ||
-                    i.start_date.includes(search_text) ||
-                    i.end_date.includes(search_text)
-                ))
-          }
+          dataSource={dataSource}
           onChange={onChange}
           pagination={false}
         />
