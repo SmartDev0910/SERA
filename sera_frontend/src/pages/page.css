@@ -110,6 +110,7 @@
   color: #0540f2;
   font-weight: 600;
   font-size: 28px;
+  margin-top: 10px;
 }
 
 .tab-style {
@@ -249,7 +250,6 @@
   border-radius: 0px;
   border: none;
 }
-
 
 .panelFooter {
   justify-content: space-between;

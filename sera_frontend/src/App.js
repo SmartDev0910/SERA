@@ -48,8 +48,7 @@ const App = () => {
           className="btn btn-green btn-launch-app"
           onClick={() => disConnect(injected)}
         >
-          {account.substring(0, 5) + " ... " + account.substring(38)} /
-          DISCONNECT
+          {account.substring(0, 5) + "..." + account.substring(38)}
         </Button>
       ) : (
         <Button
