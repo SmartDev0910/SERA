@@ -199,7 +199,7 @@ const BusinessEcosystem = () => {
     }
     fetchData();
     setLoading(false);
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     if (validNetwork && active && window.ethereum) {
@@ -236,7 +236,7 @@ const BusinessEcosystem = () => {
         <Table
           className="margin-top-20"
           columns={columns}
-          scroll={{ x: 1300 }}
+          scroll={{ x: 2000 }}
           dataSource={
             data &&
             (search_text === ""

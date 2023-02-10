@@ -1,10 +1,11 @@
 package controllers
 
 import (
-    "example/task/database"
-    // "fmt"
-	"net/http"
+	"example/task/database"
+	// "fmt"
 	"example/task/model"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -120,6 +121,47 @@ func SignInUser(c *gin.Context) {
         "endpoint": "/SignInUser",
         "status": "Login Success!",
         "msg":    "Welcome to Login",
+        "data": user,
+    })
+}
+
+
+func GetUser(c *gin.Context) {
+    var input model.User
+
+    if err := c.Bind(&input); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status_code": 500,
+            "api_version": "v1",
+            "endpoint": "/GetUser",
+            "status": "Internal Server Error !",
+            "msg":    "Internal Server Error !",
+            "data":   nil,
+        })
+        c.Abort()
+        return
+    } 
+
+    user, err := model.FindUserByWalletAddress(input.Wallet_address)
+
+    if len(user.Email) == 0 {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "status_code": 404,
+            "api_version": "v1",
+            "endpoint": "/GetUser",
+            "status": "Not exist!",
+            "msg":    "There is a no exist person!",
+            "data": err,
+        })
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{
+        "status_code": 200,
+        "api_version": "v1",
+        "endpoint": "/GetUser",
+        "status": "Success!",
+        "msg":    "Success.",
         "data": user,
     })
 }
