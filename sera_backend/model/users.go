@@ -1,10 +1,11 @@
 package model
 
 import (
-    "example/task/database"
-    "golang.org/x/crypto/bcrypt"
-    "gorm.io/gorm"
-    // "fmt"
+	"example/task/database"
+
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
+	// "fmt"
 )
 
 type User struct {
@@ -33,6 +34,16 @@ func (user *User) Save() (*User, error) {
 func FindUserByUsername(email string) (User, error) {
     var user User
     err := database.Database.Where("email=?", email).Find(&user).Error
+    if err != nil {
+        return User{}, err
+    }
+    return user, nil
+}
+
+
+func FindUserByWalletAddress(wallet_address string) (User, error) {
+    var user User
+    err := database.Database.Where("wallet_address=?", wallet_address).Find(&user).Error
     if err != nil {
         return User{}, err
     }

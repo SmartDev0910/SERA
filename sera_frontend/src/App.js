@@ -10,11 +10,13 @@ import {
   notification,
   Drawer,
   Dropdown,
+  message,
 } from "antd";
 import { MenuOutlined, DownOutlined } from "@ant-design/icons";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "./utils/connector";
-
+import { ethers } from "ethers";
+import axios from "axios";
 import logo from "./logo.jpg";
 import "./App.css";
 const { Sider, Content } = Layout;
@@ -42,6 +44,9 @@ const logoTitleStyle = {
 const App = () => {
   const { chainId, active, activate, deactivate, account } = useWeb3React();
   const [visible, setVisible] = useState(false);
+  const [balance, setBalance] = useState(0);
+  const [company, setCompany] = useState("");
+
   async function connect(injected) {
     activate(injected);
   }
@@ -52,14 +57,14 @@ const App = () => {
 
   const items = [
     {
-      label: "SERA Company",
+      label: company,
       key: "0",
     },
     {
       type: "divider",
     },
     {
-      label: "0 BNB",
+      label: balance + " BNB",
       key: "1",
     },
 
@@ -115,7 +120,30 @@ const App = () => {
           message:
             "You are on wrong network. Please switch to Ethereum Mainnet to continue",
         });
+        return;
       }
+      const myProvider = new ethers.providers.Web3Provider(window.ethereum);
+      myProvider.getBalance(account).then((balance) => {
+        // convert a currency unit from wei to ether
+        const balanceInEth = ethers.utils.formatEther(balance);
+        setBalance(balanceInEth);
+      });
+      async function FetchData() {
+        try {
+          const res = await axios.post(
+            `${process.env.REACT_APP_IP_ADDRESS}/v1/getUser`,
+            {
+              Wallet_address: account,
+            }
+          );
+          if (res.data.status_code === 200) {
+            setCompany(res.data.data.Trade_name);
+          }
+        } catch (e) {
+          message.error("Internal Server Error\n" + e, 5);
+        }
+      }
+      FetchData();
     }
   }, [chainId, active]);
 
