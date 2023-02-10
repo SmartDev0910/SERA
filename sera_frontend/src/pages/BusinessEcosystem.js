@@ -163,7 +163,7 @@ const BusinessEcosystem = () => {
               value: item.Wallet_address,
             });
             tmp1.push({
-              index: index,
+              index: index + 1,
               t_name: item.Trade_name,
               l_name: item.Legal_name,
               country: item.Country,

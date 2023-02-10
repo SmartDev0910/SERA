@@ -20,6 +20,7 @@ import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
 
 import "./page.css";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -180,11 +181,8 @@ const AuthParties = () => {
     async function fetchData() {
       try {
         let tmp = [];
-        const res = await axios.post(
-          `${process.env.REACT_APP_IP_ADDRESS}/v1/getpartner`,
-          {
-            wallet_address1: account,
-          }
+        const res = await axios.get(
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/getlist`
         );
         res.data.data.map((item) => {
           if (item.Wallet_address !== account)
@@ -195,7 +193,8 @@ const AuthParties = () => {
         });
         setBusPartnerOp(tmp);
       } catch (e) {
-        message.error("Server Error\n" + e, 5);
+        // message.error("Server Error\n" + e, 5);
+        console.log("Error: ", "Server Error\n" + e);
       }
     }
     fetchData();
