@@ -140,12 +140,15 @@ const CreateContract = () => {
         myProvider.getSigner()
       );
       let shipment_id = await TrackContract.shipment_id();
-      for (let i = 0; i < shipment_id; i++)
-        tmp.push({
-          key: i,
-          label: i,
-          value: i,
-        });
+      for (let i = 0; i < shipment_id; i++) {
+        let contract = await TrackContract.shipments(i);
+        if (contract.recipient === account)
+          tmp.push({
+            key: i,
+            label: i,
+            value: i,
+          });
+      }
       await setContractOp(tmp);
       let USDCContract = new ethers.Contract(
         process.env.REACT_APP_USDC_CONTRACT_ADDRESS,
