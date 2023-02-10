@@ -143,7 +143,9 @@ const Contracts = () => {
       for (let i = 0; i <= shipment_id; i++) {
         let contract = await TrackContract.shipments(i);
         if (
-          contract.recipient !== "0x0000000000000000000000000000000000000000"
+          contract.recipient !== "0x0000000000000000000000000000000000000000" ||
+          contract.recipient === account ||
+          contract.sender === account
         ) {
           let buyer = await ProvContract.producers(contract.recipient);
           let supplier = await ProvContract.producers(contract.sender);
