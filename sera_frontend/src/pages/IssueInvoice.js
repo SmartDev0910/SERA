@@ -84,12 +84,16 @@ const IssueInvoice = () => {
         myProvider.getSigner()
       );
       let purchase_id = await TrackContract.purchase_id();
-      for (let i = 0; i < purchase_id; i++)
-        tmp.push({
-          key: i,
-          label: i,
-          value: i,
-        });
+      for (let i = 0; i < purchase_id; i++) {
+        let shipment_id = await TrackContract.purchase_list(i);
+        let contract = await TrackContract.shipments(shipment_id);
+        if (contract.sender === account)
+          tmp.push({
+            key: i,
+            label: i,
+            value: i,
+          });
+      }
       await setPurOrderOp(tmp);
     }
     fetchData();

@@ -73,7 +73,7 @@ const Invoices = () => {
           provAbi,
           myProvider.getSigner()
         );
-        if (contract.sender === account) {
+        if (contract.recipient === account || contract.sender === account) {
           let bus_partner = await ProvContract.producers(contract.recipient);
 
           tmp.push({
