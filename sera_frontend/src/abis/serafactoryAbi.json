@@ -1,0 +1,9 @@
+[
+  {
+    "inputs": [],
+    "name": "createSeraNFT",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

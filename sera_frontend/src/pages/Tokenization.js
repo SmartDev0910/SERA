@@ -12,7 +12,7 @@ import {
   message,
 } from "antd";
 import { FileAddOutlined } from "@ant-design/icons";
-import seranftAbi from "../abis/seranftAbi.json";
+import serafactoryAbi from "../abis/serafactoryAbi.json";
 import trackAbi from "../abis/trackingAbi.json";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
@@ -32,13 +32,13 @@ const Tokenization = () => {
   const handleOk = async () => {
     setLoading(true);
     const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-    let seraNFTContract = new ethers.Contract(
-      process.env.REACT_APP_SERANFT_CONTRACT_ADDRESS,
-      seranftAbi,
+    let seraNFTFactoryContract = new ethers.Contract(
+      process.env.REACT_APP_SERANFT_FACTORY_CONTRACT_ADDRESS,
+      serafactoryAbi,
       myProvider.getSigner()
     );
-    await seraNFTContract
-      .mintToken()
+    await seraNFTFactoryContract
+      .createSeraNFT()
       .then((tx) => {
         return tx.wait().then(
           async (receipt) => {
