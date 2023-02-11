@@ -13,10 +13,12 @@ import {
   Select,
   message,
   Spin,
+  Rate,
 } from "antd";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import provenanceAbi from "../abis/provenanceAbi";
+import trackAbi from "../abis/trackingAbi.json";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import "./page.css";
@@ -39,6 +41,14 @@ const BusinessEcosystem = () => {
   const validNetwork =
     chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
   let ProvenanceContract = null;
+
+  const calculateRate = (val) => {
+    if (val % 10 >= 5) {
+      return val / 10 + 0.5;
+    } else {
+      return val / 10;
+    }
+  };
 
   const columns = [
     {
@@ -94,14 +104,24 @@ const BusinessEcosystem = () => {
       dataIndex: "w_address",
     },
     {
+      title: "Reputation",
+      dataIndex: "reputation",
+      render: (data) => <Rate allowHalf disabled value={calculateRate(data)} />,
+      sorter: {
+        compare: (a, b) => a.reputation - b.reputation,
+        multiple: 6,
+      },
+    },
+    {
       title: "Status",
       dataIndex: "status",
       sorter: {
         compare: (a, b) => a.status - b.status,
-        multiple: 6,
+        multiple: 7,
       },
     },
   ];
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -145,6 +165,8 @@ const BusinessEcosystem = () => {
       setIsWalletInstalled(true);
     }
     setLoading(true);
+    const myProvider = new ethers.providers.Web3Provider(window.ethereum);
+
     async function fetchData() {
       try {
         const res = await axios.get(
@@ -152,8 +174,17 @@ const BusinessEcosystem = () => {
         );
         let tmp = [],
           tmp1 = [];
-        res.data.data.map((item, index) => {
+
+        let TrackContract = new ethers.Contract(
+          process.env.REACT_APP_TRACKING_CONTRACT_ADDRESS,
+          trackAbi,
+          myProvider.getSigner()
+        );
+        for (let item of res.data.data) {
           if (item.Wallet_address !== account) {
+            let reputation = await TrackContract.calculateReputation(
+              item.Wallet_address
+            );
             tmp.push({
               label: item.Wallet_address,
               value: item.Wallet_address,
@@ -167,10 +198,11 @@ const BusinessEcosystem = () => {
               email: item.Email,
               phone: item.Phone_number,
               w_address: item.Wallet_address,
+              reputation: reputation,
               status: <Tag color="magenta">Active</Tag>,
             });
           }
-        });
+        }
         setOrgOp(tmp);
         setData(tmp1);
         // tmp = [];
