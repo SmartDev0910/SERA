@@ -164,7 +164,7 @@ const App = () => {
           placement="left"
           onClick={() => setVisible(false)}
           onClose={() => setVisible(false)}
-          visible={visible}
+          open={visible}
         >
           <Menubar clickEvent={() => setVisible(false)} />
         </Drawer>
