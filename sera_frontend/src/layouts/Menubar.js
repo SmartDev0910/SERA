@@ -71,7 +71,7 @@ const Menubar = ({ clickEvent }) => {
       mode="inline"
       items={items}
       style={menuStyle}
-      onClick={() => clickEvent()}
+      onClick={() => (clickEvent ? clickEvent() : null)}
     />
   );
 };

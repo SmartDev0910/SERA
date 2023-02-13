@@ -14,12 +14,12 @@ import {
   message,
 } from "antd";
 import provAbi from "../abis/provenanceAbi.json";
-import trackAbi from "../abis/trackingAbi.json";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
 
 import "./page.css";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -42,14 +42,6 @@ const AuthParties = () => {
   let ProvContract = null;
   const validNetwork =
     chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
-
-  const calculateRate = (val) => {
-    if (val % 10 >= 5) {
-      return val / 10 + 0.5;
-    } else {
-      return val / 10;
-    }
-  };
 
   const columns = [
     {
@@ -76,15 +68,6 @@ const AuthParties = () => {
         multiple: 3,
       },
     },
-    {
-      title: "Reputation",
-      dataIndex: "reputation",
-      render: (data) => <Rate allowHalf disabled value={calculateRate(data)} />,
-      sorter: {
-        compare: (a, b) => a.reputation - b.reputation,
-        multiple: 4,
-      },
-    },
   ];
 
   const updateOrganizations = async () => {
@@ -95,23 +78,17 @@ const AuthParties = () => {
       provAbi,
       myProvider.getSigner()
     );
-    let TrackContract = new ethers.Contract(
-      process.env.REACT_APP_TRACKING_CONTRACT_ADDRESS,
-      trackAbi,
-      myProvider.getSigner()
-    );
+
     let tmp = [];
     let pro_count = await ProvContract.producer_count();
 
     for (let i = 0; i < pro_count; i++) {
       let pro_address = await ProvContract.producer_list(i);
       let org = await ProvContract.producers(pro_address);
-      let reputation = await TrackContract.calculateReputation(pro_address);
       tmp.push({
         organization: org.name,
         org_type: org.producer_type,
         org_wallet_address: pro_address,
-        reputation: reputation,
       });
     }
 
@@ -148,14 +125,16 @@ const AuthParties = () => {
             return true;
           },
           (error) => {
-            message.error("Had some errors." + error, 5);
+            message.error("Server had some errors.", 5);
+            console.log(error);
             setLoading1(false);
           }
         );
       })
       .catch((error) => {
+        message.error("Server had some errors.", 5);
+        console.log(error);
         setLoading1(false);
-        message.error("Had some errors." + error, 5);
       });
 
     setIsModalOpen(false);
@@ -180,11 +159,8 @@ const AuthParties = () => {
     async function fetchData() {
       try {
         let tmp = [];
-        const res = await axios.post(
-          `${process.env.REACT_APP_IP_ADDRESS}/v1/getpartner`,
-          {
-            wallet_address1: account,
-          }
+        const res = await axios.get(
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/getlist`
         );
         res.data.data.map((item) => {
           if (item.Wallet_address !== account)
@@ -195,7 +171,8 @@ const AuthParties = () => {
         });
         setBusPartnerOp(tmp);
       } catch (e) {
-        message.error("Server Error\n" + e, 5);
+        message.error("Server had some errors.", 5);
+        console.log(e);
       }
     }
     fetchData();

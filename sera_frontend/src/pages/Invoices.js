@@ -73,7 +73,7 @@ const Invoices = () => {
           provAbi,
           myProvider.getSigner()
         );
-        if (contract.sender === account) {
+        if (contract.recipient === account || contract.sender === account) {
           let bus_partner = await ProvContract.producers(contract.recipient);
 
           tmp.push({
@@ -110,8 +110,9 @@ const Invoices = () => {
       }
       await setData(tmp);
     } catch (e) {
+      message.error("Server had some errors.", 5);
+      console.log(e);
       setLoading(false);
-      message.error("Internal Server Error.\n" + e, 5);
     }
     setLoading(false);
   };

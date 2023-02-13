@@ -12,7 +12,7 @@ import {
   message,
 } from "antd";
 import { FileAddOutlined } from "@ant-design/icons";
-import seranftAbi from "../abis/seranftAbi.json";
+import serafactoryAbi from "../abis/serafactoryAbi.json";
 import trackAbi from "../abis/trackingAbi.json";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
@@ -25,20 +25,27 @@ const Tokenization = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [invoiceOps, setInvoiceOps] = useState([]);
+  const [invoiceId, setInvoiceID] = useState("");
+  const { account } = useWeb3React();
 
   const showModal = () => {
     setIsModalOpen(true);
   };
   const handleOk = async () => {
+    if (invoiceId === "") {
+      message.error("Not Valid");
+      return;
+    }
+
     setLoading(true);
     const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-    let seraNFTContract = new ethers.Contract(
-      process.env.REACT_APP_SERANFT_CONTRACT_ADDRESS,
-      seranftAbi,
+    let seraNFTFactoryContract = new ethers.Contract(
+      process.env.REACT_APP_SERANFT_FACTORY_CONTRACT_ADDRESS,
+      serafactoryAbi,
       myProvider.getSigner()
     );
-    await seraNFTContract
-      .mintToken()
+    await seraNFTFactoryContract
+      .createSeraNFT()
       .then((tx) => {
         return tx.wait().then(
           async (receipt) => {
@@ -48,13 +55,15 @@ const Tokenization = () => {
             return true;
           },
           (error) => {
-            message.error(error.error.data.message, 5);
+            message.error("Server had some errors.", 5);
+            console.log(error);
             setLoading(false);
           }
         );
       })
       .catch(async (error) => {
-        message.error(error.error.data.message, 5);
+        message.error("Server had some errors.", 5);
+        console.log(error);
         setLoading(false);
       });
     setIsModalOpen(false);
@@ -72,12 +81,16 @@ const Tokenization = () => {
         myProvider.getSigner()
       );
       let invoice_id = await TrackContract.invoice_id();
-      for (let i = 0; i < invoice_id; i++)
-        tmp.push({
-          key: i,
-          label: i,
-          value: i,
-        });
+      for (let i = 0; i < invoice_id; i++) {
+        let shipment_id = await TrackContract.invoice_list(i);
+        let contract = await TrackContract.shipments(shipment_id);
+        if (contract.sender === account && !contract.action_status)
+          tmp.push({
+            key: i,
+            label: i,
+            value: i,
+          });
+      }
       await setInvoiceOps(tmp);
     }
     fetchData();
@@ -147,7 +160,9 @@ const Tokenization = () => {
           <Select
             className="width-100"
             placeholder="Invoice ID"
+            value={invoiceId}
             options={invoiceOps}
+            onChange={(value) => setInvoiceID(value)}
           />
           <Divider orientation="center"> Select Contract Type </Divider>
           <Select
