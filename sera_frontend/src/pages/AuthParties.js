@@ -125,14 +125,16 @@ const AuthParties = () => {
             return true;
           },
           (error) => {
-            message.error("Had some errors." + error, 5);
+            message.error("Server had some errors.", 5);
+            console.log(error);
             setLoading1(false);
           }
         );
       })
       .catch((error) => {
+        message.error("Server had some errors.", 5);
+        console.log(error);
         setLoading1(false);
-        message.error("Had some errors." + error, 5);
       });
 
     setIsModalOpen(false);
@@ -169,8 +171,8 @@ const AuthParties = () => {
         });
         setBusPartnerOp(tmp);
       } catch (e) {
-        // message.error("Server Error\n" + e, 5);
-        console.log("Error: ", "Server Error\n" + e);
+        message.error("Server had some errors.", 5);
+        console.log(e);
       }
     }
     fetchData();

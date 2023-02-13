@@ -54,14 +54,13 @@ const CreateContract = () => {
             return true;
           },
           (error) => {
-            console.log("```````````", error);
-            // message.error(error.message, 5);
+            message.error("Server had some errors.", 5);
+            console.log(error);
             setLoading(false);
           }
         );
       })
       .catch(async (error) => {
-        console.log("------", error);
         let msg = error.error !== undefined ? error.error.data.message : "";
         if (msg.includes("allowance")) {
           let contract = await TrackContract.shipments(contract_id);
@@ -82,7 +81,7 @@ const CreateContract = () => {
         } else if (msg.includes("You do not have enough tokens.")) {
           message.error("You do not have enough tokens.", 5);
         } else {
-          message.error("Rejected transaction", 5);
+          message.error("You have some MetaMask Problem.", 5);
         }
         setLoading(false);
       });
@@ -119,13 +118,15 @@ const CreateContract = () => {
             return true;
           },
           (error) => {
-            message.error(error.message, 5);
+            message.error("Server had some errors.", 5);
+            console.log(error);
             setLoading(false);
           }
         );
       })
       .catch((error) => {
-        message.error(error.message, 5);
+        message.error("Server had some errors.", 5);
+        console.log(error);
         setLoading(false);
       });
   };

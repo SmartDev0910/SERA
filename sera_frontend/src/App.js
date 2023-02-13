@@ -140,8 +140,8 @@ const App = () => {
             setCompany(res.data.data.Trade_name);
           }
         } catch (e) {
-          // message.error("Internal Server Error\n" + e, 5);
-          console.log("Error: ", "Internal Server Error\n" + e);
+          message.error("Server had some errors.", 5);
+          console.log(e);
         }
       }
       FetchData();
