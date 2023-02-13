@@ -80,11 +80,9 @@ const Login = () => {
         if (res.data.status_code === 200) {
           message.success("Login successfully.");
           navigate("/business-ecosystem");
-        } else {
-          message.error(res.data.msg);
         }
       } catch (e) {
-        message.error(SERVER_ERROR, 5);
+        message.error(e.response.data.msg);
         console.log(e);
       }
     } else if (activeKey === "tab_signup") {
@@ -120,7 +118,7 @@ const Login = () => {
         );
         message.success("Sign Up successfully.");
       } catch (e) {
-        message.error(SERVER_ERROR, 5);
+        message.error(e.response.data.msg);
         console.log(e);
       }
       dispatch({

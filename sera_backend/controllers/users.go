@@ -27,7 +27,7 @@ func SignUpUser(c *gin.Context) {
  
     user, err := model.FindUserByUsername(input.Email)
     if len(user.Email) != 0 {
-        c.JSON(http.StatusBadRequest, gin.H{
+        c.JSON(http.StatusConflict, gin.H{
             "status_code": 409,
             "api_version": "v1",
             "endpoint": "/SignUpUser",
@@ -40,7 +40,7 @@ func SignUpUser(c *gin.Context) {
     wallet, err := model.IsValidWallet(input.Wallet_address)
 
     if len(wallet.Wallet_address) != 0  {
-        c.JSON(http.StatusBadRequest, gin.H{
+        c.JSON(http.StatusConflict, gin.H{
             "status_code": 409,
             "api_version": "v1",
             "endpoint": "/SignUpUser",
@@ -53,7 +53,7 @@ func SignUpUser(c *gin.Context) {
     savedUser, err := input.Save()
 
     if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{
+        c.JSON(http.StatusInternalServerError, gin.H{
             "status_code": 500,
             "api_version": "v1",
             "endpoint": "/SignUpUser",
@@ -64,7 +64,7 @@ func SignUpUser(c *gin.Context) {
     }
 
     c.JSON(http.StatusCreated, gin.H{
-        "status_code": 201,
+        "status_code": 200,
         "api_version": "v1",
         "endpoint": "/SignUpUser",
         "status": "SignUp Success!",
@@ -92,12 +92,12 @@ func SignInUser(c *gin.Context) {
     user, err := model.FindUserByUsername(input.Email)
 
     if len(user.Email) == 0 {
-        c.JSON(http.StatusBadRequest, gin.H{
-            "status_code": 409,
+        c.JSON(http.StatusUnauthorized, gin.H{
+            "status_code": 401,
             "api_version": "v1",
             "endpoint": "/SignInUser",
             "status": "Wrong Email!",
-            "msg":    "There is a no exist person!",
+            "msg":    "You have entered wrong email!",
             "data": err,
         })
         return
@@ -105,12 +105,12 @@ func SignInUser(c *gin.Context) {
 
     password, err := model.IsValidPassword(input.Password)
     if len(password.Email) == 0 {
-        c.JSON(http.StatusBadRequest, gin.H{
-            "status_code": 409,
+        c.JSON(http.StatusUnauthorized, gin.H{
+            "status_code": 401,
             "api_version": "v1",
             "endpoint": "/SignInUser",
             "status": "Wrong Password!",
-            "msg":    "There is a no exist person!",
+            "msg":    "You have entered wrong password!",
         })
         return
     }
@@ -145,8 +145,8 @@ func GetUser(c *gin.Context) {
     user, err := model.FindUserByWalletAddress(input.Wallet_address)
 
     if len(user.Email) == 0 {
-        c.JSON(http.StatusBadRequest, gin.H{
-            "status_code": 404,
+        c.JSON(http.StatusNoContent, gin.H{
+            "status_code": 204,
             "api_version": "v1",
             "endpoint": "/GetUser",
             "status": "Not exist!",
@@ -182,7 +182,7 @@ func GetListUser(c *gin.Context) {
     }
 
     if len(input) == 0 {
-        c.JSON(http.StatusNotFound, gin.H{
+        c.JSON(http.StatusNoContent, gin.H{
             "status_code": 204,
             "api_version": "v1",
             "endpoint": "/GetListUser",
