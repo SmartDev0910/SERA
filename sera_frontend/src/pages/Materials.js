@@ -86,7 +86,7 @@ const Materials = () => {
       }
       await setData(tmp);
     } catch (e) {
-      message.error("Server had some errors.", 5);
+      message.error("Server Error!", 5);
       console.log(e);
       setLoading(false);
     }
@@ -123,14 +123,14 @@ const Materials = () => {
             return true;
           },
           (error) => {
-            message.error("Server had some errors.", 5);
+            message.error("Server Error!", 5);
             console.log(error);
             setLoading1(false);
           }
         );
       })
       .catch((error) => {
-        message.error("Server had some errors.", 5);
+        message.error("Server Error!", 5);
         console.log(error);
         setLoading1(false);
       });

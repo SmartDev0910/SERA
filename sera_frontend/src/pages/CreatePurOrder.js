@@ -54,7 +54,7 @@ const CreateContract = () => {
             return true;
           },
           (error) => {
-            message.error("Server had some errors.", 5);
+            message.error("Server Error!", 5);
             console.log(error);
             setLoading(false);
           }
@@ -118,14 +118,14 @@ const CreateContract = () => {
             return true;
           },
           (error) => {
-            message.error("Server had some errors.", 5);
+            message.error("Server Error!", 5);
             console.log(error);
             setLoading(false);
           }
         );
       })
       .catch((error) => {
-        message.error("Server had some errors.", 5);
+        message.error("Server Error!", 5);
         console.log(error);
         setLoading(false);
       });

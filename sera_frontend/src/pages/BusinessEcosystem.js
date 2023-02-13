@@ -153,7 +153,7 @@ const BusinessEcosystem = () => {
       }
       message.success(res.data.msg, 5);
     } catch (e) {
-      message.error("Server had some errors.", 5);
+      message.error("Server Error!", 5);
       console.log(e);
     }
     setIsModalOpen(false);
@@ -222,7 +222,7 @@ const BusinessEcosystem = () => {
         // });
         // setData(tmp);
       } catch (e) {
-        message.error("Server had some errors.", 5);
+        message.error("Server Error!", 5);
         console.log(e);
       }
     }

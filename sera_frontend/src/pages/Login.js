@@ -51,11 +51,23 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
-    if (!active) {
-      setValid(true);
-      return;
-    }
+    let {
+      email,
+      password,
+      trade_name,
+      legal_name,
+      country,
+      state_town,
+      building_number,
+      phone_number,
+    } = state;
+
     if (activeKey === "tab_signin") {
+      if (!active || email === "" || password === "") {
+        message.error("Please input your info correctly!", 5);
+        setValid(true);
+        return;
+      }
       try {
         const res = await axios.post(
           `${process.env.REACT_APP_IP_ADDRESS}/v1/signin`,
@@ -71,10 +83,25 @@ const Login = () => {
           message.error(res.data.msg);
         }
       } catch (e) {
-        message.error("Server had some errors.", 5);
+        message.error("Server Error!", 5);
         console.log(e);
       }
     } else if (activeKey === "tab_signup") {
+      if (
+        !active ||
+        email === "" ||
+        password === "" ||
+        trade_name === "" ||
+        legal_name === "" ||
+        country === "" ||
+        state_town === "" ||
+        building_number === "" ||
+        phone_number === ""
+      ) {
+        message.error("Please input your info correctly!", 5);
+        setValid(true);
+        return;
+      }
       try {
         const res = await axios.post(
           `${process.env.REACT_APP_IP_ADDRESS}/v1/signup`,
@@ -92,7 +119,7 @@ const Login = () => {
         );
         message.success("Sign Up successfully.");
       } catch (e) {
-        message.error("Server had some errors.", 5);
+        message.error("Server Error!", 5);
         console.log(e);
       }
       dispatch({
@@ -157,13 +184,25 @@ const Login = () => {
               onChange={handleInputChange}
             />
           </Form.Item>
-          <Input.Password
-            placeholder="input password"
-            className="auth-input-style"
+
+          <Form.Item
             name="password"
-            value={state.password}
-            onChange={handleInputChange}
-          />
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input.Password
+              placeholder="input password"
+              className="auth-input-style"
+              name="password"
+              value={state.password}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
           {renderButton}
         </Form>
       ),
@@ -175,10 +214,11 @@ const Login = () => {
         <Form validateMessages={validateMessages}>
           {renderButton}
           <Form.Item
-            name={["trade_name"]}
+            name={"trade_name"}
             rules={[
               {
-                type: "text",
+                required: true,
+                message: "Please input your trade name!",
               },
             ]}
             style={{ marginBottom: "0px" }}
@@ -192,10 +232,11 @@ const Login = () => {
             />
           </Form.Item>
           <Form.Item
-            name={["legal_name"]}
+            name={"legal_name"}
             rules={[
               {
-                type: "text",
+                required: true,
+                message: "Please input your legal name!",
               },
             ]}
             style={{ marginBottom: "0px" }}
@@ -209,10 +250,11 @@ const Login = () => {
             />
           </Form.Item>
           <Form.Item
-            name={["country"]}
+            name={"country"}
             rules={[
               {
-                type: "text",
+                required: true,
+                message: "Please input your country!",
               },
             ]}
             style={{ marginBottom: "0px" }}
@@ -226,10 +268,11 @@ const Login = () => {
             />
           </Form.Item>
           <Form.Item
-            name={["state_town"]}
+            name={"state_town"}
             rules={[
               {
-                type: "text",
+                required: true,
+                message: "Please input your state/town!",
               },
             ]}
             style={{ marginBottom: "0px" }}
@@ -246,7 +289,8 @@ const Login = () => {
             name={["building_number"]}
             rules={[
               {
-                type: "text",
+                required: true,
+                message: "Please input your building number!",
               },
             ]}
             style={{ marginBottom: "0px" }}
@@ -260,10 +304,11 @@ const Login = () => {
             />
           </Form.Item>
           <Form.Item
-            name={["phone_number"]}
+            name={"phone_number"}
             rules={[
               {
-                type: "text",
+                required: true,
+                message: "Please input your phone number!",
               },
             ]}
             style={{ marginBottom: "0px" }}
@@ -281,6 +326,8 @@ const Login = () => {
             rules={[
               {
                 type: "email",
+                required: true,
+                message: "Please input your email!",
               },
             ]}
             style={{ marginBottom: "0px" }}
@@ -293,14 +340,25 @@ const Login = () => {
               onChange={handleInputChange}
             />
           </Form.Item>
-          <Input.Password
-            placeholder="input password"
-            className="auth-input-style"
-            style={{ marginTop: "0px; !important" }}
-            name="password"
-            value={state.password}
-            onChange={handleInputChange}
-          />
+          <Form.Item
+            name={"password"}
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+            style={{ marginBottom: "0px" }}
+          >
+            <Input.Password
+              placeholder="input password"
+              className="auth-input-style"
+              style={{ marginTop: "0px; !important" }}
+              name="password"
+              value={state.password}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
         </Form>
       ),
     },
@@ -310,7 +368,7 @@ const Login = () => {
     if (active) {
       if (chainId !== parseInt(process.env.REACT_APP_CHAIN_ID)) {
         message.error(
-          "You are on wrong network. Please switch to Ethereum Mainnet to continue"
+          "You are on wrong network. Please switch to Polygon testnet to continue"
         );
       }
     }
