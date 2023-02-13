@@ -18,6 +18,7 @@ import { injected } from "./utils/connector";
 import { ethers } from "ethers";
 import axios from "axios";
 import logo from "./logo.jpg";
+import { SERVER_ERROR } from "./utils/messages";
 import "./App.css";
 const { Sider, Content } = Layout;
 
@@ -140,7 +141,7 @@ const App = () => {
             setCompany(res.data.data.Trade_name);
           }
         } catch (e) {
-          message.error("Server Error!", 5);
+          message.error(SERVER_ERROR, 5);
           console.log(e);
         }
       }

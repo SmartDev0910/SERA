@@ -19,6 +19,7 @@ import provAbi from "../abis/provenanceAbi.json";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import "./page.css";
+import { TRANSACTION_ERROR } from "../utils/messages";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -76,13 +77,13 @@ const CreateContract = () => {
             return true;
           },
           (error) => {
-            message.error("Server Error!", 5);
+            message.error(TRANSACTION_ERROR, 5);
             console.log(error);
           }
         );
       })
       .catch((error) => {
-        message.error("Server Error!", 5);
+        message.error(TRANSACTION_ERROR, 5);
         console.log(error);
         setLoading(false);
       });

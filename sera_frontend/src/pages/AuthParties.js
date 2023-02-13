@@ -20,6 +20,7 @@ import axios from "axios";
 
 import "./page.css";
 import { ConsoleSqlOutlined } from "@ant-design/icons";
+import { SERVER_ERROR, TRANSACTION_ERROR } from "../utils/messages";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -125,14 +126,14 @@ const AuthParties = () => {
             return true;
           },
           (error) => {
-            message.error("Server Error!", 5);
+            message.error(TRANSACTION_ERROR, 5);
             console.log(error);
             setLoading1(false);
           }
         );
       })
       .catch((error) => {
-        message.error("Server Error!", 5);
+        message.error(TRANSACTION_ERROR, 5);
         console.log(error);
         setLoading1(false);
       });
@@ -171,7 +172,7 @@ const AuthParties = () => {
         });
         setBusPartnerOp(tmp);
       } catch (e) {
-        message.error("Server Error!", 5);
+        message.error(SERVER_ERROR, 5);
         console.log(e);
       }
     }

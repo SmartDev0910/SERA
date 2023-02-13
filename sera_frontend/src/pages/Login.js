@@ -8,6 +8,7 @@ import { ADD_PRODUCER } from "../utils/constants";
 import axios from "axios";
 import "./page.css";
 import logo from "./logo.jpg";
+import { SERVER_ERROR } from "../utils/messages";
 
 const Login = () => {
   const [activeKey, setActiveKey] = useState("tab_signin");
@@ -83,7 +84,7 @@ const Login = () => {
           message.error(res.data.msg);
         }
       } catch (e) {
-        message.error("Server Error!", 5);
+        message.error(SERVER_ERROR, 5);
         console.log(e);
       }
     } else if (activeKey === "tab_signup") {
@@ -119,7 +120,7 @@ const Login = () => {
         );
         message.success("Sign Up successfully.");
       } catch (e) {
-        message.error("Server Error!", 5);
+        message.error(SERVER_ERROR, 5);
         console.log(e);
       }
       dispatch({
