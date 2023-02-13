@@ -16,6 +16,7 @@ import provAbi from "../abis/provenanceAbi.json";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import "./page.css";
+import { TRANSACTION_ERROR } from "../utils/messages";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -86,7 +87,7 @@ const Materials = () => {
       }
       await setData(tmp);
     } catch (e) {
-      message.error("Server Error!", 5);
+      message.error(TRANSACTION_ERROR, 5);
       console.log(e);
       setLoading(false);
     }
@@ -123,14 +124,14 @@ const Materials = () => {
             return true;
           },
           (error) => {
-            message.error("Server Error!", 5);
+            message.error(TRANSACTION_ERROR, 5);
             console.log(error);
             setLoading1(false);
           }
         );
       })
       .catch((error) => {
-        message.error("Server Error!", 5);
+        message.error(TRANSACTION_ERROR, 5);
         console.log(error);
         setLoading1(false);
       });
