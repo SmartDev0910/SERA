@@ -369,7 +369,7 @@ const Login = () => {
     if (active) {
       if (chainId !== parseInt(process.env.REACT_APP_CHAIN_ID)) {
         message.error(
-          "You are on wrong network. Please switch to Polygon testnet to continue"
+          "You are on wrong network. Please switch to Binance testnet to continue"
         );
       }
     }
