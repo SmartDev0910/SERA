@@ -192,7 +192,8 @@ const Contracts = () => {
       }
       await setData(tmp);
     } catch (e) {
-      message.error("Internal Server Error\n" + e, 5);
+      message.error("Server had some errors.", 5);
+      console.log(e);
       setLoading(false);
     }
 

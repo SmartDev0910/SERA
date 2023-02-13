@@ -71,7 +71,8 @@ const Login = () => {
           message.error(res.data.msg);
         }
       } catch (e) {
-        message.error(e.response.data.msg);
+        message.error("Server had some errors.", 5);
+        console.log(e);
       }
     } else if (activeKey === "tab_signup") {
       try {
@@ -89,13 +90,10 @@ const Login = () => {
             wallet_address: account,
           }
         );
-        if (res.data.status_code === 200) {
-          message.success("Sign Up successfully.");
-        } else {
-          message.error(res.data.msg);
-        }
+        message.success("Sign Up successfully.");
       } catch (e) {
-        message.error(e.response.data.msg);
+        message.error("Server had some errors.", 5);
+        console.log(e);
       }
       dispatch({
         type: ADD_PRODUCER,

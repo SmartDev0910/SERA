@@ -95,8 +95,9 @@ const PurchaseOrders = () => {
       }
       await setData(tmp);
     } catch (e) {
+      message.error("Server had some errors.", 5);
+      console.log(e);
       setLoading(false);
-      message.error("Internal Server Error.\n" + e, 5);
     }
     setLoading(false);
   };
