@@ -118,7 +118,7 @@ const App = () => {
       if (chainId !== parseInt(process.env.REACT_APP_CHAIN_ID)) {
         notification.error({
           message:
-            "You are on wrong network. Please switch to Ethereum Mainnet to continue",
+            "You are on wrong network. Please switch to Binance testnet to continue",
         });
         return;
       }
@@ -140,7 +140,7 @@ const App = () => {
             setCompany(res.data.data.Trade_name);
           }
         } catch (e) {
-          message.error("Server had some errors.", 5);
+          message.error("Server Error!", 5);
           console.log(e);
         }
       }

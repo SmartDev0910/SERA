@@ -55,14 +55,14 @@ const Tokenization = () => {
             return true;
           },
           (error) => {
-            message.error("Server had some errors.", 5);
+            message.error("Server Error!", 5);
             console.log(error);
             setLoading(false);
           }
         );
       })
       .catch(async (error) => {
-        message.error("Server had some errors.", 5);
+        message.error("Server Error!", 5);
         console.log(error);
         setLoading(false);
       });
