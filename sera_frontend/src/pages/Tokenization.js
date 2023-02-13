@@ -18,6 +18,7 @@ import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 
 import "./page.css";
+import { TRANSACTION_ERROR } from "../utils/messages";
 
 const { Title } = Typography;
 
@@ -55,14 +56,14 @@ const Tokenization = () => {
             return true;
           },
           (error) => {
-            message.error("Server Error!", 5);
+            message.error(TRANSACTION_ERROR, 5);
             console.log(error);
             setLoading(false);
           }
         );
       })
       .catch(async (error) => {
-        message.error("Server Error!", 5);
+        message.error(TRANSACTION_ERROR, 5);
         console.log(error);
         setLoading(false);
       });

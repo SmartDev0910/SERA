@@ -22,6 +22,7 @@ import trackAbi from "../abis/trackingAbi.json";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import "./page.css";
+import { SERVER_ERROR, TRANSACTION_ERROR } from "../utils/messages";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -153,7 +154,7 @@ const BusinessEcosystem = () => {
       }
       message.success(res.data.msg, 5);
     } catch (e) {
-      message.error("Server Error!", 5);
+      message.error(SERVER_ERROR, 5);
       console.log(e);
     }
     setIsModalOpen(false);
@@ -222,7 +223,7 @@ const BusinessEcosystem = () => {
         // });
         // setData(tmp);
       } catch (e) {
-        message.error("Server Error!", 5);
+        message.error(TRANSACTION_ERROR, 5);
         console.log(e);
       }
     }

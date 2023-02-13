@@ -18,6 +18,7 @@ import { useWeb3React } from "@web3-react/core";
 import trackAbi from "../abis/trackingAbi.json";
 import provAbi from "../abis/provenanceAbi.json";
 import "./page.css";
+import { TRANSACTION_ERROR } from "../utils/messages";
 
 const { Search } = Input;
 
@@ -192,7 +193,7 @@ const Contracts = () => {
       }
       await setData(tmp);
     } catch (e) {
-      message.error("Server Error!", 5);
+      message.error(TRANSACTION_ERROR, 5);
       console.log(e);
       setLoading(false);
     }
