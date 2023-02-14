@@ -79,11 +79,12 @@ const Materials = () => {
       for (let i = 0; i < pro_count; i++) {
         let pro_pub_number = await ProvContract.product_list(i);
         let material = await ProvContract.products(pro_pub_number);
-        tmp.push({
-          material: material.name,
-          pub_number: pro_pub_number,
-          producer: material.producer_address,
-        });
+        if (material.producer_address === account)
+          tmp.push({
+            material: material.name,
+            pub_number: pro_pub_number,
+            producer: material.producer_address,
+          });
       }
       await setData(tmp);
     } catch (e) {

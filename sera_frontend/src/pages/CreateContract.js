@@ -122,11 +122,12 @@ const CreateContract = () => {
       for (let i = 0; i < product_count; i++) {
         let pro_pub_number = await ProvContract.product_list(i);
         let mat = await ProvContract.products(pro_pub_number);
-        tmp1.push({
-          key: mat.pub_number,
-          label: mat.pub_number,
-          value: mat.name,
-        });
+        if (mat.producer_address === account)
+          tmp1.push({
+            key: mat.pub_number,
+            label: mat.pub_number,
+            value: mat.name,
+          });
       }
       await setMaterialOp(tmp1);
       let pro_count = await ProvContract.producer_count();
