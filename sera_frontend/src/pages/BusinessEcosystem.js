@@ -10,16 +10,15 @@ import {
   Pagination,
   Modal,
   Tag,
-  Select,
   message,
   Spin,
   Rate,
+  Form,
 } from "antd";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import provenanceAbi from "../abis/provenanceAbi";
 import trackAbi from "../abis/trackingAbi.json";
-import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import "./page.css";
 import { SERVER_ERROR, TRANSACTION_ERROR } from "../utils/messages";
@@ -30,14 +29,11 @@ const { Search } = Input;
 const BusinessEcosystem = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buspartner, setBusPartner] = useState("");
-  const [orgOp, setOrgOp] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isWalletIntalled, setIsWalletInstalled] = useState(false);
   const [search_text, setSearchText] = useState("");
   const [provider, setProvider] = useState();
   const [data, setData] = useState([]);
-  const dispatch = useDispatch();
-  const { buspartners } = useSelector((state) => state.busPartnerList);
   const { chainId, active, account } = useWeb3React();
   const validNetwork =
     chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
@@ -49,6 +45,17 @@ const BusinessEcosystem = () => {
     } else {
       return val / 10;
     }
+  };
+
+  const validateMessages = {
+    required: "${label} is required!",
+    types: {
+      email: "${label} is not a valid email!",
+      number: "${label} is not a valid number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
   };
 
   const columns = [
@@ -174,8 +181,7 @@ const BusinessEcosystem = () => {
         const res = await axios.get(
           `${process.env.REACT_APP_IP_ADDRESS}/v1/getlist`
         );
-        let tmp = [],
-          tmp1 = [];
+        let tmp = [];
 
         let TrackContract = new ethers.Contract(
           process.env.REACT_APP_TRACKING_CONTRACT_ADDRESS,
@@ -188,10 +194,6 @@ const BusinessEcosystem = () => {
               item.Wallet_address
             );
             tmp.push({
-              label: item.Wallet_address,
-              value: item.Wallet_address,
-            });
-            tmp1.push({
               t_name: item.Trade_name,
               l_name: item.Legal_name,
               country: item.Country,
@@ -205,8 +207,7 @@ const BusinessEcosystem = () => {
             });
           }
         }
-        setOrgOp(tmp);
-        setData(tmp1);
+        setData(tmp);
         // tmp = [];
         // const res1 = await axios.post(
         //   `${process.env.REACT_APP_IP_ADDRESS}/v1/getpartner`,
@@ -288,18 +289,31 @@ const BusinessEcosystem = () => {
         <Modal
           title={<Title level={4}>Add Business Partner</Title>}
           open={isModalOpen}
+          okText="Send invitation"
           onOk={handleOk}
           onCancel={handleCancel}
         >
-          <Select
-            className="width-100 margin-top-20"
-            value={buspartner}
-            placeholder="Organization Wallet Address"
-            onChange={(value) => {
-              setBusPartner(value);
-            }}
-            options={orgOp}
-          />
+          <Form validateMessages={validateMessages}>
+            <Form.Item
+              name={["Email"]}
+              rules={[
+                {
+                  type: "email",
+                },
+              ]}
+              style={{ marginBottom: "0px" }}
+            >
+              <Input
+                className="margin-top-20"
+                placeholder="Business Partner"
+                value={buspartner}
+                onChange={(e) => {
+                  setBusPartner(e.target.value);
+                }}
+                maxLength={42}
+              />
+            </Form.Item>
+          </Form>
         </Modal>
       </Spin>
     </>
