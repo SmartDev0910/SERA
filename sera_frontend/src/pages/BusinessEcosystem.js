@@ -150,14 +150,14 @@ const BusinessEcosystem = () => {
       );
 
       if (res.data.status_code === 200) {
-        let tmp = [
-          ...data,
-          {
-            w_address: buspartner,
-            status: <Tag color="magenta">Active</Tag>,
-          },
-        ];
-        setData(tmp);
+        // let tmp = [
+        //   ...data,
+        //   {
+        //     w_address: buspartner,
+        //     status: <Tag color="magenta">Active</Tag>,
+        //   },
+        // ];
+        // setData(tmp);
       }
       message.success(res.data.msg, 5);
     } catch (e) {
