@@ -86,11 +86,12 @@ const AuthParties = () => {
     for (let i = 0; i < pro_count; i++) {
       let pro_address = await ProvContract.producer_list(i);
       let org = await ProvContract.producers(pro_address);
-      tmp.push({
-        organization: org.name,
-        org_type: org.producer_type,
-        org_wallet_address: pro_address,
-      });
+      if (org.autherized_by === account)
+        tmp.push({
+          organization: org.name,
+          org_type: org.producer_type,
+          org_wallet_address: pro_address,
+        });
     }
 
     await setData(tmp);
