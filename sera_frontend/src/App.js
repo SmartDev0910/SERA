@@ -73,11 +73,7 @@ const App = () => {
       type: "divider",
     },
     {
-      label: (
-        <a href="" onClick={() => disConnect(injected)}>
-          Disconnect
-        </a>
-      ),
+      label: <span onClick={() => disConnect(injected)}>Disconnect</span>,
       key: "2",
     },
     {
