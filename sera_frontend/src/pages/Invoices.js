@@ -81,8 +81,7 @@ const Invoices = () => {
             invoice_id: i,
             bus_partner: (
               <>
-                {" "}
-                {bus_partner.name} <br /> {contract.recipient}
+                {bus_partner.trade_name} <br /> {contract.recipient}
               </>
             ),
             sender: contract.sender,

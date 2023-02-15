@@ -130,15 +130,15 @@ const CreateContract = () => {
           });
       }
       await setMaterialOp(tmp1);
-      let pro_count = await ProvContract.producer_count();
-      for (let i = 0; i < pro_count; i++) {
-        let pro_address = await ProvContract.producer_list(i);
-        if (pro_address !== account) {
-          let producer = await ProvContract.producers(pro_address);
+      let prov_count = await ProvContract.producer_count();
+      for (let i = 0; i < prov_count; i++) {
+        let prov_address = await ProvContract.producer_list(i);
+        if (prov_address !== account) {
+          let producer = await ProvContract.producers(prov_address);
           tmp.push({
-            key: pro_address,
+            key: prov_address,
             label: producer.name,
-            value: pro_address,
+            value: prov_address,
           });
         }
       }

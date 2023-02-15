@@ -63,6 +63,11 @@
             "name": "producer_type",
             "type": "string"
           },
+          {
+            "internalType": "address",
+            "name": "autherized_by",
+            "type": "address"
+          },
           { "internalType": "bool", "name": "certification", "type": "bool" },
           {
             "internalType": "enum Provenance.ActionStatus",
@@ -138,6 +143,7 @@
     "outputs": [
       { "internalType": "string", "name": "name", "type": "string" },
       { "internalType": "string", "name": "producer_type", "type": "string" },
+      { "internalType": "address", "name": "autherized_by", "type": "address" },
       { "internalType": "bool", "name": "certification", "type": "bool" },
       {
         "internalType": "enum Provenance.ActionStatus",

@@ -46,7 +46,7 @@ func serveApplication() {
     publicRoutes.GET("/getlist", controllers.GetListUser)
     publicRoutes.POST("/signup", controllers.SignUpUser)
     publicRoutes.POST("/signin", controllers.SignInUser)
-    publicRoutes.POST("/getUser", controllers.GetUser)
+    publicRoutes.POST("/getuser", controllers.GetUser)
     publicRoutes.POST("/addpartner", controllers.AddPartner)
     publicRoutes.POST("/getpartner", controllers.GetPartner)
 
