@@ -58,15 +58,19 @@ const App = () => {
 
   const items = [
     {
-      label: company,
+      label: "Your Profile",
       key: "0",
     },
     {
       type: "divider",
     },
     {
-      label: balance + " BNB",
+      label: company,
       key: "1",
+    },
+    {
+      label: balance.substring(0, 5) + " BNB",
+      key: "2",
     },
 
     {
@@ -74,11 +78,11 @@ const App = () => {
     },
     {
       label: <span onClick={() => disConnect(injected)}>Disconnect</span>,
-      key: "2",
+      key: "3",
     },
     {
       label: <a href="/">Sign Out</a>,
-      key: "3",
+      key: "4",
     },
   ];
 
