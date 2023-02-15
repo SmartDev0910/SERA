@@ -6,13 +6,17 @@ import {
   Layout,
   Avatar,
   Row,
+  Col,
+  Input,
+  Divider,
+  Modal,
   Button,
   notification,
   Drawer,
   Dropdown,
   message,
 } from "antd";
-import { MenuOutlined, DownOutlined } from "@ant-design/icons";
+import { MenuOutlined, DownOutlined, EditOutlined } from "@ant-design/icons";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "./utils/connector";
 import { ethers } from "ethers";
@@ -44,6 +48,8 @@ const logoTitleStyle = {
 
 const App = () => {
   const { chainId, active, activate, deactivate, account } = useWeb3React();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isEdited, setEdited] = useState(true);
   const [visible, setVisible] = useState(false);
   const [balance, setBalance] = useState(0);
   const [company, setCompany] = useState("");
@@ -56,9 +62,11 @@ const App = () => {
     deactivate(injected);
   }
 
+  const handleOk = () => {};
+
   const items = [
     {
-      label: "Your Profile",
+      label: <span onClick={() => setModalOpen(true)}>Your Profile</span>,
       key: "0",
     },
     {
@@ -69,7 +77,7 @@ const App = () => {
       key: "1",
     },
     {
-      label: balance.substring(0, 5) + " BNB",
+      label: balance.toString().substring(0, 5) + " BNB",
       key: "2",
     },
 
@@ -185,6 +193,57 @@ const App = () => {
           <Router />
         </Content>
       </Layout>
+      <Modal
+        title={
+          <span className="Modal-title">
+            Profile{" "}
+            <Button
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => setEdited(!isEdited)}
+            />
+          </span>
+        }
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={() => setModalOpen(false)}
+        width={800}
+        style={{
+          top: "20%",
+        }}
+      >
+        <Divider />
+        <Row className="width-100" gutter={15}>
+          <Col span="12">
+            <Input placeholder="Email" disabled={isEdited} />
+          </Col>
+          <Col span="12">
+            <Input placeholder="Trade Name" disabled={isEdited} />
+          </Col>
+        </Row>
+        <Row className="width-100 margin-top-20" gutter={15}>
+          <Col span="12">
+            <Input placeholder="Legal Name" disabled={isEdited} />
+          </Col>
+          <Col span="12">
+            <Input placeholder="Country" disabled={isEdited} />
+          </Col>
+        </Row>
+        <Row className="width-100 margin-top-20" gutter={15}>
+          <Col span="12">
+            <Input placeholder="State/town" disabled={isEdited} />
+          </Col>
+          <Col span="12">
+            <Input placeholder="Building Number" disabled={isEdited} />
+          </Col>
+        </Row>
+        <Row className="width-100 margin-top-20" gutter={15}>
+          <Col span="12">
+            <Input placeholder="Phone Number" disabled={isEdited} />
+          </Col>
+        </Row>
+        <Divider />
+      </Modal>
     </BrowserRouter>
   );
 };
