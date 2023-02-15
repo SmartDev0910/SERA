@@ -28,7 +28,8 @@ const { Search } = Input;
 
 const BusinessEcosystem = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [buspartner, setBusPartner] = useState("");
+  const [from_email, setFromEmail] = useState("");
+  const [to_email, setToEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isWalletIntalled, setIsWalletInstalled] = useState(false);
@@ -145,8 +146,8 @@ const BusinessEcosystem = () => {
       const res = await axios.post(
         `${process.env.REACT_APP_IP_ADDRESS}/v1/sendmail`,
         {
-          from: account,
-          to: buspartner,
+          from: from_email,
+          to: to_email,
           password: password,
         }
       );
@@ -289,7 +290,7 @@ const BusinessEcosystem = () => {
         >
           <Form validateMessages={validateMessages}>
             <Form.Item
-              name={"Email"}
+              name={"Email_To"}
               rules={[
                 {
                   type: "email",
@@ -300,9 +301,29 @@ const BusinessEcosystem = () => {
               <Input
                 className="margin-top-20"
                 placeholder="Business Partner"
-                value={buspartner}
+                value={to_email}
                 onChange={(e) => {
-                  setBusPartner(e.target.value);
+                  setToEmail(e.target.value);
+                }}
+                maxLength={42}
+              />
+            </Form.Item>
+            <Divider orientation="left"> Your email </Divider>
+            <Form.Item
+              name={"Email_From"}
+              rules={[
+                {
+                  type: "email",
+                },
+              ]}
+              style={{ marginBottom: "0px" }}
+            >
+              <Input
+                className="margin-top-20"
+                placeholder="Email"
+                value={from_email}
+                onChange={(e) => {
+                  setFromEmail(e.target.value);
                 }}
                 maxLength={42}
               />
