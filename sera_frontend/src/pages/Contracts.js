@@ -155,12 +155,12 @@ const Contracts = () => {
             buyer: (
               <>
                 {" "}
-                {buyer.name} <br /> {contract.recipient}
+                {buyer.trade_name} <br /> {contract.recipient}
               </>
             ),
             supplier: (
               <>
-                {supplier.name} <br /> {contract.sender}
+                {supplier.trade_name} <br /> {contract.sender}
               </>
             ),
             delivery_term: (

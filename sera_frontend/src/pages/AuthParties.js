@@ -49,18 +49,50 @@ const AuthParties = () => {
 
   const columns = [
     {
-      title: "Party",
-      dataIndex: "party",
+      title: "Trade Name",
+      dataIndex: "trade_name",
       sorter: {
-        compare: (a, b) => a.party - b.party,
+        compare: (a, b) => a.trade_name - b.trade_name,
         multiple: 1,
       },
     },
     {
-      title: "Party Wallet Address",
-      dataIndex: "org_wallet_address",
+      title: "Email",
+      dataIndex: "email",
       sorter: {
-        compare: (a, b) => a.org_wallet_address - b.org_wallet_address,
+        compare: (a, b) => a.email - b.email,
+        multiple: 1,
+      },
+    },
+    {
+      title: "Country",
+      dataIndex: "country",
+      sorter: {
+        compare: (a, b) => a.country - b.country,
+        multiple: 1,
+      },
+    },
+    {
+      title: "State/town",
+      dataIndex: "state_town",
+      sorter: {
+        compare: (a, b) => a.state_town - b.state_town,
+        multiple: 1,
+      },
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phone_number",
+      sorter: {
+        compare: (a, b) => a.phone_number - b.phone_number,
+        multiple: 1,
+      },
+    },
+    {
+      title: "Wallet Address",
+      dataIndex: "wallet_address",
+      sorter: {
+        compare: (a, b) => a.wallet_address - b.wallet_address,
         multiple: 3,
       },
     },
@@ -79,13 +111,15 @@ const AuthParties = () => {
     let pro_count = await ProvContract.producer_count();
 
     for (let i = 0; i < pro_count; i++) {
-      let pro_address = await ProvContract.producer_list(i);
-      let producer = await ProvContract.producers(pro_address);
-      if (producer.autherized_by === account)
-        tmp.push({
-          party: producer.name,
-          org_wallet_address: pro_address,
-        });
+      let prov_address = await ProvContract.producer_list(i);
+      let producer = await ProvContract.producers(prov_address);
+      tmp.push({
+        trade_name: producer.trade_name,
+        email: producer.email,
+        country: producer.country,
+        state_town: producer.state_town,
+        wallet_address: prov_address,
+      });
     }
 
     await setData(tmp);
@@ -239,7 +273,7 @@ const AuthParties = () => {
         <Divider />
         <Row justify="space-between">
           <Button className="black-button" onClick={showModal}>
-            Add Party
+            Add Partner
           </Button>
           <Search
             placeholder="Search Party"
