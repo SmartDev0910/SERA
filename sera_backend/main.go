@@ -49,6 +49,7 @@ func serveApplication() {
     publicRoutes.POST("/getuser", controllers.GetUser)
     publicRoutes.POST("/addpartner", controllers.AddPartner)
     publicRoutes.POST("/getpartner", controllers.GetPartner)
+    publicRoutes.POST("/sendmail", controllers.SendMail)
 
     fmt.Println("Server running on port 8000")
     
