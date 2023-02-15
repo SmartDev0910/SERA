@@ -154,7 +154,6 @@ const Contracts = () => {
             contract_id: i,
             buyer: (
               <>
-                {" "}
                 {buyer.trade_name} <br /> {contract.recipient}
               </>
             ),
