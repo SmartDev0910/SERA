@@ -128,7 +128,7 @@ const App = () => {
       async function FetchData() {
         try {
           const res = await axios.post(
-            `${process.env.REACT_APP_IP_ADDRESS}/v1/getUser`,
+            `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
             {
               Wallet_address: account,
             }

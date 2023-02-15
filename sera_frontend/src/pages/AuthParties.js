@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { ethers } from "ethers";
+import { useWeb3React } from "@web3-react/core";
 import {
   Row,
   Button,
@@ -10,16 +13,12 @@ import {
   Select,
   Spin,
   Input,
-  Rate,
+  Descriptions,
   message,
 } from "antd";
 import provAbi from "../abis/provenanceAbi.json";
-import { ethers } from "ethers";
-import { useWeb3React } from "@web3-react/core";
-import axios from "axios";
-
 import "./page.css";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
+
 import { SERVER_ERROR, TRANSACTION_ERROR } from "../utils/messages";
 
 const { Title } = Typography;
@@ -32,13 +31,17 @@ const AuthParties = () => {
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
   const [search_text, setSearchText] = useState("");
-  const [provider, setProvider] = useState();
   const [data, setData] = useState([]);
   const [state, setState] = useState({
-    organization: "",
-    org_type: "",
-    org_wallet_address: "",
+    email: "",
+    trade_name: "",
+    legal_name: "",
+    country: "",
+    state_town: "",
+    building_number: "",
+    phone_number: "",
   });
+  const [wallet_address, setWalletAddress] = useState("");
   const { chainId, active, account } = useWeb3React();
   let ProvContract = null;
   const validNetwork =
@@ -46,23 +49,15 @@ const AuthParties = () => {
 
   const columns = [
     {
-      title: "Organization",
-      dataIndex: "organization",
+      title: "Party",
+      dataIndex: "party",
       sorter: {
-        compare: (a, b) => a.organization - b.organization,
+        compare: (a, b) => a.party - b.party,
         multiple: 1,
       },
     },
     {
-      title: "Organization Type",
-      dataIndex: "org_type",
-      sorter: {
-        compare: (a, b) => a.org_type - b.org_type,
-        multiple: 2,
-      },
-    },
-    {
-      title: "Organization Wallet Address",
+      title: "Party Wallet Address",
       dataIndex: "org_wallet_address",
       sorter: {
         compare: (a, b) => a.org_wallet_address - b.org_wallet_address,
@@ -85,11 +80,10 @@ const AuthParties = () => {
 
     for (let i = 0; i < pro_count; i++) {
       let pro_address = await ProvContract.producer_list(i);
-      let org = await ProvContract.producers(pro_address);
-      if (org.autherized_by === account)
+      let producer = await ProvContract.producers(pro_address);
+      if (producer.autherized_by === account)
         tmp.push({
-          organization: org.name,
-          org_type: org.producer_type,
+          party: producer.name,
           org_wallet_address: pro_address,
         });
     }
@@ -115,8 +109,16 @@ const AuthParties = () => {
       provAbi,
       myProvider.getSigner()
     );
-    let { organization, org_type, org_wallet_address } = state;
-    await ProvContract.addProducer(org_wallet_address, organization, org_type)
+    await ProvContract.addProducer(
+      wallet_address,
+      state.email,
+      state.trade_name,
+      state.legal_name,
+      state.country,
+      state.state_town,
+      state.building_number,
+      state.phone_number
+    )
       .then((tx) => {
         return tx.wait().then(
           async (receipt) => {
@@ -146,13 +148,41 @@ const AuthParties = () => {
     setIsModalOpen(false);
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setState((prevProps) => ({
-      ...prevProps,
-      [name]: value,
-    }));
-  };
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+          {
+            Wallet_address: wallet_address,
+          }
+        );
+        if (res.data.status_code === 200) {
+          let {
+            Email,
+            Trade_name,
+            Legal_name,
+            Country,
+            State_town,
+            Building_number,
+            Phone_number,
+          } = res.data.data;
+          setState({
+            email: Email,
+            trade_name: Trade_name,
+            legal_name: Legal_name,
+            country: Country,
+            state_town: State_town,
+            building_number: Building_number,
+            phone_number: Phone_number,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    fetchData();
+  }, [wallet_address]);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -186,8 +216,6 @@ const AuthParties = () => {
     async function fetchData() {
       if (validNetwork && active && window.ethereum) {
         const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-        setProvider(myProvider);
-        const balanceETH = myProvider.getBalance(account);
         function getProvContract() {
           ProvContract = new ethers.Contract(
             process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
@@ -211,10 +239,10 @@ const AuthParties = () => {
         <Divider />
         <Row justify="space-between">
           <Button className="black-button" onClick={showModal}>
-            Add Organization
+            Add Party
           </Button>
           <Search
-            placeholder="Search Organization"
+            placeholder="Search Party"
             className="search-input"
             onSearch={onSearch}
           />
@@ -223,12 +251,7 @@ const AuthParties = () => {
           className="margin-top-20"
           columns={columns}
           scroll={{ x: true }}
-          dataSource={
-            data &&
-            (search_text === ""
-              ? data
-              : data.filter((i) => i.organization.includes(search_text)))
-          }
+          dataSource={data}
           onChange={onChange}
           pagination={false}
         />
@@ -242,58 +265,48 @@ const AuthParties = () => {
           className="margin-top-20"
         /> */}
         <Modal
-          title={<Title level={4}>Add Organization</Title>}
+          title={<Title level={4}>Add Party</Title>}
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
+          okText="Add party"
+          width={800}
         >
           <Spin spinning={loading1} tip="Loading...">
-            <Input
-              className="margin-top-20"
-              placeholder="Organization"
-              name="organization"
-              value={state.organization}
-              onChange={handleInputChange}
-              maxLength={42}
-            />
+            <Divider orientation="center">
+              Authorized party's wallet address
+            </Divider>
             <Select
-              className="org-select"
-              name="org_type"
-              value={state.org_type}
+              className="producer-select"
+              value={wallet_address}
               onChange={(value) => {
-                setState((prevProps) => ({
-                  ...prevProps,
-                  org_type: value,
-                }));
+                setWalletAddress(value);
               }}
-              placeholder="Organization Type"
-              options={[
-                {
-                  value: "subsidiary",
-                  label: "Subsidiary",
-                },
-                {
-                  value: "Authorized Organization",
-                  label: "Authorized Organization",
-                },
-              ]}
-            />
-            <Row className="margin-top-20">
-              <Title level={4}>Organization Wallet Address</Title>
-            </Row>
-            <Select
-              className="org-select"
-              name="org_wallet_address"
-              value={state.org_wallet_address}
-              onChange={(value) => {
-                setState((prevProps) => ({
-                  ...prevProps,
-                  org_wallet_address: value,
-                }));
-              }}
-              placeholder="Organization Wallet Address"
+              placeholder="Party Wallet Address"
               options={busPartnerOp}
             />
+            <Divider />
+            <Descriptions title="Party Info">
+              <Descriptions.Item label="Email">{state.email}</Descriptions.Item>
+              <Descriptions.Item label="Trade Name">
+                {state.trade_name}
+              </Descriptions.Item>
+              <Descriptions.Item label="Legal Name">
+                {state.legal_name}
+              </Descriptions.Item>
+              <Descriptions.Item label="Country">
+                {state.country}
+              </Descriptions.Item>
+              <Descriptions.Item label="State/town">
+                {state.state_town}
+              </Descriptions.Item>
+              <Descriptions.Item label="Building Number">
+                {state.building_number}
+              </Descriptions.Item>
+              <Descriptions.Item label="Phone Number">
+                {state.phone_number}
+              </Descriptions.Item>
+            </Descriptions>
           </Spin>
         </Modal>
       </Spin>
