@@ -210,7 +210,7 @@ const AuthParties = () => {
     fetchData();
 
     updateOrganizations();
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     async function fetchData() {
