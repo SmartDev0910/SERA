@@ -29,6 +29,7 @@ const { Search } = Input;
 const BusinessEcosystem = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buspartner, setBusPartner] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isWalletIntalled, setIsWalletInstalled] = useState(false);
   const [search_text, setSearchText] = useState("");
@@ -142,24 +143,17 @@ const BusinessEcosystem = () => {
   const handleOk = async () => {
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_IP_ADDRESS}/v1/addpartner`,
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/sendmail`,
         {
-          wallet_address1: account,
-          wallet_address2: buspartner,
+          from: account,
+          to: buspartner,
+          password: password,
         }
       );
 
       if (res.data.status_code === 200) {
-        // let tmp = [
-        //   ...data,
-        //   {
-        //     w_address: buspartner,
-        //     status: <Tag color="magenta">Active</Tag>,
-        //   },
-        // ];
-        // setData(tmp);
+        message.success(res.data.msg, 5);
       }
-      message.success(res.data.msg, 5);
     } catch (e) {
       message.error(SERVER_ERROR, 5);
       console.log(e);
@@ -295,7 +289,7 @@ const BusinessEcosystem = () => {
         >
           <Form validateMessages={validateMessages}>
             <Form.Item
-              name={["Email"]}
+              name={"Email"}
               rules={[
                 {
                   type: "email",
@@ -311,6 +305,23 @@ const BusinessEcosystem = () => {
                   setBusPartner(e.target.value);
                 }}
                 maxLength={42}
+              />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password!",
+                },
+              ]}
+            >
+              <Input.Password
+                className="margin-top-20"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
               />
             </Form.Item>
           </Form>
