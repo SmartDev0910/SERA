@@ -1,41 +1,6 @@
 [
   { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "to", "type": "address" },
-      { "internalType": "string", "name": "email", "type": "string" },
-      { "internalType": "string", "name": "trade_name", "type": "string" },
-      { "internalType": "string", "name": "legal_name", "type": "string" },
-      { "internalType": "string", "name": "country", "type": "string" },
-      { "internalType": "string", "name": "state_town", "type": "string" },
-      { "internalType": "string", "name": "building_number", "type": "string" },
-      { "internalType": "string", "name": "phone_number", "type": "string" }
-    ],
-    "name": "addProducer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       { "internalType": "string", "name": "pub_number", "type": "string" },
       { "internalType": "string", "name": "name", "type": "string" }
@@ -63,96 +28,9 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "recipient", "type": "address" }
-    ],
-    "name": "certifyProducer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "recipient", "type": "address" }
-    ],
-    "name": "findProducer",
-    "outputs": [
-      {
-        "components": [
-          { "internalType": "string", "name": "email", "type": "string" },
-          { "internalType": "string", "name": "trade_name", "type": "string" },
-          { "internalType": "string", "name": "legal_name", "type": "string" },
-          { "internalType": "string", "name": "country", "type": "string" },
-          { "internalType": "string", "name": "state_town", "type": "string" },
-          {
-            "internalType": "string",
-            "name": "building_number",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "phone_number",
-            "type": "string"
-          },
-          { "internalType": "bool", "name": "certification", "type": "bool" },
-          {
-            "internalType": "enum Provenance.ActionStatus",
-            "name": "action_status",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct Provenance.Producer",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "string", "name": "pub_number", "type": "string" }
-    ],
-    "name": "findProduct",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "producer_address",
-            "type": "address"
-          },
-          { "internalType": "string", "name": "name", "type": "string" },
-          {
-            "internalType": "uint256",
-            "name": "date_time_of_origin",
-            "type": "uint256"
-          },
-          {
-            "internalType": "enum Provenance.ActionStatus",
-            "name": "action_status",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct Provenance.Product",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "is_producer",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -167,27 +45,6 @@
     "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "producer_list",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "producers",
-    "outputs": [
-      { "internalType": "string", "name": "email", "type": "string" },
-      { "internalType": "string", "name": "trade_name", "type": "string" },
-      { "internalType": "string", "name": "legal_name", "type": "string" },
-      { "internalType": "string", "name": "country", "type": "string" },
-      { "internalType": "string", "name": "state_town", "type": "string" },
-      { "internalType": "string", "name": "building_number", "type": "string" },
-      { "internalType": "string", "name": "phone_number", "type": "string" },
-      { "internalType": "bool", "name": "certification", "type": "bool" },
-      {
-        "internalType": "enum Provenance.ActionStatus",
-        "name": "action_status",
-        "type": "uint8"
-      }
-    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -227,40 +84,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "recipient", "type": "address" }
-    ],
-    "name": "removeProducer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "string", "name": "pub_number", "type": "string" }
-    ],
-    "name": "removeProduct",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]
