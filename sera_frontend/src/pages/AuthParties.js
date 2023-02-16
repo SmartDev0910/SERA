@@ -108,19 +108,25 @@ const AuthParties = () => {
     );
 
     let tmp = [];
-    let pro_count = await ProvContract.producer_count();
-
-    for (let i = 0; i < pro_count; i++) {
-      let prov_address = await ProvContract.producer_list(i);
-      let producer = await ProvContract.producers(prov_address);
-      tmp.push({
-        trade_name: producer.trade_name,
-        email: producer.email,
-        country: producer.country,
-        state_town: producer.state_town,
-        wallet_address: prov_address,
-      });
-    }
+    let producer_count = await ProvContract.producer_count();
+    if (producer_count > 0)
+      for (let i = 1; i <= producer_count; i++) {
+        let producer_address = await ProvContract.producer_list(i);
+        let is_auth_producer = await ProvContract.auth_producer(
+          account,
+          producer_address
+        );
+        if (is_auth_producer) {
+          let producer = await ProvContract.producers(producer_address);
+          tmp.push({
+            trade_name: producer.trade_name,
+            email: producer.email,
+            country: producer.country,
+            state_town: producer.state_town,
+            wallet_address: producer_address,
+          });
+        }
+      }
 
     await setData(tmp);
     setLoading(false);
@@ -143,6 +149,68 @@ const AuthParties = () => {
       provAbi,
       myProvider.getSigner()
     );
+    let is_producer = await ProvContract.is_producer(account);
+    if (!is_producer) {
+      const res = await axios.post(
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+        {
+          Wallet_address: account,
+        }
+      );
+      if (res.data.status_code === 200) {
+        let {
+          Email,
+          Trade_name,
+          Legal_name,
+          Country,
+          State_town,
+          Building_number,
+          Phone_number,
+        } = res.data.data;
+        await ProvContract.addProducer(
+          account,
+          Email,
+          Trade_name,
+          Legal_name,
+          Country,
+          State_town,
+          Building_number,
+          Phone_number
+        )
+          .then((tx) => {
+            return tx.wait().then(
+              async (receipt) => {
+                console.log(receipt);
+              },
+              (error) => {
+                message.error(TRANSACTION_ERROR, 5);
+                console.log(error);
+              }
+            );
+          })
+          .catch((error) => {
+            message.error(TRANSACTION_ERROR, 5);
+            console.log(error);
+          });
+      }
+    }
+    await ProvContract.authProducer(wallet_address)
+      .then((tx) => {
+        return tx.wait().then(
+          async (receipt) => {
+            console.log(receipt);
+          },
+          (error) => {
+            message.error(TRANSACTION_ERROR, 5);
+            console.log(error);
+          }
+        );
+      })
+      .catch((error) => {
+        message.error(TRANSACTION_ERROR, 5);
+        console.log(error);
+      });
+
     await ProvContract.addProducer(
       wallet_address,
       state.email,
