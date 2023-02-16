@@ -202,46 +202,46 @@ const AuthParties = () => {
           });
       }
     }
+
+    is_producer = await ProvContract.is_producer(wallet_address);
+    if (!is_producer)
+      await ProvContract.addProducer(
+        wallet_address,
+        state.email,
+        state.trade_name,
+        state.legal_name,
+        state.country,
+        state.state_town,
+        state.building_number,
+        state.phone_number
+      )
+        .then((tx) => {
+          return tx.wait().then(
+            async (receipt) => {
+              console.log(receipt);
+            },
+            (error) => {
+              message.error(TRANSACTION_ERROR, 5);
+              console.log(error);
+            }
+          );
+        })
+        .catch((error) => {
+          message.error(TRANSACTION_ERROR, 5);
+          console.log(error);
+        });
+
     await ProvContract.authProducer(wallet_address)
       .then((tx) => {
         return tx.wait().then(
           async (receipt) => {
-            console.log(receipt);
-          },
-          (error) => {
-            message.error(TRANSACTION_ERROR, 5);
-            console.log(error);
-          }
-        );
-      })
-      .catch((error) => {
-        message.error(TRANSACTION_ERROR, 5);
-        console.log(error);
-      });
-
-    await ProvContract.addProducer(
-      wallet_address,
-      state.email,
-      state.trade_name,
-      state.legal_name,
-      state.country,
-      state.state_town,
-      state.building_number,
-      state.phone_number
-    )
-      .then((tx) => {
-        return tx.wait().then(
-          async (receipt) => {
-            // This is entered if the transaction receipt indicates success
-            message.success("Added new producer successfully.", 5);
+            message.success("Added to authorized party successfully.", 5);
             setLoading1(false);
             updateOrganizations();
-            return true;
           },
           (error) => {
             message.error(TRANSACTION_ERROR, 5);
             console.log(error);
-            setLoading1(false);
           }
         );
       })
@@ -349,7 +349,7 @@ const AuthParties = () => {
         <Divider />
         <Row justify="space-between">
           <Button className="black-button" onClick={showModal}>
-            Add Partner
+            Add Party
           </Button>
           <Search
             placeholder="Search Party"
