@@ -166,7 +166,6 @@ const AuthParties = () => {
               message.success("Added to authorized party successfully.", 5);
               setLoading1(false);
               updateOrganizations();
-              return true;
             },
             (error) => {
               message.error(TRANSACTION_ERROR, 5);
