@@ -3,12 +3,12 @@ import { Layout, Row, Tabs, Button, Input, message, Form } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../utils/connector";
-import { useDispatch } from "react-redux";
-import { ADD_PRODUCER } from "../utils/constants";
+import { ethers } from "ethers";
 import axios from "axios";
 import "./page.css";
 import logo from "./logo.jpg";
-import { SERVER_ERROR } from "../utils/messages";
+import provAbi from "../abis/provenanceAbi.json";
+import { TRANSACTION_ERROR } from "../utils/messages";
 
 const Login = () => {
   const [activeKey, setActiveKey] = useState("tab_signin");
@@ -26,7 +26,6 @@ const Login = () => {
   });
   const { chainId, active, activate, deactivate, account } = useWeb3React();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   async function connect(injected) {
     activate(injected);
@@ -116,15 +115,46 @@ const Login = () => {
             wallet_address: account,
           }
         );
-        message.success("Sign Up successfully.");
+        if (res.data.status_code === 200) {
+          const myProvider = new ethers.providers.Web3Provider(window.ethereum);
+          let ProvContract = new ethers.Contract(
+            process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
+            provAbi,
+            myProvider.getSigner()
+          );
+
+          let is_producer = await ProvContract.is_producer(account);
+          if (!is_producer)
+            await ProvContract.addProducer(
+              account,
+              state.email,
+              state.trade_name,
+              state.legal_name,
+              state.country,
+              state.state_town,
+              state.building_number,
+              state.phone_number
+            )
+              .then((tx) => {
+                return tx.wait().then(
+                  async (receipt) => {
+                    message.success("Sign Up successfully.");
+                  },
+                  (error) => {
+                    message.error(TRANSACTION_ERROR, 5);
+                    console.log(error);
+                  }
+                );
+              })
+              .catch((error) => {
+                message.error(TRANSACTION_ERROR, 5);
+                console.log(error);
+              });
+        }
       } catch (e) {
         message.error(e.response.data.msg);
         console.log(e);
       }
-      dispatch({
-        type: ADD_PRODUCER,
-        payload: state,
-      });
 
       setActiveKey("tab_signin");
     }
