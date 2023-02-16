@@ -95,6 +95,7 @@ const App = () => {
       );
       if (res.data.status_code === 200) {
         message.success("Profile is updated Successfully.");
+        setEdited(true);
       }
     } catch (e) {
       message.error(SERVER_ERROR, 5);
