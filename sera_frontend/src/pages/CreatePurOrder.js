@@ -188,7 +188,7 @@ const CreateContract = () => {
               </Text>
             </Row>
             <Select
-              className="org-select"
+              className="producer-select"
               placeholder="Contract ID"
               name="contract_id"
               value={contract_id}
