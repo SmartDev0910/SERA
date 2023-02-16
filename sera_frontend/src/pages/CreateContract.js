@@ -130,18 +130,32 @@ const CreateContract = () => {
           });
       }
       await setMaterialOp(tmp1);
-      let prov_count = await ProvContract.producer_count();
-      for (let i = 0; i < prov_count; i++) {
-        let prov_address = await ProvContract.producer_list(i);
-        if (prov_address !== account) {
-          let producer = await ProvContract.producers(prov_address);
-          tmp.push({
-            key: prov_address,
-            label: producer.name,
-            value: prov_address,
-          });
+
+      let producer_count = await ProvContract.producer_count();
+      if (producer_count > 0)
+        for (let i = 1; i <= producer_count; i++) {
+          let producer_address = await ProvContract.producer_list(i);
+          let is_auth_producer = false;
+          if (producer_address > account)
+            is_auth_producer = await ProvContract.auth_producer(
+              producer_address,
+              account
+            );
+          else
+            is_auth_producer = await ProvContract.auth_producer(
+              account,
+              producer_address
+            );
+          if (is_auth_producer) {
+            let producer = await ProvContract.producers(producer_address);
+            tmp.push({
+              key: producer_address,
+              label: producer.trade_name,
+              value: producer_address,
+            });
+          }
         }
-      }
+
       await setOrgOp(tmp);
     }
     fetchData();

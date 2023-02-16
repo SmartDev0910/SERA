@@ -158,67 +158,15 @@ const AuthParties = () => {
       myProvider.getSigner()
     );
     let is_producer = await ProvContract.is_producer(account);
-    if (!is_producer) {
-      const res = await axios.post(
-        `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
-        {
-          Wallet_address: account,
-        }
-      );
-      if (res.data.status_code === 200) {
-        let {
-          Email,
-          Trade_name,
-          Legal_name,
-          Country,
-          State_town,
-          Building_number,
-          Phone_number,
-        } = res.data.data;
-        await ProvContract.addProducer(
-          account,
-          Email,
-          Trade_name,
-          Legal_name,
-          Country,
-          State_town,
-          Building_number,
-          Phone_number
-        )
-          .then((tx) => {
-            return tx.wait().then(
-              async (receipt) => {
-                console.log(receipt);
-              },
-              (error) => {
-                message.error(TRANSACTION_ERROR, 5);
-                console.log(error);
-              }
-            );
-          })
-          .catch((error) => {
-            message.error(TRANSACTION_ERROR, 5);
-            console.log(error);
-          });
-      }
-    }
-
-    is_producer = await ProvContract.is_producer(wallet_address);
-    if (!is_producer)
-      await ProvContract.addProducer(
-        wallet_address,
-        state.email,
-        state.trade_name,
-        state.legal_name,
-        state.country,
-        state.state_town,
-        state.building_number,
-        state.phone_number
-      )
+    if (is_producer)
+      await ProvContract.authProducer(wallet_address)
         .then((tx) => {
           return tx.wait().then(
             async (receipt) => {
-              console.log(receipt);
+              message.success("Added to authorized party successfully.", 5);
+              setLoading1(false);
+              updateOrganizations();
+              return true;
             },
             (error) => {
               message.error(TRANSACTION_ERROR, 5);
@@ -229,27 +177,8 @@ const AuthParties = () => {
         .catch((error) => {
           message.error(TRANSACTION_ERROR, 5);
           console.log(error);
+          setLoading1(false);
         });
-
-    await ProvContract.authProducer(wallet_address)
-      .then((tx) => {
-        return tx.wait().then(
-          async (receipt) => {
-            message.success("Added to authorized party successfully.", 5);
-            setLoading1(false);
-            updateOrganizations();
-          },
-          (error) => {
-            message.error(TRANSACTION_ERROR, 5);
-            console.log(error);
-          }
-        );
-      })
-      .catch((error) => {
-        message.error(TRANSACTION_ERROR, 5);
-        console.log(error);
-        setLoading1(false);
-      });
 
     setIsModalOpen(false);
   };
