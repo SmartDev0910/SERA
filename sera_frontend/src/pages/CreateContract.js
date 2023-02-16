@@ -152,7 +152,7 @@ const CreateContract = () => {
               const res = await axios.post(
                 `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
                 {
-                  Wallet_address: account,
+                  Wallet_address: producer_address,
                 }
               );
               if (res.data.status_code === 200) {

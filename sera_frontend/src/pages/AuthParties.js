@@ -128,7 +128,7 @@ const AuthParties = () => {
             const res = await axios.post(
               `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
               {
-                Wallet_address: account,
+                Wallet_address: producer_address,
               }
             );
             if (res.data.status_code === 200) {
@@ -178,27 +178,25 @@ const AuthParties = () => {
       provAbi,
       myProvider.getSigner()
     );
-    let is_producer = await ProvContract.is_producer(account);
-    if (is_producer)
-      await ProvContract.authProducer(wallet_address)
-        .then((tx) => {
-          return tx.wait().then(
-            async (receipt) => {
-              message.success("Added to authorized party successfully.", 5);
-              setLoading1(false);
-              updateOrganizations();
-            },
-            (error) => {
-              message.error(TRANSACTION_ERROR, 5);
-              console.log(error);
-            }
-          );
-        })
-        .catch((error) => {
-          message.error(TRANSACTION_ERROR, 5);
-          console.log(error);
-          setLoading1(false);
-        });
+    await ProvContract.authProducer(wallet_address)
+      .then((tx) => {
+        return tx.wait().then(
+          async (receipt) => {
+            message.success("Added to authorized party successfully.", 5);
+            setLoading1(false);
+            updateOrganizations();
+          },
+          (error) => {
+            message.error(TRANSACTION_ERROR, 5);
+            console.log(error);
+          }
+        );
+      })
+      .catch((error) => {
+        message.error(TRANSACTION_ERROR, 5);
+        console.log(error);
+        setLoading1(false);
+      });
 
     setIsModalOpen(false);
   };
