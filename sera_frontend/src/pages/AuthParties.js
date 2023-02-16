@@ -124,15 +124,36 @@ const AuthParties = () => {
             producer_address
           );
         if (is_auth_producer) {
-          let producer = await ProvContract.producers(producer_address);
-          tmp.push({
-            trade_name: producer.trade_name,
-            email: producer.email,
-            country: producer.country,
-            state_town: producer.state_town,
-            phone_number: producer.phone_number,
-            wallet_address: producer_address,
-          });
+          try {
+            const res = await axios.post(
+              `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+              {
+                Wallet_address: account,
+              }
+            );
+            if (res.data.status_code === 200) {
+              let {
+                Email,
+                Trade_name,
+                Legal_name,
+                Country,
+                State_town,
+                Phone_number,
+              } = res.data.data;
+              tmp.push({
+                email: Email,
+                trade_name: Trade_name,
+                legal_name: Legal_name,
+                country: Country,
+                state_town: State_town,
+                phone_number: Phone_number,
+                wallet_address: producer_address,
+              });
+            }
+          } catch (e) {
+            message.error(SERVER_ERROR, 5);
+            console.log(e);
+          }
         }
       }
 

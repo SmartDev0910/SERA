@@ -12,11 +12,11 @@ import {
   Pagination,
   message,
 } from "antd";
+import axios from "axios";
 import { FileAddOutlined } from "@ant-design/icons";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import trackAbi from "../abis/trackingAbi.json";
-import provAbi from "../abis/provenanceAbi.json";
 import "./page.css";
 import { TRANSACTION_ERROR } from "../utils/messages";
 
@@ -133,19 +133,25 @@ const Contracts = () => {
       trackAbi,
       myProvider.getSigner()
     );
-    let ProvContract = new ethers.Contract(
-      process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
-      provAbi,
-      myProvider.getSigner()
-    );
+
     let tmp = [];
     try {
       let shipment_id = await TrackContract.shipment_id();
       for (let i = 0; i <= shipment_id; i++) {
         let contract = await TrackContract.shipments(i);
         if (contract.recipient === account || contract.sender === account) {
-          let buyer = await ProvContract.producers(contract.recipient);
-          let supplier = await ProvContract.producers(contract.sender);
+          const buyer = await axios.post(
+            `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+            {
+              Wallet_address: contract.recipient,
+            }
+          );
+          const supplier = await axios.post(
+            `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+            {
+              Wallet_address: contract.sender,
+            }
+          );
           let net_value =
             contract.quantity1 * contract.price1 +
             contract.quantity2 * contract.price2;
@@ -154,12 +160,12 @@ const Contracts = () => {
             contract_id: i,
             buyer: (
               <>
-                {buyer.trade_name} <br /> {contract.recipient}
+                {buyer.data.data.Trade_name} <br /> {contract.recipient}
               </>
             ),
             supplier: (
               <>
-                {supplier.trade_name} <br /> {contract.sender}
+                {supplier.data.data.Trade_name} <br /> {contract.sender}
               </>
             ),
             delivery_term: (

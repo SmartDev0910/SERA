@@ -13,13 +13,14 @@ import {
   Spin,
   message,
 } from "antd";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import trackAbi from "../abis/trackingAbi.json";
 import provAbi from "../abis/provenanceAbi.json";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import "./page.css";
-import { TRANSACTION_ERROR } from "../utils/messages";
+import { SERVER_ERROR, TRANSACTION_ERROR } from "../utils/messages";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -147,12 +148,24 @@ const CreateContract = () => {
               producer_address
             );
           if (is_auth_producer) {
-            let producer = await ProvContract.producers(producer_address);
-            tmp.push({
-              key: producer_address,
-              label: producer.trade_name,
-              value: producer_address,
-            });
+            try {
+              const res = await axios.post(
+                `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+                {
+                  Wallet_address: account,
+                }
+              );
+              if (res.data.status_code === 200) {
+                tmp.push({
+                  key: producer_address,
+                  label: res.data.data.Trade_name,
+                  value: producer_address,
+                });
+              }
+            } catch (e) {
+              message.error(SERVER_ERROR, 5);
+              console.log(e);
+            }
           }
         }
 

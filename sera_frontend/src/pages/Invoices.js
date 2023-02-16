@@ -13,11 +13,11 @@ import {
   Pagination,
   message,
 } from "antd";
+import axios from "axios";
 import { FileAddOutlined } from "@ant-design/icons";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import trackAbi from "../abis/trackingAbi.json";
-import provAbi from "../abis/provenanceAbi.json";
 import "./page.css";
 import { TRANSACTION_ERROR } from "../utils/messages";
 
@@ -69,19 +69,18 @@ const Invoices = () => {
           contract.quantity1 * contract.price1 +
           contract.quantity2 * contract.price2;
 
-        let ProvContract = new ethers.Contract(
-          process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
-          provAbi,
-          myProvider.getSigner()
-        );
         if (contract.recipient === account || contract.sender === account) {
-          let bus_partner = await ProvContract.producers(contract.recipient);
-
+          const bus_partner = await axios.post(
+            `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+            {
+              Wallet_address: contract.recipient,
+            }
+          );
           tmp.push({
             invoice_id: i,
             bus_partner: (
               <>
-                {bus_partner.trade_name} <br /> {contract.recipient}
+                {bus_partner.data.data.Trade_name} <br /> {contract.recipient}
               </>
             ),
             sender: contract.sender,
