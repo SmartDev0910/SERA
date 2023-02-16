@@ -10,6 +10,45 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func UpdateUser(c *gin.Context) {
+    var input model.User
+
+    if err := c.Bind(&input); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status_code": 500,
+            "api_version": "v1",
+            "endpoint": "/updateuser",
+            "status": "Internal Server Error.",
+            "msg":    "Internal Server Error.",
+            "data":   nil,
+        })
+        c.Abort()
+        return
+    } 
+
+    user, err := input.UpdateUser(input)
+    
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "status_code": 500,
+            "api_version": "v1",
+            "endpoint": "/updateuser",
+            "status": "Failure!",
+            "msg":    "Internal Server Error!",
+        })
+        return
+    }
+
+    c.JSON(http.StatusCreated, gin.H{
+        "status_code": 200,
+        "api_version": "v1",
+        "endpoint": "/updateuser",
+        "status": "Updated Successfully!",
+        "msg":    "Updated Successfully!",
+        "data": user, 
+    })
+}
+
 func SignUpUser(c *gin.Context) {
    var input model.User
 
@@ -18,8 +57,8 @@ func SignUpUser(c *gin.Context) {
             "status_code": 500,
             "api_version": "v1",
             "endpoint": "/SignUpUser",
-            "status": "Server Error !",
-            "msg":    "Server Error !",
+            "status": "Internal Server Error.",
+            "msg":    "Internal Server Error.",
             "data":   nil,
         })
         c.Abort()
@@ -82,8 +121,8 @@ func SignInUser(c *gin.Context) {
             "status_code": 500,
             "api_version": "v1",
             "endpoint": "/SignInUser",
-            "status": "Server Error !",
-            "msg":    "Server Error !",
+            "status": "Internal Server Error.",
+            "msg":    "Internal Server Error.",
             "data":   nil,
         })
         c.Abort()
@@ -175,8 +214,8 @@ func GetListUser(c *gin.Context) {
             "status_code": 500,
             "api_version": "v1",
             "endpoint": "/SignInUser",
-            "status": "Server Error !",
-            "msg":    "Server Error !",
+            "status": "Internal Server Error.",
+            "msg":    "Internal Server Error.",
             "data":   err.Error(),
         })
         return

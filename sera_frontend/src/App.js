@@ -52,8 +52,15 @@ const App = () => {
   const [isEdited, setEdited] = useState(true);
   const [visible, setVisible] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [company, setCompany] = useState("");
-
+  const [state, setState] = useState({
+    email: "",
+    trade_name: "",
+    legal_name: "",
+    country: "",
+    state_town: "",
+    building_number: "",
+    phone_number: "",
+  });
   async function connect(injected) {
     activate(injected);
   }
@@ -62,7 +69,39 @@ const App = () => {
     deactivate(injected);
   }
 
-  const handleOk = () => {};
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setState((prevProps) => ({
+      ...prevProps,
+      [name]: value,
+    }));
+  };
+
+  const handleOk = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/updateuser`,
+        {
+          email: state.email,
+          password: state.password,
+          trade_name: state.trade_name,
+          legal_name: state.legal_name,
+          country: state.country,
+          state_town: state.state_town,
+          building_number: state.building_number,
+          phone_number: state.phone_number,
+          wallet_address: account,
+        }
+      );
+      if (res.data.status_code === 200) {
+        message.success("Profile is updated Successfully.");
+      }
+    } catch (e) {
+      message.error(SERVER_ERROR, 5);
+      console.log(e);
+    }
+    setModalOpen(false);
+  };
 
   const items = [
     {
@@ -73,14 +112,13 @@ const App = () => {
       type: "divider",
     },
     {
-      label: company,
+      label: state.trade_name,
       key: "1",
     },
     {
       label: balance.toString().substring(0, 5) + " BNB",
       key: "2",
     },
-
     {
       type: "divider",
     },
@@ -146,7 +184,24 @@ const App = () => {
             }
           );
           if (res.data.status_code === 200) {
-            setCompany(res.data.data.Trade_name);
+            let {
+              Email,
+              Trade_name,
+              Legal_name,
+              Country,
+              State_town,
+              Building_number,
+              Phone_number,
+            } = res.data.data;
+            setState({
+              email: Email,
+              trade_name: Trade_name,
+              legal_name: Legal_name,
+              country: Country,
+              state_town: State_town,
+              building_number: Building_number,
+              phone_number: Phone_number,
+            });
           }
         } catch (e) {
           message.error(SERVER_ERROR, 5);
@@ -155,7 +210,7 @@ const App = () => {
       }
       FetchData();
     }
-  }, [chainId, active]);
+  }, [chainId, active, account]);
 
   return (
     <BrowserRouter>
@@ -215,31 +270,73 @@ const App = () => {
         <Divider />
         <Row className="width-100" gutter={15}>
           <Col span="12">
-            <Input placeholder="Email" disabled={isEdited} />
+            <Input
+              placeholder="Email"
+              name="email"
+              value={state.email}
+              disabled={isEdited}
+              onChange={handleInputChange}
+            />
           </Col>
           <Col span="12">
-            <Input placeholder="Trade Name" disabled={isEdited} />
-          </Col>
-        </Row>
-        <Row className="width-100 margin-top-20" gutter={15}>
-          <Col span="12">
-            <Input placeholder="Legal Name" disabled={isEdited} />
-          </Col>
-          <Col span="12">
-            <Input placeholder="Country" disabled={isEdited} />
-          </Col>
-        </Row>
-        <Row className="width-100 margin-top-20" gutter={15}>
-          <Col span="12">
-            <Input placeholder="State/town" disabled={isEdited} />
-          </Col>
-          <Col span="12">
-            <Input placeholder="Building Number" disabled={isEdited} />
+            <Input
+              placeholder="Trade Name"
+              name="trade_name"
+              value={state.trade_name}
+              disabled={isEdited}
+              onChange={handleInputChange}
+            />
           </Col>
         </Row>
         <Row className="width-100 margin-top-20" gutter={15}>
           <Col span="12">
-            <Input placeholder="Phone Number" disabled={isEdited} />
+            <Input
+              placeholder="Legal Name"
+              name="legal_name"
+              value={state.legal_name}
+              disabled={isEdited}
+              onChange={handleInputChange}
+            />
+          </Col>
+          <Col span="12">
+            <Input
+              placeholder="Country"
+              name="country"
+              value={state.country}
+              disabled={isEdited}
+              onChange={handleInputChange}
+            />
+          </Col>
+        </Row>
+        <Row className="width-100 margin-top-20" gutter={15}>
+          <Col span="12">
+            <Input
+              placeholder="State/town"
+              name="state_town"
+              value={state.state_town}
+              disabled={isEdited}
+              onChange={handleInputChange}
+            />
+          </Col>
+          <Col span="12">
+            <Input
+              placeholder="Building Number"
+              name="building_number"
+              value={state.building_number}
+              disabled={isEdited}
+              onChange={handleInputChange}
+            />
+          </Col>
+        </Row>
+        <Row className="width-100 margin-top-20" gutter={15}>
+          <Col span="12">
+            <Input
+              placeholder="Phone Number"
+              name="phone_number"
+              value={state.phone_number}
+              disabled={isEdited}
+              onChange={handleInputChange}
+            />
           </Col>
         </Row>
         <Divider />

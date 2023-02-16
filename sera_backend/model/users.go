@@ -21,6 +21,15 @@ type User struct {
     Wallet_address  string `gorm:"size:255"`
 }
 
+func (user *User) UpdateUser(u User) (User, error) {
+    err := database.Database.Where("wallet_address=?", u.Wallet_address).Updates(u).Error
+    if err != nil {
+        return User{}, err
+    }
+
+    return u, nil
+}
+
 func (user *User) Save() (*User, error) {
     err := database.Database.Create(&user).Error
 

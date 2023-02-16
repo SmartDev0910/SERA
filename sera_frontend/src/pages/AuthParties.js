@@ -112,10 +112,17 @@ const AuthParties = () => {
     if (producer_count > 0)
       for (let i = 1; i <= producer_count; i++) {
         let producer_address = await ProvContract.producer_list(i);
-        let is_auth_producer = await ProvContract.auth_producer(
-          account,
-          producer_address
-        );
+        let is_auth_producer = false;
+        if (producer_address > account)
+          is_auth_producer = await ProvContract.auth_producer(
+            producer_address,
+            account
+          );
+        else
+          is_auth_producer = await ProvContract.auth_producer(
+            account,
+            producer_address
+          );
         if (is_auth_producer) {
           let producer = await ProvContract.producers(producer_address);
           tmp.push({
@@ -123,6 +130,7 @@ const AuthParties = () => {
             email: producer.email,
             country: producer.country,
             state_town: producer.state_town,
+            phone_number: producer.phone_number,
             wallet_address: producer_address,
           });
         }
