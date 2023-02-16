@@ -21,9 +21,14 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "from", "type": "address" },
-      { "internalType": "string", "name": "name", "type": "string" },
-      { "internalType": "string", "name": "producer_type", "type": "string" }
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "string", "name": "email", "type": "string" },
+      { "internalType": "string", "name": "trade_name", "type": "string" },
+      { "internalType": "string", "name": "legal_name", "type": "string" },
+      { "internalType": "string", "name": "country", "type": "string" },
+      { "internalType": "string", "name": "state_town", "type": "string" },
+      { "internalType": "string", "name": "building_number", "type": "string" },
+      { "internalType": "string", "name": "phone_number", "type": "string" }
     ],
     "name": "addProducer",
     "outputs": [],
@@ -38,6 +43,23 @@
     "name": "addProduct",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "to", "type": "address" }],
+    "name": "authProducer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "", "type": "address" },
+      { "internalType": "address", "name": "", "type": "address" }
+    ],
+    "name": "auth_producer",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -57,16 +79,20 @@
     "outputs": [
       {
         "components": [
-          { "internalType": "string", "name": "name", "type": "string" },
+          { "internalType": "string", "name": "email", "type": "string" },
+          { "internalType": "string", "name": "trade_name", "type": "string" },
+          { "internalType": "string", "name": "legal_name", "type": "string" },
+          { "internalType": "string", "name": "country", "type": "string" },
+          { "internalType": "string", "name": "state_town", "type": "string" },
           {
             "internalType": "string",
-            "name": "producer_type",
+            "name": "building_number",
             "type": "string"
           },
           {
-            "internalType": "address",
-            "name": "autherized_by",
-            "type": "address"
+            "internalType": "string",
+            "name": "phone_number",
+            "type": "string"
           },
           { "internalType": "bool", "name": "certification", "type": "bool" },
           {
@@ -117,6 +143,13 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "is_producer",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "owner",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -141,9 +174,13 @@
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "producers",
     "outputs": [
-      { "internalType": "string", "name": "name", "type": "string" },
-      { "internalType": "string", "name": "producer_type", "type": "string" },
-      { "internalType": "address", "name": "autherized_by", "type": "address" },
+      { "internalType": "string", "name": "email", "type": "string" },
+      { "internalType": "string", "name": "trade_name", "type": "string" },
+      { "internalType": "string", "name": "legal_name", "type": "string" },
+      { "internalType": "string", "name": "country", "type": "string" },
+      { "internalType": "string", "name": "state_town", "type": "string" },
+      { "internalType": "string", "name": "building_number", "type": "string" },
+      { "internalType": "string", "name": "phone_number", "type": "string" },
       { "internalType": "bool", "name": "certification", "type": "bool" },
       {
         "internalType": "enum Provenance.ActionStatus",
