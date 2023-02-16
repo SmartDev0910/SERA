@@ -47,6 +47,7 @@ func serveApplication() {
     publicRoutes.POST("/signup", controllers.SignUpUser)
     publicRoutes.POST("/signin", controllers.SignInUser)
     publicRoutes.POST("/getuser", controllers.GetUser)
+    publicRoutes.POST("/updateuser", controllers.UpdateUser)
     publicRoutes.POST("/addpartner", controllers.AddPartner)
     publicRoutes.POST("/getpartner", controllers.GetPartner)
     publicRoutes.POST("/sendmail", controllers.SendMail)
