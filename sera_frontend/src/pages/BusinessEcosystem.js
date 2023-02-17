@@ -203,21 +203,6 @@ const BusinessEcosystem = () => {
           }
         }
         setData(tmp);
-        // tmp = [];
-        // const res1 = await axios.post(
-        //   `${process.env.REACT_APP_IP_ADDRESS}/v1/getpartner`,
-        //   {
-        //     wallet_address1: account,
-        //   }
-        // );
-        // res1.data.data.map((item) => {
-        //   if (item.Wallet_address !== account)
-        //     tmp.push({
-        //       w_address: item.Wallet_address,
-        //       status: <Tag color="magenta">Active</Tag>,
-        //     });
-        // });
-        // setData(tmp);
       } catch (e) {
         message.error(TRANSACTION_ERROR, 5);
         console.log(e);
@@ -254,7 +239,7 @@ const BusinessEcosystem = () => {
             Add Business Partner
           </Button>
           <Search
-            placeholder="Search Business Partner"
+            placeholder="Search By Wallet Address"
             className="search-input"
             onSearch={onSearch}
           />

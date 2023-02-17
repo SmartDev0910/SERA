@@ -18,6 +18,7 @@ type User struct {
     State_town  string `gorm:"size:255"`
     Building_number  string `gorm:"size:255"`
     Phone_number  string `gorm:"size:255"`
+    Description  string `gorm:"size:255"`
     Wallet_address  string `gorm:"size:255"`
 }
 

@@ -54,7 +54,13 @@ const items = [
     "Core Services",
     "group_core_services",
     null,
-    [getItem(<Link to="/tokenization">Tokenization</Link>, "tokenization")],
+    [
+      getItem(<Link to="/tokenization">Tokenization</Link>, "tokenization"),
+      getItem(
+        <Link to="/shipment-management">Shipment Management</Link>,
+        "shipment-management"
+      ),
+    ],
     "group"
   ),
 ];
