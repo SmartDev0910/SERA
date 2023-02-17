@@ -239,7 +239,7 @@ const BusinessEcosystem = () => {
             Add Business Partner
           </Button>
           <Search
-            placeholder="Search Business Partner"
+            placeholder="Search By Wallet Address"
             className="search-input"
             onSearch={onSearch}
           />
