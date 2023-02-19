@@ -18,7 +18,11 @@ import {
   message,
   Tag,
 } from "antd";
-import { MenuOutlined, DownOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  MenuOutlined,
+  CaretDownOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "./utils/connector";
 import { ethers } from "ethers";
@@ -126,7 +130,7 @@ const App = () => {
 
   const items = [
     {
-      label: <span onClick={() => setModalOpen(true)}>Your Profile</span>,
+      label: "Your Profile",
       key: "0",
     },
     {
@@ -144,7 +148,7 @@ const App = () => {
       type: "divider",
     },
     {
-      label: <span onClick={() => disConnect(injected)}>Disconnect</span>,
+      label: "Disconnect",
       key: "3",
     },
     {
@@ -153,12 +157,18 @@ const App = () => {
     },
   ];
 
+  const onMenuClick = (e) => {
+    if (e.key === "0") setModalOpen(true);
+    if (e.key === "3") disConnect(injected);
+  };
+
   const renderButton = (
     <>
       {active ? (
         <Dropdown
           menu={{
             items,
+            onClick: onMenuClick,
           }}
           trigger={["click"]}
         >
@@ -167,7 +177,7 @@ const App = () => {
             onClick={(e) => e.preventDefault()}
           >
             {account.substring(0, 5) + " ... " + account.substring(38)}{" "}
-            <DownOutlined />
+            <CaretDownOutlined />
           </Button>
         </Dropdown>
       ) : (
