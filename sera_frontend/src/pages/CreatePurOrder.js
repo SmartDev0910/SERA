@@ -18,10 +18,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
+import { CaretLeftOutlined } from "@ant-design/icons";
 
 import "./page.css";
 import { TRANSACTION_ERROR } from "../utils/messages";
-
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
@@ -171,7 +171,9 @@ const CreateContract = () => {
       <Spin spinning={loading} tip="Loading...">
         <Row>
           <Link to="/purchase-orders">
-            <Button> {"<"} Back</Button>
+            <Button>
+              <CaretLeftOutlined /> Back
+            </Button>
           </Link>
         </Row>
         <Row className="margin-top-20">
