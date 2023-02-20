@@ -32,6 +32,7 @@ const CreateContract = () => {
   const [materialOp, setMaterialOp] = useState([]);
   const [materialItems, setMaterialItems] = useState([]);
   const [buspartner, setbuspartner] = useState("");
+  const [wallet_address, setWalletAddress] = useState("");
   const [start_date, setStartDate] = useState("");
   const [end_date, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -84,6 +85,16 @@ const CreateContract = () => {
       return;
     }
     setLoading(true);
+    console.log(
+      "---------",
+      buspartner,
+      materialItems[0].material,
+      materialItems[0].quantity,
+      materialItems[0].price,
+      materialItems[1].material,
+      materialItems[1].quantity,
+      materialItems[1].price
+    );
     const myProvider = new ethers.providers.Web3Provider(window.ethereum);
     TrackContract = new ethers.Contract(
       process.env.REACT_APP_TRACKING_CONTRACT_ADDRESS,
@@ -91,12 +102,12 @@ const CreateContract = () => {
       myProvider.getSigner()
     );
     await TrackContract.createContract(
-      buspartner,
+      wallet_address,
       materialItems[0].material,
-      "100",
+      materialItems[0].quantity,
       materialItems[0].price,
       materialItems[1].material,
-      "100",
+      materialItems[1].quantity,
       materialItems[1].price
     )
       .then((tx) => {
@@ -174,6 +185,7 @@ const CreateContract = () => {
         );
         if (res.data.status_code === 200) {
           setbuspartner(res.data.data.Buspartner);
+          setWalletAddress(res.data.data.Wallet_address);
           setMaterialItems(JSON.parse(res.data.data.MaterialItems));
         }
       } catch (e) {
@@ -303,9 +315,9 @@ const CreateContract = () => {
                   materialItems.map((item, index) => (
                     <Row className="margin-top-10" key={index} justify="center">
                       <Col span={8} justify="center" align="middle">
-                        {item.material} price:
+                        {item.material} :
                       </Col>
-                      <Col span={12}>
+                      <Col span={16}>
                         <Input
                           placeholder="Price"
                           value={item.price}
@@ -317,6 +329,23 @@ const CreateContract = () => {
                                   : {
                                       ...it,
                                       price: event.target.value,
+                                    }
+                              )
+                            );
+                          }}
+                        />{" "}
+                        <Input
+                          placeholder="Quantity"
+                          value={item.quantity}
+                          className="margin-top-10"
+                          onChange={(event) => {
+                            setMaterialItems(
+                              materialItems.map((it) =>
+                                it.id !== item.id
+                                  ? it
+                                  : {
+                                      ...it,
+                                      quantity: event.target.value,
                                     }
                               )
                             );
@@ -386,25 +415,6 @@ const CreateContract = () => {
                             );
                           }}
                           options={materialOp}
-                        />
-                      </Row>
-                      <Row>
-                        <Input
-                          className="margin-top-10"
-                          value={matItem.material_description}
-                          onChange={(event) => {
-                            setMaterialItems(
-                              materialItems.map((it) =>
-                                it.id !== matItem.id
-                                  ? it
-                                  : {
-                                      ...it,
-                                      material_description: event.target.value,
-                                    }
-                              )
-                            );
-                          }}
-                          placeholder="Material Description"
                         />
                       </Row>
                     </Panel>

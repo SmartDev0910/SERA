@@ -6,9 +6,9 @@ const ShipmentManagement = () => {
   return (
     <Row justify="center" style={{ marginTop: "10%" }}>
       <h1 style={{ fontSize: "58px", color: "#0540f2" }}>
-        Website
+        ~ Under ~
         <br />
-        Coming Soon
+        Development
       </h1>
     </Row>
   );

@@ -11,7 +11,6 @@ import {
   Spin,
   message,
 } from "antd";
-import { useSelector } from "react-redux";
 import provAbi from "../abis/provenanceAbi.json";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
@@ -31,8 +30,8 @@ const Materials = () => {
   const [state, setState] = useState({
     material: "",
     pub_number: "",
+    description: "",
   });
-  const { materials } = useSelector((state) => state.materialList);
   const { chainId, active, account } = useWeb3React();
   const validNetwork =
     chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
@@ -233,6 +232,14 @@ const Materials = () => {
               placeholder="Publish Number"
               name="pub_number"
               value={state.pub_number}
+              onChange={handleInputChange}
+            />
+            <Input.TextArea
+              className="margin-top-20"
+              placeholder="Description"
+              name="description"
+              rows={4}
+              value={state.description}
               onChange={handleInputChange}
             />
             <Input className="margin-top-20" value={account} />
