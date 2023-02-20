@@ -25,7 +25,7 @@ const PurchaseOrders = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search_text, setSearchText] = useState("");
-  const { chainId, active, account } = useWeb3React();
+  const { chainId, account } = useWeb3React();
   const validNetwork =
     chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
   let TrackContract = null;
