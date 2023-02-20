@@ -14,6 +14,7 @@ import {
   Spin,
   Rate,
   Form,
+  Descriptions,
 } from "antd";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
@@ -30,6 +31,7 @@ const BusinessEcosystem = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [from_email, setFromEmail] = useState("");
   const [to_email, setToEmail] = useState("");
+  const [wallet_address, setWalletAddress] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isWalletIntalled, setIsWalletInstalled] = useState(false);
@@ -161,9 +163,20 @@ const BusinessEcosystem = () => {
     }
     setIsModalOpen(false);
   };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const handleChangeWalletAddress = (e) => {
+    setWalletAddress(e.target.value);
+
+    console.log(
+      "-------",
+      data.filter((i) => i.w_address.includes(wallet_address))
+    );
+  };
+
   useEffect(() => {
     setLoading(true);
     if (window.ethereum) {
@@ -273,64 +286,121 @@ const BusinessEcosystem = () => {
           onOk={handleOk}
           onCancel={handleCancel}
         >
-          <Form validateMessages={validateMessages}>
-            <Form.Item
-              name={"Email_To"}
-              rules={[
-                {
-                  type: "email",
-                },
-              ]}
-              style={{ marginBottom: "0px" }}
-            >
-              <Input
-                className="margin-top-20"
-                placeholder="Business Partner"
-                value={to_email}
-                onChange={(e) => {
-                  setToEmail(e.target.value);
-                }}
-                maxLength={42}
-              />
-            </Form.Item>
-            <Divider orientation="left"> Your email </Divider>
-            <Form.Item
-              name={"Email_From"}
-              rules={[
-                {
-                  type: "email",
-                },
-              ]}
-              style={{ marginBottom: "0px" }}
-            >
-              <Input
-                className="margin-top-20"
-                placeholder="Email"
-                value={from_email}
-                onChange={(e) => {
-                  setFromEmail(e.target.value);
-                }}
-                maxLength={42}
-              />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-              ]}
-            >
-              <Input.Password
-                className="margin-top-20"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </Form.Item>
-          </Form>
+          <Input
+            className="margin-top-20"
+            placeholder="Wallet Address"
+            value={wallet_address}
+            onChange={handleChangeWalletAddress}
+            maxLength={42}
+          />
+          {data.filter((i) => i.w_address.includes(wallet_address)).length ? (
+            <>
+              <Divider />
+              <Descriptions title="Party Info" column={1} bordered>
+                <Descriptions.Item label="Email">
+                  {
+                    data.filter((i) => i.w_address.includes(wallet_address))[0]
+                      .email
+                  }
+                </Descriptions.Item>
+                <Descriptions.Item label="Trade Name">
+                  {
+                    data.filter((i) => i.w_address.includes(wallet_address))[0]
+                      .t_name
+                  }
+                </Descriptions.Item>
+                <Descriptions.Item label="Legal Name">
+                  {
+                    data.filter((i) => i.w_address.includes(wallet_address))[0]
+                      .l_name
+                  }
+                </Descriptions.Item>
+                <Descriptions.Item label="Country">
+                  {
+                    data.filter((i) => i.w_address.includes(wallet_address))[0]
+                      .country
+                  }
+                </Descriptions.Item>
+                <Descriptions.Item label="State/town">
+                  {
+                    data.filter((i) => i.w_address.includes(wallet_address))[0]
+                      .state_town
+                  }
+                </Descriptions.Item>
+                <Descriptions.Item label="Building Number">
+                  {
+                    data.filter((i) => i.w_address.includes(wallet_address))[0]
+                      .b_number
+                  }
+                </Descriptions.Item>
+                <Descriptions.Item label="Phone Number">
+                  {
+                    data.filter((i) => i.w_address.includes(wallet_address))[0]
+                      .phone
+                  }
+                </Descriptions.Item>
+              </Descriptions>
+            </>
+          ) : (
+            <Form validateMessages={validateMessages}>
+              <Divider orientation="left"> Invitation Info </Divider>
+              <Form.Item
+                name={"Email_To"}
+                rules={[
+                  {
+                    type: "email",
+                  },
+                ]}
+                style={{ marginBottom: "0px" }}
+              >
+                <Input
+                  className="margin-top-20"
+                  placeholder="Business Partner Email"
+                  value={to_email}
+                  onChange={(e) => {
+                    setToEmail(e.target.value);
+                  }}
+                  maxLength={42}
+                />
+              </Form.Item>
+              <Form.Item
+                name={"Email"}
+                rules={[
+                  {
+                    type: "email",
+                  },
+                ]}
+                style={{ marginBottom: "0px" }}
+              >
+                <Input
+                  className="margin-top-20"
+                  placeholder="Your Email"
+                  value={from_email}
+                  onChange={(e) => {
+                    setFromEmail(e.target.value);
+                  }}
+                  maxLength={42}
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your password!",
+                  },
+                ]}
+              >
+                <Input.Password
+                  className="margin-top-20"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                />
+              </Form.Item>
+            </Form>
+          )}
         </Modal>
       </Spin>
     </>
