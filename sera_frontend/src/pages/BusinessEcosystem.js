@@ -165,10 +165,10 @@ const BusinessEcosystem = () => {
     setIsModalOpen(false);
   };
   useEffect(() => {
+    setLoading(true);
     if (window.ethereum) {
       setIsWalletInstalled(true);
     }
-    setLoading(true);
     const myProvider = new ethers.providers.Web3Provider(window.ethereum);
 
     async function fetchData() {
