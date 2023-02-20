@@ -5,7 +5,7 @@ import { useWeb3React } from "@web3-react/core";
 import { injected } from "../utils/connector";
 import axios from "axios";
 import "./page.css";
-import logo from "./logo.jpg";
+import logo from "../logo.jpg";
 
 const Login = () => {
   const [activeKey, setActiveKey] = useState("tab_signin");

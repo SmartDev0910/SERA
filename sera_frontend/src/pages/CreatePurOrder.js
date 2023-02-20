@@ -27,12 +27,11 @@ const { Panel } = Collapse;
 
 const CreateContract = () => {
   const [contractOp, setContractOp] = useState([]);
-  const [buspartner, setBusPartner] = useState("");
   const [contract_id, setContractId] = useState("");
   const [loading, setLoading] = useState(false);
   const [isApproved, setApproved] = useState(true);
   const [total_amount, setTotalAmount] = useState(0);
-  const { chainId, active, account } = useWeb3React();
+  const { account } = useWeb3React();
   const navigate = useNavigate();
   let TrackContract = null;
 

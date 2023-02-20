@@ -26,7 +26,6 @@ const Materials = () => {
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
   const [isWalletIntalled, setIsWalletInstalled] = useState(false);
-  const [provider, setProvider] = useState();
   const [search_text, setSearchText] = useState("");
   const [data, setData] = useState([]);
   const [state, setState] = useState({
@@ -162,8 +161,6 @@ const Materials = () => {
     async function fetchData() {
       if (validNetwork && active && window.ethereum) {
         const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-        setProvider(myProvider);
-        const balanceETH = myProvider.getBalance(account);
         function getProvContract() {
           ProvContract = new ethers.Contract(
             process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
