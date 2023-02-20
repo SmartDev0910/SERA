@@ -11,6 +11,7 @@ import {
   Spin,
   Pagination,
   message,
+  Radio,
 } from "antd";
 import axios from "axios";
 import { FileAddOutlined } from "@ant-design/icons";
@@ -18,32 +19,39 @@ import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import trackAbi from "../abis/trackingAbi.json";
 import "./page.css";
-import { TRANSACTION_ERROR } from "../utils/messages";
+import { TRANSACTION_ERROR, SERVER_ERROR } from "../utils/messages";
 
 const { Search } = Input;
 
 const Contracts = () => {
   const [data, setData] = useState([]);
+  const [rfqdata, setRfqData] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [isWalletIntalled, setIsWalletInstalled] = useState(false);
+  const [mode, setMode] = useState("RFQ");
   const [search_text, setSearchText] = useState("");
-  // const [provider, setProvider] = useState();
-  const { chainId, active, account } = useWeb3React();
+  const { account } = useWeb3React();
   const [tabKey, setTabKey] = useState("all");
+
   const dataSource = useMemo(() => {
     switch (tabKey) {
       case "all":
         return data;
       case "issued":
         return data.filter((i) => JSON.stringify(i.buyer).includes(account));
-      case "received":
-        return data.filter((i) => JSON.stringify(i.supplier).includes(account));
     }
   }, [data, tabKey, account]);
 
+  const dataSourceRFQ = useMemo(() => {
+    switch (tabKey) {
+      case "all":
+        return rfqdata;
+      case "received":
+        return rfqdata.filter((i) => i.wallet_address !== account);
+    }
+  }, [rfqdata, tabKey, account]);
+
   let TrackContract = null;
-  const validNetwork =
-    chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
+
   const items = [
     {
       key: "all",
@@ -58,6 +66,26 @@ const Contracts = () => {
       label: `Received`,
     },
   ];
+
+  const columnsRFQ = [
+    {
+      title: "RFQ ID",
+      dataIndex: "rfq_id",
+    },
+    {
+      title: "Buyer",
+      dataIndex: "buyer",
+    },
+    {
+      title: "Material",
+      dataIndex: "material",
+    },
+    {
+      title: "Wallet Address",
+      dataIndex: "wallet_address",
+    },
+  ];
+
   const columns = [
     {
       title: "Contract ID",
@@ -124,6 +152,10 @@ const Contracts = () => {
       },
     },
   ];
+
+  const handleModeChange = (e) => {
+    setMode(e.target.value);
+  };
 
   const updateContracts = async () => {
     setLoading(true);
@@ -206,9 +238,41 @@ const Contracts = () => {
     setSearchText(value);
   };
 
+  const getListRfq = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/getlistrfq`
+      );
+      if (res.data.status_code === 200) {
+        let tmp = [];
+        for (let item of res.data.data) {
+          let material = "";
+          JSON.parse(item.MaterialItems).map(
+            (it) => (material += it.material + ", ")
+          );
+          tmp.push({
+            rfq_id: item.MaterialId,
+            buyer: item.Buspartner,
+            wallet_address: item.Wallet_address,
+            material: material.slice(0, material.length - 2),
+          });
+        }
+        setRfqData(tmp);
+      }
+    } catch (e) {
+      message.error(SERVER_ERROR, 5);
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
+    getListRfq();
     updateContracts();
   }, []);
+
+  useEffect(() => {
+    if (mode === "proposal") updateContracts();
+  }, [mode]);
 
   const onChange = (key) => {
     setTabKey(key);
@@ -226,21 +290,84 @@ const Contracts = () => {
         </Row>
         <Divider />
         <Tabs defaultActiveKey="all" items={items} onChange={onChange} />
-        <Row justify="space-between">
-          <Search
-            placeholder="Search Contracts"
-            className="contract-search-input"
-            onSearch={onSearch}
-          />
-        </Row>
-        <Table
-          className="margin-top-20"
-          columns={columns}
-          scroll={{ x: 2000 }}
-          dataSource={dataSource}
-          onChange={onChange}
-          pagination={false}
-        />
+        {tabKey === "all" ? (
+          <>
+            <Row justify="left">
+              <Search
+                placeholder="Search Contracts"
+                className="contract-search-input"
+                onSearch={onSearch}
+              />
+              <Radio.Group
+                onChange={handleModeChange}
+                value={mode}
+                buttonStyle="solid"
+                style={{ marginLeft: 10 }}
+              >
+                <Radio.Button value="RFQ">RFQ</Radio.Button>
+                <Radio.Button value="proposal">Proposal</Radio.Button>
+              </Radio.Group>
+            </Row>
+            {mode === "RFQ" ? (
+              <Table
+                className="margin-top-20"
+                columns={columnsRFQ}
+                dataSource={dataSourceRFQ}
+                pagination={false}
+              />
+            ) : (
+              <Table
+                className="margin-top-20"
+                columns={columns}
+                scroll={{ x: 2000 }}
+                dataSource={dataSource}
+                pagination={false}
+              />
+            )}
+          </>
+        ) : (
+          ""
+        )}
+        {tabKey === "issued" ? (
+          <>
+            <Row justify="space-between">
+              <Search
+                placeholder="Search Contracts"
+                className="contract-search-input"
+                onSearch={onSearch}
+              />
+            </Row>
+            <Table
+              className="margin-top-20"
+              columns={columns}
+              scroll={{ x: 2000 }}
+              dataSource={dataSource}
+              pagination={false}
+            />
+          </>
+        ) : (
+          ""
+        )}
+        {tabKey === "received" ? (
+          <>
+            <Row justify="space-between">
+              <Search
+                placeholder="Search Contracts"
+                className="contract-search-input"
+                onSearch={onSearch}
+              />
+            </Row>
+            <Table
+              className="margin-top-20"
+              columns={columnsRFQ}
+              dataSource={dataSourceRFQ}
+              pagination={false}
+            />
+          </>
+        ) : (
+          ""
+        )}
+
         {/* <Pagination
           total={85}
           showTotal={(total, range) =>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useFetcher } from "react-router-dom";
 import {
   Row,
   Col,
@@ -12,47 +12,78 @@ import {
   Input,
   Spin,
   message,
+  Radio,
 } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import trackAbi from "../abis/trackingAbi.json";
 import provAbi from "../abis/provenanceAbi.json";
+import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import "./page.css";
 import { SERVER_ERROR, TRANSACTION_ERROR } from "../utils/messages";
-
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 var materialID = 0;
 
 const CreateContract = () => {
-  const [orgOp, setOrgOp] = useState([]);
+  const [rfqOp, setRFQOp] = useState([]);
   const [materialOp, setMaterialOp] = useState([]);
   const [materialItems, setMaterialItems] = useState([]);
   const [buspartner, setbuspartner] = useState("");
-  const [contract_type, setContractType] = useState("");
   const [start_date, setStartDate] = useState("");
   const [end_date, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isWalletIntalled, setIsWalletInstalled] = useState(false);
-  const [provider, setProvider] = useState();
-  const { chainId, active, account } = useWeb3React();
-  const validNetwork =
-    chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
+  const [rfqId, setRfqId] = useState("");
+  const [mode, setMode] = useState("RFQ");
+  const { account } = useWeb3React();
+
   let TrackContract = null;
 
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleModeChange = (e) => {
+    setMode(e.target.value);
+  };
+
+  const handleSubmitRFQ = async () => {
     setLoading(true);
-    const contract = {
-      buspartner: buspartner,
-      contract_type: contract_type,
-      start_date: start_date,
-      end_date: end_date,
-      materials: materialItems,
-    };
+    try {
+      const res1 = await axios.post(
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+        {
+          Wallet_address: account,
+        }
+      );
+      if (res1.data.status_code === 200) {
+        const res = await axios.post(
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/addrfq`,
+          {
+            materialItems: JSON.stringify(materialItems),
+            buspartner: res1.data.data.Trade_name,
+            wallet_address: account,
+          }
+        );
+        if (res.data.status_code === 200) {
+          message.success("Requested for quotation successfully.", 5);
+          await setLoading(false);
+          navigate("/contracts");
+        }
+      }
+    } catch (e) {
+      message.error(SERVER_ERROR, 5);
+      console.log(e);
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitProposal = async () => {
+    if (rfqId === "") {
+      message.error("Please select RFQ Id.");
+      return;
+    }
+    setLoading(true);
     const myProvider = new ethers.providers.Web3Provider(window.ethereum);
     TrackContract = new ethers.Contract(
       process.env.REACT_APP_TRACKING_CONTRACT_ADDRESS,
@@ -62,10 +93,10 @@ const CreateContract = () => {
     await TrackContract.createContract(
       buspartner,
       materialItems[0].material,
-      materialItems[0].quantity,
+      "100",
       materialItems[0].price,
       materialItems[1].material,
-      materialItems[1].quantity,
+      "100",
       materialItems[1].price
     )
       .then((tx) => {
@@ -97,8 +128,6 @@ const CreateContract = () => {
         id: materialID++,
         material: "",
         material_description: "",
-        quantity: 0,
-        price: 0,
       },
     ];
     setMaterialItems([...tmp]);
@@ -109,8 +138,55 @@ const CreateContract = () => {
   };
 
   useEffect(() => {
-    let tmp = [],
-      tmp1 = [];
+    if (mode === "proposal") {
+      setRfqId("");
+      async function fetchData() {
+        try {
+          const res = await axios.get(
+            `${process.env.REACT_APP_IP_ADDRESS}/v1/getlistrfq`
+          );
+          if (res.data.status_code === 200) {
+            let tmp = [];
+            for (let item of res.data.data) {
+              tmp.push({
+                label: item.MaterialId,
+                value: item.MaterialId,
+              });
+            }
+            setRFQOp(tmp);
+          }
+        } catch (e) {
+          message.error(SERVER_ERROR, 5);
+          console.log(e);
+        }
+      }
+      fetchData();
+      setMaterialItems([]);
+    }
+  }, [mode]);
+
+  const onChangeRFQ = (value) => {
+    async function fetchData() {
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_IP_ADDRESS}/v1/getrfq`,
+          { MaterialId: value }
+        );
+        if (res.data.status_code === 200) {
+          setbuspartner(res.data.data.Buspartner);
+          setMaterialItems(JSON.parse(res.data.data.MaterialItems));
+        }
+      } catch (e) {
+        message.error(SERVER_ERROR, 5);
+        console.log(e);
+      }
+    }
+    fetchData();
+    setRfqId(value);
+  };
+
+  useEffect(() => {
+    let tmp = [];
     let ProvContract = null;
     async function fetchData() {
       const myProvider = new ethers.providers.Web3Provider(window.ethereum);
@@ -124,255 +200,119 @@ const CreateContract = () => {
         let pro_pub_number = await ProvContract.product_list(i);
         let mat = await ProvContract.products(pro_pub_number);
         if (mat.producer_address === account)
-          tmp1.push({
+          tmp.push({
             key: mat.pub_number,
             label: mat.pub_number,
             value: mat.name,
           });
       }
-      await setMaterialOp(tmp1);
-
-      let producer_count = await ProvContract.producer_count();
-      if (producer_count > 0)
-        for (let i = 1; i <= producer_count; i++) {
-          let producer_address = await ProvContract.producer_list(i);
-          let is_auth_producer = false;
-          if (producer_address > account)
-            is_auth_producer = await ProvContract.auth_producer(
-              producer_address,
-              account
-            );
-          else
-            is_auth_producer = await ProvContract.auth_producer(
-              account,
-              producer_address
-            );
-          if (is_auth_producer) {
-            try {
-              const res = await axios.post(
-                `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
-                {
-                  Wallet_address: producer_address,
-                }
-              );
-              if (res.data.status_code === 200) {
-                tmp.push({
-                  key: producer_address,
-                  label: res.data.data.Trade_name,
-                  value: producer_address,
-                });
-              }
-            } catch (e) {
-              message.error(SERVER_ERROR, 5);
-              console.log(e);
-            }
-          }
-        }
-
-      await setOrgOp(tmp);
+      await setMaterialOp(tmp);
     }
     fetchData();
   }, []);
 
   return (
     <>
+      <Row>
+        <Link to="/contracts">
+          <Button>
+            <CaretLeftOutlined /> Back
+          </Button>
+        </Link>
+      </Row>
+      <Divider />
+      <Row>
+        <Radio.Group
+          onChange={handleModeChange}
+          value={mode}
+          buttonStyle="solid"
+          style={{
+            marginTop: 16,
+            marginBottom: 8,
+          }}
+        >
+          <Radio.Button value="RFQ">RFQ</Radio.Button>
+          <Radio.Button value="proposal">Proposal</Radio.Button>
+        </Radio.Group>
+      </Row>
       <Spin spinning={loading} tip="Loading...">
-        <Row>
-          <Link to="/contracts">
-            <Button> {"<"} Back</Button>
-          </Link>
-        </Row>
-        <Row className="margin-top-20">
-          <Title level={3}>Create Contract</Title>
-        </Row>
-        <Text type="danger" strong className="float-left">
-          Please add a business partner to proceed.
-        </Text>
-        <Divider />
-        <Row>
-          <Col xs={24} sm={16} ls={10} md={10} lg={7}>
+        {mode === "proposal" ? (
+          <>
+            <Row className="margin-top-20">
+              <Title level={3}>Create Proposal</Title>
+            </Row>
+            <Divider />
             <Row>
-              <Text strong className="float-left">
-                Business Partner
-              </Text>
-            </Row>
-            <Row>
-              <Select
-                className="contract-select"
-                value={buspartner}
-                onChange={(value) => setbuspartner(value)}
-                placeholder="Business Partner"
-                options={orgOp}
-              />
-            </Row>
-            <Row>
-              <Text strong className="float-left">
-                Contract Type
-              </Text>
-            </Row>
-            <Row>
-              <Select
-                className="contract-select"
-                value={contract_type}
-                onChange={(value) => setContractType(value)}
-                placeholder="Volume-based tiered pricing"
-                options={[
-                  {
-                    label: "Smart Contract",
-                    value: "Smart Contract",
-                  },
-                ]}
-              />
-            </Row>
-            <Row>
-              <Text strong className="float-left">
-                Validity Period
-              </Text>
-            </Row>
-            <Row className="margin-top-10 validityperiod">
-              <Col span={11}>
-                <DatePicker
-                  className="datepicker"
-                  placeholder="Start Date"
-                  format="YYYY/MM/DD"
-                  onChange={(date, dateString) => {
-                    setStartDate(dateString);
-                  }}
-                />
-              </Col>
-              <Col span={2}></Col>
-              <Col span={11}>
-                <DatePicker
-                  className="datepicker"
-                  placeholder="End Date"
-                  format="YYYY/MM/DD"
-                  onChange={(date, dateString) => {
-                    setEndDate(dateString);
-                  }}
-                />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Divider />
-        <Row>
-          <Text strong className="float-left">
-            Materials
-          </Text>
-        </Row>
-
-        <Row>
-          <Col xs={24} sm={16} ls={10} md={10} lg={7}>
-            <Collapse
-              className="text-align-left margin-top-20"
-              defaultActiveKey={["1"]}
-              ghost
-            >
-              {materialItems.map((matItem, index) => (
-                <Panel
-                  header={
-                    <Row className="inline-block">
-                      <Text strong className="float-left">
-                        Material {index + 1}
-                      </Text>
-                      <Button
-                        className="float-right"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onRemoveMaterial(matItem.id);
-                        }}
-                      >
-                        Remove
-                      </Button>
-                    </Row>
-                  }
-                  key={matItem.id}
-                >
-                  <Row>
-                    <Select
-                      className="contract-select"
-                      placeholder="Material"
-                      value={matItem.material}
-                      onChange={(value) => {
-                        setMaterialItems(
-                          materialItems.map((it) =>
-                            it.id !== matItem.id
-                              ? it
-                              : {
-                                  ...it,
-                                  material: value,
-                                }
-                          )
-                        );
+              <Col xs={24} sm={16} ls={10} md={10} lg={7}>
+                <Row>
+                  <Text strong className="float-left">
+                    RFQ
+                  </Text>
+                </Row>
+                <Row>
+                  <Select
+                    className="contract-select"
+                    value={rfqId}
+                    onChange={(value) => onChangeRFQ(value)}
+                    placeholder="RFQ ID"
+                    options={rfqOp}
+                  />
+                </Row>
+                <Row className="margin-top-10">
+                  <Text strong className="float-left">
+                    Business Partner
+                  </Text>
+                </Row>
+                <Row className="margin-top-10">
+                  <Input value={buspartner} disabled />
+                </Row>
+                <Row className="margin-top-10">
+                  <Text strong className="float-left">
+                    Validity Period
+                  </Text>
+                </Row>
+                <Row className="margin-top-10 validityperiod">
+                  <Col span={11}>
+                    <DatePicker
+                      className="datepicker"
+                      placeholder="Start Date"
+                      format="YYYY/MM/DD"
+                      onChange={(date, dateString) => {
+                        setStartDate(dateString);
                       }}
-                      options={materialOp}
                     />
-                  </Row>
-                  <Row>
-                    <Input
-                      className="margin-top-10"
-                      value={matItem.material_description}
-                      onChange={(event) => {
-                        setMaterialItems(
-                          materialItems.map((it) =>
-                            it.id !== matItem.id
-                              ? it
-                              : {
-                                  ...it,
-                                  material_description: event.target.value,
-                                }
-                          )
-                        );
+                  </Col>
+                  <Col span={2}></Col>
+                  <Col span={11}>
+                    <DatePicker
+                      className="datepicker"
+                      placeholder="End Date"
+                      format="YYYY/MM/DD"
+                      onChange={(date, dateString) => {
+                        setEndDate(dateString);
                       }}
-                      placeholder="Material Description"
                     />
-                  </Row>
-                  <Row>
-                    <Text strong className="float-left margin-top-10">
-                      Material1 tier prices
-                    </Text>
-                  </Row>
-                  <Row>
-                    <Row className="margin-top-20 width-100">
-                      <Col span="12">
-                        <Text strong className="float-left">
-                          Quantity
-                        </Text>
+                  </Col>
+                </Row>
+                <Row className="margin-top-10">
+                  <Text strong className="float-left">
+                    Materials
+                  </Text>
+                </Row>
+                {materialItems &&
+                  materialItems.map((item, index) => (
+                    <Row className="margin-top-10" key={index} justify="center">
+                      <Col span={8} justify="center" align="middle">
+                        {item.material} price:
                       </Col>
-                      <Col span="12">
-                        <Text strong className="float-left">
-                          Pricing
-                        </Text>
-                      </Col>
-                    </Row>
-                    <Row className="margin-top-20 width-100" gutter={12}>
-                      <Col span="12">
+                      <Col span={12}>
                         <Input
-                          className="contract-material-select"
-                          value={matItem.quantity}
+                          placeholder="Price"
+                          value={item.price}
                           onChange={(event) => {
                             setMaterialItems(
                               materialItems.map((it) =>
-                                it.id !== matItem.id
-                                  ? it
-                                  : {
-                                      ...it,
-                                      quantity: event.target.value,
-                                    }
-                              )
-                            );
-                          }}
-                          placeholder="Qty & above"
-                        />
-                      </Col>
-                      <Col span="12">
-                        <Input
-                          className="contract-material-select"
-                          value={matItem.price}
-                          onChange={(event) => {
-                            setMaterialItems(
-                              materialItems.map((it) =>
-                                it.id !== matItem.id
+                                it.id !== item.id
                                   ? it
                                   : {
                                       ...it,
@@ -381,28 +321,114 @@ const CreateContract = () => {
                               )
                             );
                           }}
-                          placeholder="Price"
                         />
                       </Col>
                     </Row>
-                  </Row>
-                </Panel>
-              ))}
-            </Collapse>
-          </Col>
-        </Row>
-        <Divider />
-        <Button
-          className="black-button float-left margin-bottom-20"
-          onClick={onAddMaterial}
-        >
-          Add Material
-        </Button>
-        <Divider />
-        <Button className="float-left">Cancel</Button>
-        <Button className="float-left margin-left-8" onClick={handleSubmit}>
-          Sign and submit contract
-        </Button>
+                  ))}
+              </Col>
+            </Row>
+            <Divider />
+            <Button className="float-left">Cancel</Button>
+            <Button
+              className="float-left margin-left-8"
+              onClick={handleSubmitProposal}
+            >
+              Sign and submit proposal
+            </Button>
+          </>
+        ) : (
+          <>
+            <Row>
+              <Col xs={24} sm={16} ls={10} md={10} lg={7}>
+                <Collapse
+                  className="text-align-left margin-top-20"
+                  defaultActiveKey={["1"]}
+                  expandIcon={({ isActive }) => (
+                    <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                  )}
+                  ghost
+                >
+                  {materialItems.map((matItem, index) => (
+                    <Panel
+                      header={
+                        <Row className="inline-block width-100">
+                          <Text strong className="float-left">
+                            Material {index + 1}
+                          </Text>
+                          <Button
+                            className="float-right"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onRemoveMaterial(matItem.id);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </Row>
+                      }
+                      key={matItem.id}
+                    >
+                      <Row>
+                        <Select
+                          className="contract-select"
+                          placeholder="Material"
+                          value={matItem.material}
+                          onChange={(value) => {
+                            setMaterialItems(
+                              materialItems.map((it) =>
+                                it.id !== matItem.id
+                                  ? it
+                                  : {
+                                      ...it,
+                                      material: value,
+                                    }
+                              )
+                            );
+                          }}
+                          options={materialOp}
+                        />
+                      </Row>
+                      <Row>
+                        <Input
+                          className="margin-top-10"
+                          value={matItem.material_description}
+                          onChange={(event) => {
+                            setMaterialItems(
+                              materialItems.map((it) =>
+                                it.id !== matItem.id
+                                  ? it
+                                  : {
+                                      ...it,
+                                      material_description: event.target.value,
+                                    }
+                              )
+                            );
+                          }}
+                          placeholder="Material Description"
+                        />
+                      </Row>
+                    </Panel>
+                  ))}
+                </Collapse>
+              </Col>
+            </Row>
+            <Divider />
+            <Button
+              className="black-button float-left margin-bottom-20"
+              onClick={onAddMaterial}
+            >
+              Add Material
+            </Button>
+            <Divider />
+            <Button className="float-left">Cancel</Button>
+            <Button
+              className="float-left margin-left-8"
+              onClick={handleSubmitRFQ}
+            >
+              Submit RFQ.
+            </Button>
+          </>
+        )}
       </Spin>
     </>
   );

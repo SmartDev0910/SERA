@@ -20,7 +20,7 @@ import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import "./page.css";
 import { TRANSACTION_ERROR } from "../utils/messages";
-
+import { CaretLeftOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
@@ -107,7 +107,9 @@ const IssueInvoice = () => {
       <Spin spinning={loading} tip="Loading...">
         <Row>
           <Link to="/invoices">
-            <Button> {"<"} Back</Button>
+            <Button>
+              <CaretLeftOutlined /> Back
+            </Button>
           </Link>
         </Row>
         <Row className="margin-top-20">
