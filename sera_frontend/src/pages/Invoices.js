@@ -7,6 +7,7 @@ import {
   Divider,
   Button,
   Tabs,
+  Tag,
   Input,
   Table,
   Spin,
@@ -27,11 +28,9 @@ const { Search } = Input;
 const Invoices = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [provider, setProvider] = useState();
   const [tabKey, setTabKey] = useState("all");
   const [search_text, setSearchText] = useState("");
-  const [isWalletIntalled, setIsWalletInstalled] = useState(false);
-  const { chainId, active, account } = useWeb3React();
+  const { account } = useWeb3React();
 
   const dataSource = useMemo(() => {
     switch (tabKey) {
@@ -46,10 +45,65 @@ const Invoices = () => {
     }
   }, [data, tabKey, account]);
 
-  const validNetwork =
-    chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
   let TrackContract = null;
 
+  const items = [
+    {
+      key: "all",
+      label: `All`,
+    },
+    {
+      key: "issued",
+      label: `Issued`,
+    },
+    {
+      key: "received",
+      label: `Received`,
+    },
+  ];
+
+  const columns = [
+    {
+      title: "Invoice ID",
+      dataIndex: "invoice_id",
+      sorter: {
+        compare: (a, b) => a.invoice_id - b.invoice_id,
+        multiple: 1,
+      },
+    },
+    {
+      title: "Business Partner",
+      dataIndex: "bus_partner",
+      sorter: {
+        compare: (a, b) => a.bus_partner - b.bus_partner,
+        multiple: 2,
+      },
+    },
+    {
+      title: "Delivery term",
+      dataIndex: "delivery_term",
+    },
+    {
+      title: "Payment term",
+      dataIndex: "payment_term",
+    },
+    {
+      title: "Due Date",
+      dataIndex: "due_date",
+      sorter: {
+        compare: (a, b) => a.due_date - b.due_date,
+        multiple: 6,
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      sorter: {
+        compare: (a, b) => a.status - b.status,
+        multiple: 7,
+      },
+    },
+  ];
   const updateInvoices = async () => {
     setLoading(true);
     const myProvider = new ethers.providers.Web3Provider(window.ethereum);
@@ -102,8 +156,7 @@ const Invoices = () => {
             ),
             payment_term: net_value,
             due_date: "2023/1/18",
-            status: "Ready",
-            actions: "1",
+            status: <Tag color="magenta">Active</Tag>,
           });
         }
       }
@@ -132,70 +185,6 @@ const Invoices = () => {
     setTabKey(key);
   };
 
-  const items = [
-    {
-      key: "all",
-      label: `All`,
-    },
-    {
-      key: "issued",
-      label: `Issued`,
-    },
-    {
-      key: "received",
-      label: `Received`,
-    },
-  ];
-  const columns = [
-    {
-      title: "Invoice ID",
-      dataIndex: "invoice_id",
-      sorter: {
-        compare: (a, b) => a.invoice_id - b.invoice_id,
-        multiple: 1,
-      },
-    },
-    {
-      title: "Business Partner",
-      dataIndex: "bus_partner",
-      sorter: {
-        compare: (a, b) => a.bus_partner - b.bus_partner,
-        multiple: 2,
-      },
-    },
-    {
-      title: "Delivery term",
-      dataIndex: "delivery_term",
-    },
-    {
-      title: "Payment term",
-      dataIndex: "payment_term",
-    },
-    {
-      title: "Due Date",
-      dataIndex: "due_date",
-      sorter: {
-        compare: (a, b) => a.due_date - b.due_date,
-        multiple: 6,
-      },
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      sorter: {
-        compare: (a, b) => a.status - b.status,
-        multiple: 7,
-      },
-    },
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      sorter: {
-        compare: (a, b) => a.actions - b.actions,
-        multiple: 8,
-      },
-    },
-  ];
   return (
     <>
       <Spin spinning={loading} tip="Loading...">

@@ -6,6 +6,7 @@ import {
   Divider,
   Button,
   Tabs,
+  Tag,
   Input,
   Table,
   Spin,
@@ -106,14 +107,6 @@ const Contracts = () => {
       sorter: {
         compare: (a, b) => a.status - b.status,
         multiple: 7,
-      },
-    },
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      sorter: {
-        compare: (a, b) => a.actions - b.actions,
-        multiple: 8,
       },
     },
   ];
@@ -225,8 +218,7 @@ const Contracts = () => {
             payment_term: net_value,
             start_date: "2023/1/6",
             end_date: "2023/1/16",
-            status: "Ready",
-            actions: "1",
+            status: <Tag color="magenta">Active</Tag>,
           });
         }
       }

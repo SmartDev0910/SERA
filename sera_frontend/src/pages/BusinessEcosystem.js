@@ -170,11 +170,6 @@ const BusinessEcosystem = () => {
 
   const handleChangeWalletAddress = (e) => {
     setWalletAddress(e.target.value);
-
-    console.log(
-      "-------",
-      data.filter((i) => i.w_address.includes(wallet_address))
-    );
   };
 
   useEffect(() => {
