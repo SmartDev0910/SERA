@@ -32,41 +32,6 @@ const Contracts = () => {
   const { account } = useWeb3React();
   const [tabKey, setTabKey] = useState("all");
 
-  const dataSource = useMemo(() => {
-    switch (tabKey) {
-      case "all":
-        return data;
-      case "issued":
-        return data.filter((i) => JSON.stringify(i.buyer).includes(account));
-    }
-  }, [data, tabKey, account]);
-
-  const dataSourceRFQ = useMemo(() => {
-    switch (tabKey) {
-      case "all":
-        return rfqdata;
-      case "received":
-        return rfqdata.filter((i) => i.wallet_address !== account);
-    }
-  }, [rfqdata, tabKey, account]);
-
-  let TrackContract = null;
-
-  const items = [
-    {
-      key: "all",
-      label: `All`,
-    },
-    {
-      key: "issued",
-      label: `Issued`,
-    },
-    {
-      key: "received",
-      label: `Received`,
-    },
-  ];
-
   const columnsRFQ = [
     {
       title: "RFQ ID",
@@ -86,7 +51,7 @@ const Contracts = () => {
     },
   ];
 
-  const columns = [
+  const columnsProposal = [
     {
       title: "Contract ID",
       dataIndex: "contract_id",
@@ -153,9 +118,50 @@ const Contracts = () => {
     },
   ];
 
-  const handleModeChange = (e) => {
-    setMode(e.target.value);
-  };
+  const dataSource = useMemo(() => {
+    switch (tabKey) {
+      case "all":
+        if (mode === "RFQ") return rfqdata;
+        else return data;
+      case "issued":
+        return data.filter((i) => JSON.stringify(i.buyer).includes(account));
+      case "received":
+        return rfqdata.filter((i) => i.wallet_address !== account);
+      default:
+        break;
+    }
+  }, [rfqdata, data, mode, tabKey, account]);
+
+  const columns = useMemo(() => {
+    switch (tabKey) {
+      case "all":
+        if (mode === "RFQ") return columnsRFQ;
+        else return columnsProposal;
+      case "issued":
+        return columnsProposal;
+      case "received":
+        return columnsRFQ;
+      default:
+        break;
+    }
+  }, [mode, tabKey, account]);
+
+  let TrackContract = null;
+
+  const items = [
+    {
+      key: "all",
+      label: `All`,
+    },
+    {
+      key: "issued",
+      label: `Issued`,
+    },
+    {
+      key: "received",
+      label: `Received`,
+    },
+  ];
 
   const updateContracts = async () => {
     setLoading(true);
@@ -267,16 +273,20 @@ const Contracts = () => {
 
   useEffect(() => {
     getListRfq();
-    updateContracts();
   }, []);
 
-  useEffect(() => {
-    if (mode === "proposal") updateContracts();
-  }, [mode]);
-
   const onChange = (key) => {
+    if (key === "issued") updateContracts();
+    if (key === "received") getListRfq();
     setTabKey(key);
   };
+
+  const handleModeChange = (e) => {
+    if (e.target.value === "RFQ") getListRfq();
+    if (e.target.value === "proposal") updateContracts();
+    setMode(e.target.value);
+  };
+
   return (
     <>
       <Spin spinning={loading} tip="Loading...">
@@ -290,83 +300,33 @@ const Contracts = () => {
         </Row>
         <Divider />
         <Tabs defaultActiveKey="all" items={items} onChange={onChange} />
-        {tabKey === "all" ? (
-          <>
-            <Row justify="left">
-              <Search
-                placeholder="Search Contracts"
-                className="contract-search-input"
-                onSearch={onSearch}
-              />
-              <Radio.Group
-                onChange={handleModeChange}
-                value={mode}
-                buttonStyle="solid"
-                style={{ marginLeft: 10 }}
-              >
-                <Radio.Button value="RFQ">RFQ</Radio.Button>
-                <Radio.Button value="proposal">Proposal</Radio.Button>
-              </Radio.Group>
-            </Row>
-            {mode === "RFQ" ? (
-              <Table
-                className="margin-top-20"
-                columns={columnsRFQ}
-                dataSource={dataSourceRFQ}
-                pagination={false}
-              />
-            ) : (
-              <Table
-                className="margin-top-20"
-                columns={columns}
-                scroll={{ x: 2000 }}
-                dataSource={dataSource}
-                pagination={false}
-              />
-            )}
-          </>
-        ) : (
-          ""
-        )}
-        {tabKey === "issued" ? (
-          <>
-            <Row justify="space-between">
-              <Search
-                placeholder="Search Contracts"
-                className="contract-search-input"
-                onSearch={onSearch}
-              />
-            </Row>
-            <Table
-              className="margin-top-20"
-              columns={columns}
-              scroll={{ x: 2000 }}
-              dataSource={dataSource}
-              pagination={false}
-            />
-          </>
-        ) : (
-          ""
-        )}
-        {tabKey === "received" ? (
-          <>
-            <Row justify="space-between">
-              <Search
-                placeholder="Search Contracts"
-                className="contract-search-input"
-                onSearch={onSearch}
-              />
-            </Row>
-            <Table
-              className="margin-top-20"
-              columns={columnsRFQ}
-              dataSource={dataSourceRFQ}
-              pagination={false}
-            />
-          </>
-        ) : (
-          ""
-        )}
+        <Row justify="left">
+          <Search
+            placeholder="Search Contracts"
+            className="contract-search-input"
+            onSearch={onSearch}
+          />
+          {tabKey === "all" ? (
+            <Radio.Group
+              onChange={handleModeChange}
+              value={mode}
+              buttonStyle="solid"
+              style={{ marginLeft: 10 }}
+            >
+              <Radio.Button value="RFQ">RFQ</Radio.Button>
+              <Radio.Button value="proposal">Proposal</Radio.Button>
+            </Radio.Group>
+          ) : (
+            ""
+          )}
+        </Row>
+        <Table
+          className="margin-top-20"
+          columns={columns}
+          scroll={{ x: 2000 }}
+          dataSource={dataSource}
+          pagination={false}
+        />
 
         {/* <Pagination
           total={85}
