@@ -259,7 +259,7 @@ const App = () => {
             for (let i = 0; i < pro_count; i++) {
               let pro_pub_number = await ProvContract.product_list(i);
               let material = await ProvContract.products(pro_pub_number);
-              tmp.push(material);
+              if (material.producer_address === account) tmp.push(material);
               setState((prevProps) => ({
                 ...prevProps,
                 material: tmp,
