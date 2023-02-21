@@ -289,6 +289,15 @@ const BusinessEcosystem = () => {
             <>
               <Divider />
               <Descriptions title="Party Info" column={1} bordered>
+                <Descriptions.Item label="Wallet Address">
+                  {data
+                    .filter((i) => i.w_address.includes(wallet_address))[0]
+                    .w_address.substring(0, 8) +
+                    " ... " +
+                    data
+                      .filter((i) => i.w_address.includes(wallet_address))[0]
+                      .w_address.substring(35)}
+                </Descriptions.Item>
                 <Descriptions.Item label="Email">
                   {
                     data.filter((i) => i.w_address.includes(wallet_address))[0]
