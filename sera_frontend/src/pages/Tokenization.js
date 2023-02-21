@@ -85,7 +85,7 @@ const Tokenization = () => {
       for (let i = 0; i < invoice_id; i++) {
         let shipment_id = await TrackContract.invoice_list(i);
         let contract = await TrackContract.shipments(shipment_id);
-        if (contract.sender === account && !contract.action_status)
+        if (contract.sender === account)
           tmp.push({
             key: i,
             label: i,
@@ -142,7 +142,7 @@ const Tokenization = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         okText="Deploy"
-        width={800}
+        width={600}
         style={{
           top: "20%",
         }}

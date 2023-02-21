@@ -1,4 +1,4 @@
-import { useRoutes } from "react-router-dom";
+import { useRoutes, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import AuthParties from "./pages/AuthParties";
 import BusinessEcosystem from "./pages/BusinessEcosystem";
@@ -58,6 +58,10 @@ export default function Router() {
     {
       path: "/create-pur-order",
       element: <CreatePurOrder />,
+    },
+    {
+      path: "*",
+      element: <Navigate to="/" replace />,
     },
   ]);
   return element;

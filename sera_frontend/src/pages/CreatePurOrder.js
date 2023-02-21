@@ -209,7 +209,7 @@ const CreateContract = () => {
               ""
             )}
             <Divider />
-            <Row className="panelFooter">
+            <Row>
               <Button className="float-left">Cancel</Button>
               <Button
                 className="float-left margin-left-8 yellow-btn"
