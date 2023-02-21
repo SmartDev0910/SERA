@@ -33,10 +33,9 @@ const BusinessEcosystem = () => {
   const [to_email, setToEmail] = useState("");
   const [wallet_address, setWalletAddress] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isWalletIntalled, setIsWalletInstalled] = useState(false);
   const [search_text, setSearchText] = useState("");
-  const [provider, setProvider] = useState();
   const [data, setData] = useState([]);
   const { chainId, active, account } = useWeb3React();
   const validNetwork =
@@ -170,15 +169,9 @@ const BusinessEcosystem = () => {
 
   const handleChangeWalletAddress = (e) => {
     setWalletAddress(e.target.value);
-
-    console.log(
-      "-------",
-      data.filter((i) => i.w_address.includes(wallet_address))
-    );
   };
 
   useEffect(() => {
-    setLoading(true);
     if (window.ethereum) {
       setIsWalletInstalled(true);
     }
@@ -216,19 +209,18 @@ const BusinessEcosystem = () => {
           }
         }
         setData(tmp);
+        setLoading(false);
       } catch (e) {
         message.error(TRANSACTION_ERROR, 5);
         console.log(e);
       }
     }
     fetchData();
-    setLoading(false);
-  }, [account]);
+  }, []);
 
   useEffect(() => {
     if (validNetwork && active && window.ethereum) {
       const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-      setProvider(myProvider);
       ProvenanceContract = new ethers.Contract(
         process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
         provenanceAbi,

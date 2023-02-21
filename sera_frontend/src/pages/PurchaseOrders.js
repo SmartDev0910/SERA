@@ -8,6 +8,7 @@ import {
   Input,
   Table,
   Spin,
+  Tag,
   Pagination,
   message,
 } from "antd";
@@ -92,8 +93,7 @@ const PurchaseOrders = () => {
               </Row>
             ),
             payment_term: net_value,
-            status: "Ready",
-            actions: "1",
+            status: <Tag color="magenta">Active</Tag>,
           });
         }
       }
@@ -169,14 +169,6 @@ const PurchaseOrders = () => {
       sorter: {
         compare: (a, b) => a.status - b.status,
         multiple: 7,
-      },
-    },
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      sorter: {
-        compare: (a, b) => a.actions - b.actions,
-        multiple: 8,
       },
     },
   ];
