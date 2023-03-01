@@ -223,7 +223,12 @@ const Tokenization = () => {
           </Button>
         </Row>
       ) : (
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={false}
+          scroll={{ x: 2000 }}
+        />
       )}
 
       <Modal
