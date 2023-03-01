@@ -210,7 +210,6 @@ const Invoices = () => {
           columns={columns}
           scroll={{ x: 2000 }}
           dataSource={dataSource}
-          onChange={onChange}
           pagination={false}
         />
         {/* <Pagination
