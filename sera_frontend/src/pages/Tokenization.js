@@ -130,9 +130,9 @@ const Tokenization = () => {
       );
       let count = await seraNFTFactoryContract.token_count();
       count = Number(count);
-      setTokenCount(count);
       if (count) {
-        let tmp = [];
+        let tmp = [],
+          cnt = 0;
         for (let i = 1; i <= count; i++) {
           let token = await seraNFTFactoryContract.token(i);
           if (token.owner === account) {
@@ -144,8 +144,10 @@ const Tokenization = () => {
               token_address: token.token_address,
               status: <Tag color="magenta">Active</Tag>,
             });
+            cnt++;
           }
         }
+        await setTokenCount(cnt);
         await setData(tmp);
       }
     } catch (e) {
@@ -179,7 +181,7 @@ const Tokenization = () => {
       await updateData();
     }
     fetchData();
-  }, []);
+  }, [account]);
 
   return (
     <Spin spinning={loading} tip="Loading...">
