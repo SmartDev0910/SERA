@@ -1,9 +1,36 @@
 [
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   {
-    "inputs": [],
+    "inputs": [
+      { "internalType": "string", "name": "invoice_id", "type": "string" },
+      { "internalType": "string", "name": "token_name", "type": "string" },
+      { "internalType": "string", "name": "token_symbol", "type": "string" },
+      { "internalType": "string", "name": "contract_type", "type": "string" }
+    ],
     "name": "createSeraNFT",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "token",
+    "outputs": [
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "address", "name": "token_address", "type": "address" },
+      { "internalType": "string", "name": "invoice_id", "type": "string" },
+      { "internalType": "string", "name": "token_name", "type": "string" },
+      { "internalType": "string", "name": "token_symbol", "type": "string" },
+      { "internalType": "string", "name": "contract_type", "type": "string" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "token_count",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
     "type": "function"
   }
 ]
