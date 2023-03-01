@@ -1,5 +1,7 @@
 # SERA
-Polygon Mumbai / Solidity / React / Ether.js
+
+* Frontend Binance / Solidity / React / Ether.js
+* Backend Golang/ PostgreSQL
 
 ## SERA PROJECT
 
