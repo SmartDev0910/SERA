@@ -12,10 +12,8 @@ import {
   Spin,
   message,
 } from "antd";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import trackAbi from "../abis/trackingAbi.json";
-import provAbi from "../abis/provenanceAbi.json";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import "./page.css";
@@ -25,19 +23,13 @@ const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
 const IssueInvoice = () => {
-  const [busPartnerOp, setBusPartnerOp] = useState([]);
   const [purOrderOp, setPurOrderOp] = useState([]);
-  const [buspartner, setBusPartner] = useState("");
   const [start_date, setStartDate] = useState("");
   const [end_date, setEndDate] = useState("");
   const [pur_id, setPurId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isWalletIntalled, setIsWalletInstalled] = useState(false);
-  const [provider, setProvider] = useState();
   let TrackContract = null;
-  const { chainId, active, account } = useWeb3React();
-  const validNetwork =
-    chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
+  const { account } = useWeb3React();
 
   const navigate = useNavigate();
 

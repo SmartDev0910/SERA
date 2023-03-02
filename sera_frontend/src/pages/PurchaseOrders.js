@@ -9,6 +9,7 @@ import {
   Table,
   Spin,
   Tag,
+  Descriptions,
   Pagination,
   message,
 } from "antd";
@@ -77,20 +78,15 @@ const PurchaseOrders = () => {
               </>
             ),
             delivery_term: (
-              <Row className="width-100">
-                <Row gutter={4} className="width-100">
-                  <Col span={12}>Material</Col>
-                  <Col span={12}>Quantity</Col>
-                </Row>
-                <Row gutter={4} className="width-100">
-                  <Col span={12}>{contract.item1}</Col>
-                  <Col span={12}>{Number(contract.quantity1)}</Col>
-                </Row>
-                <Row gutter={4} className="width-100">
-                  <Col span={12}>{contract.item2}</Col>
-                  <Col span={12}>{Number(contract.quantity2)}</Col>
-                </Row>
-              </Row>
+              <Descriptions column={1} size="small" bordered>
+                <Descriptions.Item label="Material">Quantity</Descriptions.Item>
+                <Descriptions.Item label={contract.item1}>
+                  {Number(contract.quantity1)}
+                </Descriptions.Item>
+                <Descriptions.Item label={contract.item2}>
+                  {Number(contract.quantity2)}
+                </Descriptions.Item>
+              </Descriptions>
             ),
             payment_term: net_value,
             status: <Tag color="magenta">Active</Tag>,

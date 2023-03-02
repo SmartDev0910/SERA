@@ -11,6 +11,7 @@ import {
   Table,
   Spin,
   Pagination,
+  Descriptions,
   message,
   Radio,
 } from "antd";
@@ -200,20 +201,15 @@ const Contracts = () => {
               </>
             ),
             delivery_term: (
-              <Row className="width-100">
-                <Row gutter={4} className="width-100">
-                  <Col span={12}>Material</Col>
-                  <Col span={12}>Quantity</Col>
-                </Row>
-                <Row gutter={4} className="width-100">
-                  <Col span={12}>{contract.item1}</Col>
-                  <Col span={12}>{Number(contract.quantity1)}</Col>
-                </Row>
-                <Row gutter={4} className="width-100">
-                  <Col span={12}>{contract.item2}</Col>
-                  <Col span={12}>{Number(contract.quantity2)}</Col>
-                </Row>
-              </Row>
+              <Descriptions column={1} size="small" bordered>
+                <Descriptions.Item label="Material">Quantity</Descriptions.Item>
+                <Descriptions.Item label={contract.item1}>
+                  {Number(contract.quantity1)}
+                </Descriptions.Item>
+                <Descriptions.Item label={contract.item2}>
+                  {Number(contract.quantity2)}
+                </Descriptions.Item>
+              </Descriptions>
             ),
             payment_term: net_value,
             start_date: "2023/1/6",
@@ -244,15 +240,13 @@ const Contracts = () => {
       if (res.data.status_code === 200) {
         let tmp = [];
         for (let item of res.data.data) {
-          let material = "";
-          JSON.parse(item.MaterialItems).map(
-            (it) => (material += it.material + ", ")
-          );
           tmp.push({
             rfq_id: item.MaterialId,
             buyer: item.Buspartner,
             wallet_address: item.Wallet_address,
-            material: material.slice(0, material.length - 2),
+            material: JSON.parse(item.MaterialItems).map((it) => (
+              <Tag>{it.material}</Tag>
+            )),
           });
         }
         setRfqData(tmp);
