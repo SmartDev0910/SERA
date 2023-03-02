@@ -469,11 +469,7 @@ const App = () => {
           <Form.Item label="Matrials" className="margin-top-10">
             {state.material &&
               state.material.map((item) => {
-                return (
-                  <>
-                    <Tag color="#108ee9">{item.name}</Tag>{" "}
-                  </>
-                );
+                return <Tag>{item.name}</Tag>;
               })}
           </Form.Item>
           <Form.Item label="Company Description" className="margin-top-10">
