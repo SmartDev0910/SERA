@@ -16,6 +16,7 @@ const items = [
     "group_landing_page",
     null,
     [
+      getItem(<Link to="/profile">My Account</Link>, "profile"),
       getItem(
         <Link to="/business-ecosystem">Business Ecosystem</Link>,
         "business_ecosystem"

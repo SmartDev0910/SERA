@@ -64,6 +64,7 @@ const CreateContract = () => {
             materialItems: JSON.stringify(materialItems),
             buspartner: res1.data.data.Trade_name,
             wallet_address: account,
+            status: 0,
           }
         );
         if (res.data.status_code === 200) {
