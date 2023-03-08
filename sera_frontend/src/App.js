@@ -34,12 +34,20 @@ import "./App.css";
 
 const { Sider, Content } = Layout;
 
+const siderStyle = {
+  height: "calc(100vh - 94px)",
+  position: "-webkit-sticky !important;",
+  position: "sticky !important;",
+  top: 0,
+};
+
 const contentStyle = {
-  minHeight: 120,
-  textAlign: "center",
+  height: "calc(100vh - 94px)",
+  backgroundColor: "#fff",
   color: "#000",
   padding: "20px",
-  backgroundColor: "#fff",
+  minHeight: 120,
+  textAlign: "center",
 };
 
 const logoStyle = {
@@ -298,12 +306,12 @@ const App = () => {
       </Row>
       <Layout>
         <Sider
-          className="sidebar"
           theme="light"
           width={240}
           breakpoint={"lg"}
           collapsedWidth={0}
           trigger={null}
+          style={siderStyle}
         >
           <Menubar />
         </Sider>

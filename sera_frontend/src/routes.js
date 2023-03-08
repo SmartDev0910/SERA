@@ -1,5 +1,6 @@
 import { useRoutes, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import AuthParties from "./pages/AuthParties";
 import BusinessEcosystem from "./pages/BusinessEcosystem";
 import Contracts from "./pages/Contracts";
@@ -18,6 +19,10 @@ export default function Router() {
     {
       path: "/auth-parties",
       element: <AuthParties />,
+    },
+    {
+      path: "/profile",
+      element: <Profile />,
     },
     {
       path: "/business-ecosystem",
