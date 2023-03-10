@@ -39,9 +39,9 @@ func serveApplication() {
     router.Use(cors.New(cors.Config{
         AllowOrigins: []string{"*"},
         AllowMethods: []string{"POST", "PUT", "PATCH", "DELETE", "OPTION"},
-        AllowHeaders: []string{"Content-Type,access-control-allow-origin, access-control-allow-headers"},
+        AllowHeaders: []string{"Content-Type, Authorization, X-Requested-With, access-control-allow-origin, access-control-allow-headers"},
     }))
-
+    
     publicRoutes := router.Group("/api/v1")
 
     publicRoutes.GET("/getlist", controllers.GetListUser)
@@ -57,6 +57,7 @@ func serveApplication() {
     publicRoutes.POST("/updaterfqbystatus", controllers.UpdateRFQByStatus)
     publicRoutes.POST("/addrfq", controllers.AddRFQ)
     publicRoutes.POST("/sendmail", controllers.SendMail)
+    publicRoutes.POST("/uploaddocument", controllers.UploadDocument)
 
     fmt.Println("Server running on port 8000")
     
