@@ -184,7 +184,7 @@ const Profile = () => {
   return (
     <Row justify="center">
       <span className="Modal-title">
-        My account{" "}
+        <span className="title-style"> My Account </span>
         <Button
           shape="circle"
           icon={<EditOutlined />}
