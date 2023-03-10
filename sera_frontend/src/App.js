@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Link } from "react-router-dom";
 import Router from "./routes";
 import Menubar from "./layouts/Menubar";
 import {
   Layout,
   Avatar,
   Row,
-  Col,
-  Input,
-  Divider,
-  Modal,
-  Form,
   Button,
   notification,
   Drawer,
   Dropdown,
   message,
-  Tag,
+  Badge,
 } from "antd";
 import {
   MenuOutlined,
   CaretDownOutlined,
-  EditOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "./utils/connector";
@@ -29,7 +24,6 @@ import { ethers } from "ethers";
 import axios from "axios";
 import logo from "./logo.jpg";
 import { SERVER_ERROR } from "./utils/messages";
-import provAbi from "./abis/provenanceAbi.json";
 import "./App.css";
 
 const { Sider, Content } = Layout;
@@ -64,33 +58,11 @@ const logoTitleStyle = {
 
 const App = () => {
   const { chainId, active, activate, deactivate, account } = useWeb3React();
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isEdited, setEdited] = useState(true);
   const [visible, setVisible] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [form] = Form.useForm();
-  const [state, setState] = useState({
-    email: "",
-    trade_name: "",
-    legal_name: "",
-    country: "",
-    state_town: "",
-    building_number: "",
-    phone_number: "",
-    description: "",
-    material: [],
-  });
-
-  const validateMessages = {
-    required: "${label} is required!",
-    types: {
-      email: "${label} is not a valid email!",
-      number: "${label} is not a valid number!",
-    },
-    number: {
-      range: "${label} must be between ${min} and ${max}",
-    },
-  };
+  const [notiCount, setNotiCount] = useState(0);
+  const [notiData, setNotiData] = useState([]);
+  const [trade_name, setTradeName] = useState("");
 
   async function connect(injected) {
     activate(injected);
@@ -100,52 +72,16 @@ const App = () => {
     deactivate(injected);
   }
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setState((prevProps) => ({
-      ...prevProps,
-      [name]: value,
-    }));
-  };
-
-  const handleOk = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_IP_ADDRESS}/v1/updateuser`,
-        {
-          email: state.email,
-          password: state.password,
-          trade_name: state.trade_name,
-          legal_name: state.legal_name,
-          country: state.country,
-          state_town: state.state_town,
-          building_number: state.building_number,
-          phone_number: state.phone_number,
-          description: state.description,
-          wallet_address: account,
-        }
-      );
-      if (res.data.status_code === 200) {
-        message.success("Profile is updated Successfully.");
-        setEdited(true);
-      }
-    } catch (e) {
-      message.error(SERVER_ERROR, 5);
-      console.log(e);
-    }
-    setModalOpen(false);
-  };
-
   const items = [
     {
-      label: "Your Profile",
+      label: <Link to="/profile">My Account</Link>,
       key: "0",
     },
     {
       type: "divider",
     },
     {
-      label: state.trade_name,
+      label: trade_name,
       key: "1",
     },
     {
@@ -166,8 +102,23 @@ const App = () => {
   ];
 
   const onMenuClick = (e) => {
-    if (e.key === "0") setModalOpen(true);
     if (e.key === "3") disConnect(injected);
+  };
+
+  const onNotiClick = async (e) => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/updaterfqbystatus`,
+        {
+          MaterialId: Number(e.key),
+          Status: 1,
+        }
+      );
+      console.log(res.data);
+      updateNotiData();
+    } catch (e) {
+      console.log("Error: ", e);
+    }
   };
 
   const renderButton = (
@@ -181,7 +132,7 @@ const App = () => {
           trigger={["click"]}
         >
           <Button
-            className="btn btn-green btn-launch-app"
+            className="btn btn-launch-app"
             onClick={(e) => e.preventDefault()}
           >
             {account.substring(0, 5) + " ... " + account.substring(38)}{" "}
@@ -190,7 +141,7 @@ const App = () => {
         </Dropdown>
       ) : (
         <Button
-          className="btn btn-green btn-launch-app"
+          className="btn btn-launch-app"
           onClick={() => connect(injected)}
         >
           CONNECT WALLET
@@ -198,6 +149,31 @@ const App = () => {
       )}
     </>
   );
+
+  const updateNotiData = async () => {
+    const res = await axios.post(
+      `${process.env.REACT_APP_IP_ADDRESS}/v1/getrfqbystatus`,
+      {
+        Status: 0,
+      }
+    );
+    console.log(res.data);
+    if (res.data.status_code === 200) {
+      await setNotiCount(res.data.data.length);
+      console.log(res.data.data);
+      let tmp = [];
+      res.data.data.map((item) => {
+        tmp.push({
+          label: "< " + item.Buspartner + " >" + " was added new RFQ.",
+          key: item.MaterialId,
+        });
+      });
+      await setNotiData(tmp);
+    } else {
+      await setNotiCount(0);
+      setNotiData([]);
+    }
+  };
 
   useEffect(() => {
     if (active) {
@@ -216,63 +192,16 @@ const App = () => {
       });
       async function FetchData() {
         try {
+          await updateNotiData();
           const res = await axios.post(
             `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
             {
               Wallet_address: account,
             }
           );
-          if (res.data.status_code === 200) {
-            let {
-              Email,
-              Trade_name,
-              Legal_name,
-              Country,
-              State_town,
-              Building_number,
-              Phone_number,
-              Description,
-            } = res.data.data;
-            setState({
-              email: Email,
-              trade_name: Trade_name,
-              legal_name: Legal_name,
-              country: Country,
-              state_town: State_town,
-              building_number: Building_number,
-              phone_number: Phone_number,
-              description: Description,
-            });
 
-            form.setFieldsValue({
-              Email: Email,
-              Trade_name: Trade_name,
-              Legal_name: Legal_name,
-              Country: Country,
-              State_town: State_town,
-              Building_number: Building_number,
-              Phone_number: Phone_number,
-              Description: Description,
-            });
-            const myProvider = new ethers.providers.Web3Provider(
-              window.ethereum
-            );
-            let ProvContract = new ethers.Contract(
-              process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
-              provAbi,
-              myProvider.getSigner()
-            );
-            let tmp = [];
-            let pro_count = await ProvContract.product_count();
-            for (let i = 0; i < pro_count; i++) {
-              let pro_pub_number = await ProvContract.product_list(i);
-              let material = await ProvContract.products(pro_pub_number);
-              if (material.producer_address === account) tmp.push(material);
-              setState((prevProps) => ({
-                ...prevProps,
-                material: tmp,
-              }));
-            }
+          if (res.data.status_code === 200) {
+            setTradeName(res.data.data.Trade_name);
           }
         } catch (e) {
           message.error(SERVER_ERROR, 5);
@@ -293,7 +222,27 @@ const App = () => {
           onClick={() => setVisible(true)}
         />
         <Avatar shape="square" src={logo} style={logoStyle} />
-        {renderButton}
+        <span className="float-right">
+          <Dropdown
+            menu={{
+              items: notiData,
+              onClick: onNotiClick,
+            }}
+            placement="bottomRight"
+            arrow
+            trigger={["click"]}
+          >
+            <Badge className="badge" size="small" count={notiCount}>
+              <Button
+                className="btn btn-bell"
+                icon={<BellOutlined />}
+                onClick={(e) => e.preventDefault()}
+              />
+            </Badge>
+          </Dropdown>
+          {renderButton}
+        </span>
+
         <Drawer
           title="Menu"
           placement="left"
@@ -319,180 +268,6 @@ const App = () => {
           <Router />
         </Content>
       </Layout>
-      <Modal
-        title={
-          <span className="Modal-title">
-            Profile{" "}
-            <Button
-              shape="circle"
-              icon={<EditOutlined />}
-              onClick={() => setEdited(!isEdited)}
-            />
-          </span>
-        }
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={() => setModalOpen(false)}
-        width={800}
-      >
-        <Divider />
-        <Form
-          labelCol={{
-            span: 6,
-          }}
-          wrapperCol={{
-            span: 14,
-          }}
-          form={form}
-          layout="horizontal"
-          validateMessages={validateMessages}
-        >
-          <Form.Item
-            label="Trade Name"
-            name="Trade_name"
-            rules={[
-              {
-                required: true,
-                message: "Please input your trade name!",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Company trade name"
-              name="trade_name"
-              disabled={isEdited}
-              value={state.trade_name}
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Legal Name"
-            name="Legal_name"
-            rules={[
-              {
-                required: true,
-                message: "Please input your legal name!",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Company legal name"
-              name="legal_name"
-              disabled={isEdited}
-              value={state.legal_name}
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Country"
-            name="Country"
-            rules={[
-              {
-                required: true,
-                message: "Please input your country!",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Country"
-              name="country"
-              disabled={isEdited}
-              value={state.country}
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
-            label="State/town"
-            name="State_town"
-            rules={[
-              {
-                required: true,
-                message: "Please input your state/town!",
-              },
-            ]}
-          >
-            <Input
-              placeholder="State town"
-              name="state_town"
-              disabled={isEdited}
-              value={state.state_town}
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Building Number"
-            name="Building_number"
-            rules={[
-              {
-                required: true,
-                message: "Please input your building number!",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Building number"
-              name="building_number"
-              disabled={isEdited}
-              value={state.building_number}
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Phone Number"
-            name="Phone_number"
-            rules={[
-              {
-                required: true,
-                message: "Please input your phone number!",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Phone number"
-              name="phone_number"
-              disabled={isEdited}
-              value={state.phone_number}
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name={["Email"]}
-            rules={[
-              {
-                type: "email",
-                required: true,
-                message: "Please input your email!",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Email"
-              name="email"
-              disabled={isEdited}
-              value={state.email}
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item label="Matrials" className="margin-top-10">
-            {state.material &&
-              state.material.map((item) => {
-                return <Tag>{item.name}</Tag>;
-              })}
-          </Form.Item>
-          <Form.Item label="Company Description" className="margin-top-10">
-            <Input.TextArea
-              placeholder="Company Description"
-              name="description"
-              rows={4}
-              value={state.description}
-              disabled={isEdited}
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-        </Form>
-        <Divider />
-      </Modal>
     </BrowserRouter>
   );
 };

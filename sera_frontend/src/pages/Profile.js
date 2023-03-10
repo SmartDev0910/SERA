@@ -8,8 +8,10 @@ import {
   Row,
   Button,
   Tag,
+  Col,
+  Upload,
 } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, UploadOutlined } from "@ant-design/icons";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import axios from "axios";
@@ -21,7 +23,6 @@ import "./page.css";
 const Profile = () => {
   const { chainId, active, account } = useWeb3React();
   const [isEdited, setEdited] = useState(true);
-  const [balance, setBalance] = useState(0);
   const [form] = Form.useForm();
   const [state, setState] = useState({
     email: "",
@@ -30,10 +31,30 @@ const Profile = () => {
     country: "",
     state_town: "",
     building_number: "",
+    tax_number: "",
+    registration_number: "",
     phone_number: "",
     description: "",
     material: [],
   });
+
+  const props = {
+    name: "document_account",
+    action: `${process.env.REACT_APP_IP_ADDRESS}/v1/uploaddocument`,
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
 
   const validateMessages = {
     required: "${label} is required!",
@@ -90,12 +111,6 @@ const Profile = () => {
         });
         return;
       }
-      const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-      myProvider.getBalance(account).then((balance) => {
-        // convert a currency unit from wei to ether
-        const balanceInEth = ethers.utils.formatEther(balance);
-        setBalance(balanceInEth);
-      });
       async function FetchData() {
         try {
           const res = await axios.post(
@@ -178,167 +193,309 @@ const Profile = () => {
       </span>
       <Divider />
       <Form
-        labelCol={{
-          span: 6,
-        }}
-        wrapperCol={{
-          span: 14,
-          align: "left",
-        }}
         form={form}
-        className="width-100"
+        className="width-80"
         layout="horizontal"
         validateMessages={validateMessages}
       >
-        <Form.Item
-          label="Trade Name"
-          name="Trade_name"
-          rules={[
-            {
-              required: true,
-              message: "Please input your trade name!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Company trade name"
-            name="trade_name"
-            disabled={isEdited}
-            value={state.trade_name}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Legal Name"
-          name="Legal_name"
-          rules={[
-            {
-              required: true,
-              message: "Please input your legal name!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Company legal name"
-            name="legal_name"
-            disabled={isEdited}
-            value={state.legal_name}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Country"
-          name="Country"
-          rules={[
-            {
-              required: true,
-              message: "Please input your country!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Country"
-            name="country"
-            disabled={isEdited}
-            value={state.country}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
-        <Form.Item
-          label="State/town"
-          name="State_town"
-          rules={[
-            {
-              required: true,
-              message: "Please input your state/town!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="State town"
-            name="state_town"
-            disabled={isEdited}
-            value={state.state_town}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Building Number"
-          name="Building_number"
-          rules={[
-            {
-              required: true,
-              message: "Please input your building number!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Building number"
-            name="building_number"
-            disabled={isEdited}
-            value={state.building_number}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Phone Number"
-          name="Phone_number"
-          rules={[
-            {
-              required: true,
-              message: "Please input your phone number!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Phone number"
-            name="phone_number"
-            disabled={isEdited}
-            value={state.phone_number}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Email"
-          name={["Email"]}
-          rules={[
-            {
-              type: "email",
-              required: true,
-              message: "Please input your email!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Email"
-            name="email"
-            disabled={isEdited}
-            value={state.email}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
-        <Form.Item label="Meterials" className="margin-top-10">
-          {state.material &&
-            state.material.map((item) => {
-              return <Tag>{item.name}</Tag>;
-            })}
-        </Form.Item>
-        <Form.Item label="Company Description" className="margin-top-10">
-          <Input.TextArea
-            placeholder="Company Description"
-            name="description"
-            rows={4}
-            value={state.description}
-            disabled={isEdited}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item
+              label="Trade Name"
+              name="Trade_name"
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your trade name!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Company trade name"
+                name="trade_name"
+                disabled={isEdited}
+                value={state.trade_name}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Legal Name"
+              name="Legal_name"
+              labelCol={{
+                span: 4,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your legal name!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Company legal name"
+                name="legal_name"
+                disabled={isEdited}
+                value={state.legal_name}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Country"
+              name="Country"
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your country!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Country"
+                name="country"
+                disabled={isEdited}
+                value={state.country}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="State/town"
+              name="State_town"
+              labelCol={{
+                span: 4,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your state/town!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="State town"
+                name="state_town"
+                disabled={isEdited}
+                value={state.state_town}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Building Number"
+              name="Building_number"
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your building number!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Building number"
+                name="building_number"
+                disabled={isEdited}
+                value={state.building_number}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Phone Number"
+              name="Phone_number"
+              labelCol={{
+                span: 4,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your phone number!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Phone number"
+                name="phone_number"
+                disabled={isEdited}
+                value={state.phone_number}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Email"
+              name={["Email"]}
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  type: "email",
+                  required: true,
+                  message: "Please input your email!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Email"
+                name="email"
+                disabled={isEdited}
+                value={state.email}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Tax Number"
+              name={["tax_number"]}
+              labelCol={{
+                span: 4,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Tax Number"
+                name="tax_number"
+                disabled={isEdited}
+                value={state.tax_number}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Registration Number"
+              name={["registration_number"]}
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Registration Number"
+                name="registration_number"
+                disabled={isEdited}
+                value={state.tax_number}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Meterials"
+              className="margin-top-10"
+              labelCol={{
+                span: 4,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+            >
+              {state.material &&
+                state.material.map((item) => {
+                  return <Tag color="#108ee9">{item.name}</Tag>;
+                })}
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Company Description"
+              className="margin-top-10"
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 18,
+                align: "left",
+              }}
+            >
+              <Input.TextArea
+                placeholder="Company Description"
+                name="description"
+                rows={4}
+                value={state.description}
+                disabled={isEdited}
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
       <Divider />
+
       <Button className="">Cancel</Button>
-      <Button type="primary" className="margin-left-8" onClick={handleOk}>
+      <Button className="margin-left-8" onClick={handleOk}>
         Submit
       </Button>
+      <Upload {...props} className="margin-left-8">
+        <Button icon={<UploadOutlined />} type="primary">
+          Click to Upload Document
+        </Button>
+      </Upload>
     </Row>
   );
 };
