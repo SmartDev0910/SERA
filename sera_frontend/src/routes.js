@@ -12,6 +12,8 @@ import Tokenization from "./pages/Tokenization";
 import PurchaseOrders from "./pages/PurchaseOrders";
 import CreatePurOrder from "./pages/CreatePurOrder";
 import ShipmentManagement from "./pages/ShipmentManagement";
+import CreateShipment from "./pages/CreateShipment";
+import DocumentManagement from "./pages/DocumentManagement";
 
 export default function Router() {
   let element = useRoutes([
@@ -55,6 +57,14 @@ export default function Router() {
     {
       path: "/shipment-management",
       element: <ShipmentManagement />,
+    },
+    {
+      path: "/create-shipment",
+      element: <CreateShipment />,
+    },
+    {
+      path: "/document-management",
+      element: <DocumentManagement />,
     },
     {
       path: "/purchase-orders",

@@ -152,8 +152,13 @@ const IssueInvoice = () => {
             </Row>
             <Divider />
             <Row className="panelFooter">
-              <Button className="float-left">Cancel</Button>
+              <Button shape="round" size="large" className="float-left ">
+                Cancel
+              </Button>
               <Button
+                type="primary"
+                shape="round"
+                size="large"
                 className="float-left margin-left-8"
                 onClick={handleSubmit}
               >
