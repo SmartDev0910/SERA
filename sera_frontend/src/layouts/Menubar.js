@@ -61,6 +61,10 @@ const items = [
         <Link to="/shipment-management">Shipment Management</Link>,
         "shipment-management"
       ),
+      getItem(
+        <Link to="/document-management">Document Management</Link>,
+        "document-management"
+      ),
     ],
     "group"
   ),

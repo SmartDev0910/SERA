@@ -210,9 +210,14 @@ const CreateContract = () => {
             )}
             <Divider />
             <Row>
-              <Button className="float-left">Cancel</Button>
+              <Button shape="round" size="large" className="float-left ">
+                Cancel
+              </Button>
               <Button
-                className="float-left margin-left-8 yellow-btn"
+                type="primary"
+                shape="round"
+                size="large"
+                className="float-left margin-left-8"
                 onClick={handleSubmit}
               >
                 Submit PO
@@ -220,6 +225,8 @@ const CreateContract = () => {
               <Button
                 type="primary"
                 disabled={isApproved}
+                shape="round"
+                size="large"
                 className="float-left margin-left-8"
                 onClick={handleApprove}
               >
