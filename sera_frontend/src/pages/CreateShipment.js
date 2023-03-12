@@ -3,10 +3,12 @@ import {
   Row,
   Col,
   Input,
+  Upload,
   Select,
   Typography,
   Divider,
   Button,
+  message,
   Descriptions,
 } from "antd";
 import { CaretLeftOutlined } from "@ant-design/icons";
@@ -14,6 +16,8 @@ import { Link } from "react-router-dom";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import trackAbi from "../abis/trackingAbi.json";
+import { UploadOutlined } from "@ant-design/icons";
+
 const { Text, Title } = Typography;
 const CreateShipment = () => {
   const [pur_id, setPurId] = useState("");
@@ -21,6 +25,24 @@ const CreateShipment = () => {
   const [purOrderOp, setPurOrderOp] = useState([]);
   const [shipment_details, setShipmentDetails] = useState(null);
   const { account } = useWeb3React();
+
+  const props = {
+    name: "document_account",
+    action: `${process.env.REACT_APP_IP_ADDRESS}/v1/uploaddocument`,
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -35,15 +57,23 @@ const CreateShipment = () => {
         let shipment = await TrackContract.shipments(shipment_id);
         setShipmentDetails(
           <>
-            <Row>
-              <Text strong className="float-left">
-                Shipment Details
-              </Text>
-            </Row>
             <Row className="margin-top-20">
-              <Descriptions column={1} size="small" bordered>
-                <Descriptions.Item label="Material">Quantity</Descriptions.Item>
-                <Descriptions.Item label={shipment.item1}>
+              <Descriptions
+                title="Shipment Details"
+                column={2}
+                size="small"
+                bordered
+              >
+                <Descriptions.Item label="Importer">
+                  {shipment.recipient}
+                </Descriptions.Item>
+                <Descriptions.Item label="Purchase Order ID">
+                  {pur_id}
+                </Descriptions.Item>
+                <Descriptions.Item label="Material" span={2}>
+                  Quantity
+                </Descriptions.Item>
+                <Descriptions.Item label={shipment.item1} span={2}>
                   {Number(shipment.quantity1)}
                 </Descriptions.Item>
                 <Descriptions.Item label={shipment.item2}>
@@ -147,6 +177,18 @@ const CreateShipment = () => {
         >
           Submit
         </Button>
+        <Upload {...props}>
+          <Button
+            icon={<UploadOutlined />}
+            type="primary"
+            shape="round"
+            size="large"
+            className="float-left margin-left-8"
+            disabled={pur_id === ""}
+          >
+            Click to Upload Document
+          </Button>
+        </Upload>
       </Row>
     </>
   );
