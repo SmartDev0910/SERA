@@ -3,7 +3,6 @@ import {
   Row,
   Col,
   Input,
-  Upload,
   Select,
   Typography,
   Divider,
@@ -16,7 +15,6 @@ import { Link } from "react-router-dom";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import trackAbi from "../abis/trackingAbi.json";
-import { UploadOutlined } from "@ant-design/icons";
 
 const { Text, Title } = Typography;
 const CreateShipment = () => {
@@ -25,24 +23,6 @@ const CreateShipment = () => {
   const [purOrderOp, setPurOrderOp] = useState([]);
   const [shipment_details, setShipmentDetails] = useState(null);
   const { account } = useWeb3React();
-
-  const props = {
-    name: "document_account",
-    action: `${process.env.REACT_APP_IP_ADDRESS}/v1/uploaddocument`,
-    headers: {
-      authorization: "authorization-text",
-    },
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
 
   useEffect(() => {
     async function fetchData() {
@@ -146,7 +126,7 @@ const CreateShipment = () => {
       </Row>
       <Row>
         <Text strong className="float-left">
-          Tracing method
+          Tracking method
         </Text>
       </Row>
       <Row>
@@ -177,18 +157,6 @@ const CreateShipment = () => {
         >
           Submit
         </Button>
-        <Upload {...props}>
-          <Button
-            icon={<UploadOutlined />}
-            type="primary"
-            shape="round"
-            size="large"
-            className="float-left margin-left-8"
-            disabled={pur_id === ""}
-          >
-            Click to Upload Document
-          </Button>
-        </Upload>
       </Row>
     </>
   );

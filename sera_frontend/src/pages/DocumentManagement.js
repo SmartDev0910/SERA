@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Row, Button, Divider, Avatar, List, Skeleton, Modal } from "antd";
+import {
+  Row,
+  Button,
+  Divider,
+  Avatar,
+  List,
+  Skeleton,
+  Modal,
+  Input,
+  Upload,
+  message,
+} from "antd";
 import {
   InboxOutlined,
   PlusOutlined,
   MailOutlined,
   SendOutlined,
   SafetyOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
+
 import "./page.css";
 
 const count = 3;
@@ -18,6 +31,24 @@ const DocumentManagement = () => {
   const [data, setData] = useState([]);
   const [list, setList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const props = {
+    name: "document_account",
+    action: `${process.env.REACT_APP_IP_ADDRESS}/v1/uploaddocument`,
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -158,7 +189,20 @@ const DocumentManagement = () => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-      />
+      >
+        <Input placeholder="Input ACID number" className="margin-top-20" />
+        <Upload {...props}>
+          <Button
+            icon={<UploadOutlined />}
+            type="primary"
+            shape="round"
+            size="large"
+            className="float-left margin-left-8 margin-top-20"
+          >
+            Click to Upload Document
+          </Button>
+        </Upload>
+      </Modal>
     </>
   );
 };

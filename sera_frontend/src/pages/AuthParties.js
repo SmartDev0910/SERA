@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
+import { Multicall } from "ethereum-multicall";
 import {
   Row,
   Button,
@@ -107,56 +108,78 @@ const AuthParties = () => {
       myProvider.getSigner()
     );
 
+    const multicall = new Multicall({
+      ethersProvider: myProvider,
+      tryAggregate: true,
+    });
+
     let tmp = [];
+
     let producer_count = await ProvContract.producer_count();
     if (producer_count > 0)
       for (let i = 1; i <= producer_count; i++) {
-        let producer_address = await ProvContract.producer_list(i);
-        let is_auth_producer = false;
-        if (producer_address > account)
-          is_auth_producer = await ProvContract.auth_producer(
-            producer_address,
-            account
-          );
-        else
-          is_auth_producer = await ProvContract.auth_producer(
-            account,
-            producer_address
-          );
-        if (is_auth_producer) {
-          try {
-            const res = await axios.post(
-              `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
-              {
-                Wallet_address: producer_address,
-              }
-            );
-            if (res.data.status_code === 200) {
-              let {
-                Email,
-                Trade_name,
-                Legal_name,
-                Country,
-                State_town,
-                Phone_number,
-              } = res.data.data;
-              tmp.push({
-                email: Email,
-                trade_name: Trade_name,
-                legal_name: Legal_name,
-                country: Country,
-                state_town: State_town,
-                phone_number: Phone_number,
-                wallet_address: producer_address,
-              });
-            }
-          } catch (e) {
-            message.error(SERVER_ERROR, 5);
-            console.log(e);
-          }
-        }
+        tmp.push({
+          reference: "producer_list",
+          methodName: "producer_list",
+          methodParameters: [i],
+        });
       }
 
+    const contractCallContext = [
+      {
+        reference: "Provenance",
+        contractAddress: process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
+        abi: provAbi,
+        calls: tmp,
+      },
+    ];
+
+    const results = await multicall.call(contractCallContext);
+
+    const len = results.results.Provenance.callsReturnContext.length;
+
+    tmp = [];
+    for (let i = 0; i < len; i++) {
+      let producer_address =
+        results.results.Provenance.callsReturnContext[i].returnValues[0];
+      let is_auth_producer = false;
+      is_auth_producer = await ProvContract.auth_producer(
+        producer_address > account ? producer_address : account,
+        producer_address > account ? account : producer_address
+      );
+      if (is_auth_producer) {
+        try {
+          const res = await axios.post(
+            `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+            {
+              Wallet_address: producer_address,
+            }
+          );
+          if (res.data.status_code === 200) {
+            let {
+              Email,
+              Trade_name,
+              Legal_name,
+              Country,
+              State_town,
+              Phone_number,
+            } = res.data.data;
+            tmp.push({
+              email: Email,
+              trade_name: Trade_name,
+              legal_name: Legal_name,
+              country: Country,
+              state_town: State_town,
+              phone_number: Phone_number,
+              wallet_address: producer_address,
+            });
+          }
+        } catch (e) {
+          message.error(SERVER_ERROR, 5);
+          console.log(e);
+        }
+      }
+    }
     await setData(tmp);
     setLoading(false);
   };
@@ -268,24 +291,6 @@ const AuthParties = () => {
 
     updateOrganizations();
   }, [account]);
-
-  useEffect(() => {
-    async function fetchData() {
-      if (validNetwork && active && window.ethereum) {
-        const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-        function getProvContract() {
-          ProvContract = new ethers.Contract(
-            process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
-            provAbi,
-            myProvider.getSigner()
-          );
-        }
-        await getProvContract();
-        updateOrganizations();
-      }
-    }
-    fetchData();
-  }, [validNetwork, active]);
 
   return (
     <>
