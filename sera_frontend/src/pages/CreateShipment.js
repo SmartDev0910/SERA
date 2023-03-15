@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import trackAbi from "../abis/trackingAbi.json";
+import { useNavigate } from "react-router-dom";
 
 const { Text, Title } = Typography;
 const CreateShipment = () => {
@@ -23,6 +24,7 @@ const CreateShipment = () => {
   const [purOrderOp, setPurOrderOp] = useState([]);
   const [shipment_details, setShipmentDetails] = useState(null);
   const { account } = useWeb3React();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -95,6 +97,11 @@ const CreateShipment = () => {
     fetchData();
   }, []);
 
+  const handleSubmit = () => {
+    message.success("Created new shipment sucessfully.");
+    navigate("/shipment-management");
+  };
+
   return (
     <>
       <Row>
@@ -154,6 +161,7 @@ const CreateShipment = () => {
           shape="round"
           size="large"
           className="float-left margin-left-8"
+          onClick={handleSubmit}
         >
           Submit
         </Button>
