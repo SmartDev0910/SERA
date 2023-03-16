@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Row,
   Button,
   Divider,
-  Avatar,
-  List,
-  Skeleton,
   Modal,
   Input,
   Upload,
   message,
   Table,
   Spin,
+  Select,
 } from "antd";
 import {
   InboxOutlined,
@@ -21,85 +20,143 @@ import {
   SafetyOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import ipfs from "../ipfs";
-
+import { useWeb3React } from "@web3-react/core";
+import { SERVER_ERROR } from "../utils/messages";
 import "./page.css";
 
 const DocumentManagement = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [acid, setAcid] = useState("");
+  const [doc_cid, setDocCid] = useState("");
+  const [doc_name, setDocName] = useState("");
+  const [doc_type, setDocType] = useState("");
+  const [doc_file_name, setDocFileName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [buffer, setBuffer] = useState("");
-  const [ipfsHash, setIpfsHash] = useState(null);
+  const { account } = useWeb3React();
+
+  const props = {
+    name: "document_account",
+    action: `${process.env.REACT_APP_IP_ADDRESS}/v1/uploaddocument`,
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+        setDocCid(info.file.response.data[0]);
+        setDocFileName(info.file.name);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
 
   const columns = [
     {
-      title: "Purchase Order ID",
-      dataIndex: "pur_order_id",
+      title: "ACID",
+      dataIndex: "acid",
       sorter: {
-        compare: (a, b) => a.pur_order_id - b.pur_order_id,
+        compare: (a, b) => a.acid - b.acid,
         multiple: 1,
       },
     },
+
     {
-      title: "Importer",
-      dataIndex: "importer",
+      title: "Document",
+      dataIndex: "document",
       sorter: {
-        compare: (a, b) => a.importer - b.importer,
-        multiple: 4,
+        compare: (a, b) => a.document - b.document,
+        multiple: 2,
       },
     },
     {
-      title: "Delivery term",
-      dataIndex: "delivery_term",
-    },
-    {
-      title: "Payment term",
-      dataIndex: "payment_term",
+      title: "Document Hash",
+      dataIndex: "document_hash",
+      sorter: {
+        compare: (a, b) => a.document_hash - b.document_hash,
+        multiple: 3,
+      },
     },
     {
       title: "Status",
       dataIndex: "status",
     },
+    {
+      title: "Action",
+      dataIndex: "action",
+    },
   ];
-
-  const uploadFile = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const file = e.target.files[0];
-    let reader = new window.FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onloadend = () => convertToBuffer(reader);
-  };
-
-  const convertToBuffer = async (reader) => {
-    //file is converted to a buffer to prepare for uploading to IPFS
-    const buff = await Buffer.from(reader.result);
-    //set this buffer -using es6 syntax
-    setBuffer({ buff });
-  };
-
-  const onUploadDoc = async (e) => {
-    e.preventDefault();
-
-    //save document to IPFS,return its hash#, and set hash# to state
-    //https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/FILES.md#add
-    await ipfs.add(buffer, (err, ipfsHash) => {
-      console.log(err, ipfsHash);
-      //setState by setting ipfsHash to ipfsHash[0].hash
-      setIpfsHash({ ipfsHash: ipfsHash[0].hash });
-    }); //await ipfs.add
-  }; //onSubmit
 
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const handleOk = () => {
+
+  const handleOk = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/composedoc`,
+        {
+          Acid: acid,
+          DocumentCid: doc_cid,
+          DocumentName: doc_name,
+          DocumentType: doc_type,
+          DocumentFileName: doc_file_name,
+          From: account,
+          Status: 0,
+        }
+      );
+
+      if (res.data.status_code === 200) {
+        message.success(res.data.msg, 5);
+        updateData();
+      }
+    } catch (e) {
+      message.error(SERVER_ERROR, 5);
+      console.log(e);
+    }
     setIsModalOpen(false);
   };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const updateData = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_IP_ADDRESS}/v1/getlistdocument`
+      );
+      let tmp = [];
+
+      console.log("------------", res.data.data);
+
+      for (let item of res.data.data) {
+        tmp.push({
+          acid: item.Acid,
+          document:
+            item.DocumentType +
+            "+" +
+            item.DocumentFileName +
+            "+" +
+            item.DocumentName,
+          document_hash: item.DocumentCid,
+          status: "inbox",
+        });
+      }
+      setData(tmp);
+      setLoading(false);
+    } catch (e) {
+      message.error(SERVER_ERROR, 5);
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    updateData();
+  }, []);
 
   return (
     <>
@@ -168,19 +225,54 @@ const DocumentManagement = () => {
           onOk={handleOk}
           onCancel={handleCancel}
         >
-          <Input placeholder="Input ACID number" className="margin-top-20" />
-          <form onSubmit={onUploadDoc}>
-            <input type="file" onChange={uploadFile} />
+          <Input
+            className="margin-top-20"
+            placeholder="Please acid number."
+            value={acid}
+            onChange={(e) => setAcid(e.target.value)}
+          />
+          <Input
+            className="margin-top-10"
+            placeholder="Please document name."
+            value={doc_name}
+            onChange={(e) => setDocName(e.target.value)}
+          />
+          <Select
+            className="producer-select margin-top-20"
+            value={doc_type}
+            onChange={(value) => {
+              setDocType(value);
+            }}
+            options={[
+              {
+                label: "INV",
+                value: "INV",
+              },
+              {
+                label: "MATS",
+                value: "MATS",
+              },
+              {
+                label: "CINS",
+                value: "CINS",
+              },
+              {
+                label: "AWBC",
+                value: "AWBC",
+              },
+            ]}
+          />
+          <Upload {...props}>
             <Button
               icon={<UploadOutlined />}
               type="primary"
               shape="round"
               size="large"
-              className="float-left margin-left-8 margin-top-20"
+              className="margin-left-8 margin-top-20"
             >
               Click to Upload Document
             </Button>
-          </form>
+          </Upload>
         </Modal>
       </Spin>
     </>

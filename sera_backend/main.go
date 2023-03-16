@@ -24,6 +24,7 @@ func loadDatabase() {
     database.Database.AutoMigrate(&model.User{})
     database.Database.AutoMigrate(&model.Partner{})
     database.Database.AutoMigrate(&model.Material{})
+    database.Database.AutoMigrate(&model.Document{})
 }
 
 func loadEnv() {
@@ -46,6 +47,7 @@ func serveApplication() {
 
     publicRoutes.GET("/getlist", controllers.GetListUser)
     publicRoutes.GET("/getlistrfq", controllers.GetListRFQ)
+    publicRoutes.GET("/getlistdocument", controllers.GetListDocument)
     publicRoutes.POST("/signup", controllers.SignUpUser)
     publicRoutes.POST("/signin", controllers.SignInUser)
     publicRoutes.POST("/getuser", controllers.GetUser)
@@ -58,6 +60,7 @@ func serveApplication() {
     publicRoutes.POST("/addrfq", controllers.AddRFQ)
     publicRoutes.POST("/sendmail", controllers.SendMail)
     publicRoutes.POST("/uploaddocument", controllers.UploadDocument)
+    publicRoutes.POST("/composedoc", controllers.ComposeDocument)
 
     fmt.Println("Server running on port 8000")
     
