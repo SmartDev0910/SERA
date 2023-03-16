@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { Multicall } from "ethereum-multicall";
 import {
   Row,
-  Col,
   Divider,
   Button,
   Tabs,
@@ -165,49 +165,78 @@ const Contracts = () => {
       trackAbi,
       myProvider.getSigner()
     );
+    const multicall = new Multicall({
+      ethersProvider: myProvider,
+      tryAggregate: true,
+    });
 
     let tmp = [];
     try {
       let shipment_id = await TrackContract.shipment_id();
-      for (let i = 0; i <= shipment_id; i++) {
-        let contract = await TrackContract.shipments(i);
-        if (contract.recipient === account || contract.sender === account) {
-          const buyer = await axios.post(
-            `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
-            {
-              Wallet_address: contract.recipient,
-            }
-          );
+      for (let i = 1; i <= shipment_id; i++) {
+        tmp.push({
+          reference: "shipments",
+          methodName: "shipments",
+          methodParameters: [i],
+        });
+      }
+
+      const contractCallContext = [
+        {
+          reference: "Tra",
+          contractAddress: process.env.REACT_APP_TRACKING_CONTRACT_ADDRESS,
+          abi: trackAbi,
+          calls: tmp,
+        },
+      ];
+
+      const results = await multicall.call(contractCallContext);
+      tmp = [];
+      const len = results.results.Tra.callsReturnContext.length;
+      for (let i = 0; i < len; i++) {
+        let contract = await results.results.Tra.callsReturnContext[i]
+          .returnValues;
+        if (contract[0] === account || contract[1] === account) {
           const supplier = await axios.post(
             `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
             {
-              Wallet_address: contract.sender,
+              Wallet_address: contract[0],
             }
           );
-          let net_value =
-            contract.quantity1 * contract.price1 +
-            contract.quantity2 * contract.price2;
+          const buyer = await axios.post(
+            `${process.env.REACT_APP_IP_ADDRESS}/v1/getuser`,
+            {
+              Wallet_address: contract[1],
+            }
+          );
+          let net_value = parseInt(
+            contract[4].hex * contract[5].hex +
+              contract[7].hex * contract[8].hex
+          );
           tmp.push({
             key: i,
             contract_id: i,
             buyer: (
               <>
-                {buyer.data.data.Trade_name} <br /> {contract.recipient}
+                {buyer.data.data ? buyer.data.data.Trade_name : ""}
+                <br /> {contract[1]}
               </>
             ),
             supplier: (
               <>
-                {supplier.data.data.Trade_name} <br /> {contract.sender}
+                {supplier.data.data ? supplier.data.data.Trade_name : ""}
+                <br />
+                {contract[0]}
               </>
             ),
             delivery_term: (
               <Descriptions column={1} size="small" bordered>
                 <Descriptions.Item label="Material">Quantity</Descriptions.Item>
-                <Descriptions.Item label={contract.item1}>
-                  {Number(contract.quantity1)}
+                <Descriptions.Item label={contract[3]}>
+                  {Number(contract[4].hex)}
                 </Descriptions.Item>
-                <Descriptions.Item label={contract.item2}>
-                  {Number(contract.quantity2)}
+                <Descriptions.Item label={contract[6]}>
+                  {Number(contract[7].hex)}
                 </Descriptions.Item>
               </Descriptions>
             ),
@@ -313,6 +342,7 @@ const Contracts = () => {
           dataSource={dataSource}
           pagination={false}
         />
+        <Divider />
 
         {/* <Pagination
           total={85}

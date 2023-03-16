@@ -13,9 +13,10 @@ import {
 } from "antd";
 import provAbi from "../abis/provenanceAbi.json";
 import { ethers } from "ethers";
+import { Multicall } from "ethereum-multicall";
 import { useWeb3React } from "@web3-react/core";
-import "./page.css";
 import { TRANSACTION_ERROR } from "../utils/messages";
+import "./page.css";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -24,7 +25,6 @@ const Materials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
-  const [isWalletIntalled, setIsWalletInstalled] = useState(false);
   const [search_text, setSearchText] = useState("");
   const [data, setData] = useState([]);
   const [state, setState] = useState({
@@ -32,9 +32,7 @@ const Materials = () => {
     pub_number: "",
     description: "",
   });
-  const { chainId, active, account } = useWeb3React();
-  const validNetwork =
-    chainId === parseInt(process.env.REACT_APP_CHAIN_ID) ? true : false;
+  const { account } = useWeb3React();
   let ProvContract = null;
   const columns = [
     {
@@ -71,26 +69,47 @@ const Materials = () => {
       provAbi,
       myProvider.getSigner()
     );
-    let tmp = [];
-    try {
-      let pro_count = await ProvContract.product_count();
-      for (let i = 0; i < pro_count; i++) {
-        let pro_pub_number = await ProvContract.product_list(i);
-        let material = await ProvContract.products(pro_pub_number);
-        if (material.producer_address === account)
-          tmp.push({
-            material: material.name,
-            pub_number: pro_pub_number,
-            producer: material.producer_address,
-          });
-      }
-      await setData(tmp);
-    } catch (e) {
-      message.error(TRANSACTION_ERROR, 5);
-      console.log(e);
-      setLoading(false);
-    }
+    const multicall = new Multicall({
+      ethersProvider: myProvider,
+      tryAggregate: true,
+    });
 
+    let tmp = [];
+    let pro_count = await ProvContract.product_count();
+
+    if (pro_count > 0)
+      for (let i = 1; i <= pro_count; i++) {
+        tmp.push({
+          reference: "product_list",
+          methodName: "product_list",
+          methodParameters: [i],
+        });
+      }
+
+    const contractCallContext = [
+      {
+        reference: "Provenance",
+        contractAddress: process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
+        abi: provAbi,
+        calls: tmp,
+      },
+    ];
+
+    const results = await multicall.call(contractCallContext);
+    const len = results.results.Provenance.callsReturnContext.length;
+    tmp = [];
+    for (let i = 0; i < len; i++) {
+      let pro_pub_number =
+        results.results.Provenance.callsReturnContext[i].returnValues[0];
+      let material = await ProvContract.products(pro_pub_number);
+      if (material.producer_address === account)
+        tmp.push({
+          material: material.name,
+          pub_number: pro_pub_number,
+          producer: material.producer_address,
+        });
+    }
+    await setData(tmp);
     setLoading(false);
   };
 
@@ -150,29 +169,11 @@ const Materials = () => {
   };
 
   useEffect(() => {
-    if (window.ethereum) {
-      setIsWalletInstalled(true);
-    }
-    updateMaterials();
-  }, []);
-
-  useEffect(() => {
     async function fetchData() {
-      if (validNetwork && active && window.ethereum) {
-        const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-        function getProvContract() {
-          ProvContract = new ethers.Contract(
-            process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
-            provAbi,
-            myProvider.getSigner()
-          );
-        }
-        await getProvContract();
-        updateMaterials();
-      }
+      await updateMaterials();
     }
     fetchData();
-  }, [validNetwork, active]);
+  }, []);
 
   return (
     <>
