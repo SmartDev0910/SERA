@@ -12,6 +12,7 @@ import {
   Dropdown,
   message,
   Badge,
+  Tag,
 } from "antd";
 import {
   MenuOutlined,
@@ -107,14 +108,13 @@ const App = () => {
 
   const onNotiClick = async (e) => {
     try {
-      const res = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_IP_ADDRESS}/v1/updaterfqbystatus`,
         {
           MaterialId: Number(e.key),
           Status: 1,
         }
       );
-      console.log(res.data);
       updateNotiData();
     } catch (e) {
       console.log("Error: ", e);
@@ -157,14 +157,13 @@ const App = () => {
         Status: 0,
       }
     );
-    console.log(res.data);
     if (res.data.status_code === 200) {
       await setNotiCount(res.data.data.length);
       console.log(res.data.data);
       let tmp = [];
       res.data.data.map((item) => {
         tmp.push({
-          label: "< " + item.Buspartner + " >" + " was added new RFQ.",
+          label: item.Buspartner + " was added new RFQ." ,
           key: item.MaterialId,
         });
       });
