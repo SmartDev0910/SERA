@@ -196,11 +196,11 @@ const PurchaseOrders = () => {
             (search_text === ""
               ? data
               : data.filter(
-                  (i) =>
-                    i.buyer.includes(search_text) ||
-                    i.supplier.includes(search_text) ||
-                    i.material.includes(search_text)
-                ))
+                (i) =>
+                  i.buyer.includes(search_text) ||
+                  i.supplier.includes(search_text) ||
+                  i.material.includes(search_text)
+              ))
           }
           onChange={onChange}
           pagination={false}

@@ -341,11 +341,11 @@ const AuthParties = () => {
             <Select
               className="producer-select"
               value={wallet_address}
+              placeholder="Party Wallet Address"
+              options={busPartnerOp}
               onChange={(value) => {
                 setWalletAddress(value);
               }}
-              placeholder="Party Wallet Address"
-              options={busPartnerOp}
             />
             <Divider />
             <Descriptions title="Party Info">
