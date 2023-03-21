@@ -211,7 +211,7 @@ const Contracts = () => {
           );
           let net_value = parseInt(
             contract[4].hex * contract[5].hex +
-              contract[7].hex * contract[8].hex
+            contract[7].hex * contract[8].hex
           );
           tmp.push({
             key: i,

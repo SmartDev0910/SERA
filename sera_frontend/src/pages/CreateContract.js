@@ -328,9 +328,9 @@ const CreateContract = () => {
                                 it.id !== item.id
                                   ? it
                                   : {
-                                      ...it,
-                                      price: event.target.value,
-                                    }
+                                    ...it,
+                                    price: event.target.value,
+                                  }
                               )
                             );
                           }}
@@ -345,9 +345,9 @@ const CreateContract = () => {
                                 it.id !== item.id
                                   ? it
                                   : {
-                                      ...it,
-                                      quantity: event.target.value,
-                                    }
+                                    ...it,
+                                    quantity: event.target.value,
+                                  }
                               )
                             );
                           }}
@@ -409,9 +409,9 @@ const CreateContract = () => {
                                 it.id !== matItem.id
                                   ? it
                                   : {
-                                      ...it,
-                                      material: value,
-                                    }
+                                    ...it,
+                                    material: value,
+                                  }
                               )
                             );
                           }}

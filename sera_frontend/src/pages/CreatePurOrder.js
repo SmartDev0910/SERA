@@ -71,8 +71,8 @@ const CreateContract = () => {
 
           message.error(
             "You need to approve " +
-              Number(net_value) +
-              " amounts of USDC first.",
+            Number(net_value) +
+            " amounts of USDC first.",
             5
           );
           setApproved(false);
