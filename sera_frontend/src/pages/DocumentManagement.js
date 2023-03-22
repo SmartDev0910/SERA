@@ -34,8 +34,9 @@ import {
 import { ethers } from "ethers";
 import { Multicall } from "ethereum-multicall";
 import { useWeb3React } from "@web3-react/core";
-import { SERVER_ERROR } from "../utils/messages";
+import { SERVER_ERROR, TRANSACTION_ERROR } from "../utils/messages";
 import provAbi from "../abis/provenanceAbi.json";
+import trackAbi from "../abis/trackingAbi.json";
 import "./page.css";
 import _default from "antd/es/time-picker";
 
@@ -47,29 +48,26 @@ const DocumentManagement = () => {
   const [acid, setAcid] = useState("");
   const [upload_id, setUploadID] = useState("");
   const [seal_msg, setSealMsg] = useState("");
+  const [seal_ipfs, setSealIpfs] = useState("");
   const [doc_cid, setDocCid] = useState("");
-  const [doc_name, setDocName] = useState("");
-  const [doc_type, setDocType] = useState([]);
+  const [doc_partner, setDocPartner] = useState("");
   const [busPartner, setBusPartner] = useState("")
   const [busPartnerOp, setBusPartnerOp] = useState([]);
-  const [doc_file_name, setDocFileName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDownModalOpen, setIsDownModalOpen] = useState(false);
   const [documentItems, setDocumentItems] = useState([{ doc_id: doc_id++ }]);
+  const [document, setDocument] = useState(null);
   const { account } = useWeb3React();
   let ProvContract = null;
   const steps = [
     {
       title: 'Envelope',
-      content: 'First-content',
     },
     {
       title: 'Seal',
-      content: 'Second-content',
     },
     {
       title: 'Transfer',
-      content: 'Last-content',
     },
   ];
 
@@ -142,10 +140,10 @@ const DocumentManagement = () => {
 
   const columns = [
     {
-      title: "ACID",
-      dataIndex: "acid",
+      title: "Partner",
+      dataIndex: "partner",
       sorter: {
-        compare: (a, b) => a.acid - b.acid,
+        compare: (a, b) => a.partner - b.partner,
         multiple: 1,
       },
     },
@@ -159,9 +157,9 @@ const DocumentManagement = () => {
     },
     {
       title: "Document Hash",
-      dataIndex: "document_hash",
+      dataIndex: "cid",
       sorter: {
-        compare: (a, b) => a.document_hash - b.document_hash,
+        compare: (a, b) => a.cid - b.cid,
         multiple: 3,
       },
     },
@@ -175,31 +173,64 @@ const DocumentManagement = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = async () => {
+  const handleSeal = async () => {
+    setLoading(true)
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_IP_ADDRESS}/v1/composedoc`,
         {
-          Acid: acid,
-          DocumentCid: doc_cid,
-          DocumentName: doc_name,
-          DocumentType: doc_type,
-          DocumentFileName: doc_file_name,
+          Message: seal_msg,
+          Document: JSON.stringify(documentItems),
           From: account,
           Status: 0,
         }
       );
 
       if (res.data.status_code === 200) {
-        message.success(res.data.msg, 5);
-        updateData("inbox");
+        message.success("Sealed the document successfully", 5);
+        setSealIpfs(res.data.data)
+        next();
       }
     } catch (e) {
       message.error(SERVER_ERROR, 5);
       console.log(e);
+      setLoading(false)
     }
-    setIsModalOpen(false);
+    setLoading(false)
   };
+
+  const handleTransfer = async () => {
+    setLoading(true)
+    const myProvider = new ethers.providers.Web3Provider(window.ethereum);
+    let TraContract = new ethers.Contract(
+      process.env.REACT_APP_TRACKING_CONTRACT_ADDRESS,
+      trackAbi,
+      myProvider.getSigner()
+    );
+    await TraContract.transferDocument(busPartner, seal_ipfs)
+      .then((tx) => {
+        return tx.wait().then(
+          async (receipt) => {
+            // This is entered if the transaction receipt indicates success
+            message.success("Transfered a new document successfully.", 5);
+            await setLoading(false);
+            setIsModalOpen(false);
+            updateData("inbox");
+            return true;
+          },
+          (error) => {
+            message.error(TRANSACTION_ERROR, 5);
+            console.log(error);
+          }
+        );
+      })
+      .catch((error) => {
+        message.error(TRANSACTION_ERROR, 5);
+        console.log(error);
+        setLoading(false);
+      });
+    setLoading(false)
+  }
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -268,35 +299,44 @@ const DocumentManagement = () => {
       let tmp = [];
       for (let item of res.data.data) {
         if (type === "inbox") {
+          let document = JSON.parse(item.Document);
           tmp.push({
-            acid: item.Acid,
+            cid: item.Cid,
+            partner: item.From,
+            message: item.Message,
             document:
-              <>
-                <Tag color={convertColor(item.DocumentType)}>{item.DocumentType}</Tag>
-                <Typography.Text strong>{item.DocumentName}</Typography.Text> {" "}
-                <Typography.Text type="secondary">{item.DocumentFileName}</Typography.Text>
-              </>,
-            document_hash: item.DocumentCid,
-            document_type: item.DocumentType,
-            document_name: item.DocumentName,
-            document_file_name: item.DocumentFileName,
+              document.map((it, index) => {
+                return (
+                  <span key={index}>
+                    {it.doc_type && it.doc_type.map((doc_t, indexDocT) => <Tag key={indexDocT} color={convertColor(doc_t)}>{doc_t}</Tag>)}
+                    <Typography.Text strong>{it.doc_name}</Typography.Text> {" "}
+                    <Typography.Text type="secondary">{it.doc_file_name}</Typography.Text>
+                    {"  "}
+                  </span>
+                )
+              })
+            ,
             status: item.From !== account ? <Badge status="processing" text="Received" /> : <Badge status="success" text="Sent" />,
           });
         }
         else if (type === "sent") {
           if (item.From === account) {
+            let document = JSON.parse(item.Document);
             tmp.push({
-              acid: item.Acid,
+              cid: item.Cid,
+              partner: item.From,
+              message: item.Message,
               document:
-                <>
-                  <Tag color="geekblue">{item.DocumentType}</Tag>
-                  <Typography.Text strong>{item.DocumentName}</Typography.Text> {" "}
-                  <Typography.Text type="secondary">{item.DocumentFileName}</Typography.Text>
-                </>,
-              document_hash: item.DocumentCid,
-              document_type: item.DocumentType,
-              document_name: item.DocumentName,
-              document_file_name: item.DocumentFileName,
+                document.map((it, index) => {
+                  return (
+                    <span key={index}>
+                      {it.doc_type && it.doc_type.map((doc_t, indexDocT) => <Tag key={indexDocT} color={convertColor(doc_t)}>{doc_t}</Tag>)}
+                      <Typography.Text strong>{it.doc_name}</Typography.Text> {" "}
+                      <Typography.Text type="secondary">{it.doc_file_name}</Typography.Text>
+                    </span>
+                  )
+                })
+              ,
               status: <Badge status="success" text="Sent" />,
             });
           }
@@ -307,8 +347,11 @@ const DocumentManagement = () => {
     } catch (e) {
       message.error(SERVER_ERROR, 5);
       console.log(e);
+      setLoading(false);
     }
+    setLoading(false);
   };
+
   useEffect(() => {
     async function fectchBusParters() {
       setLoading(true);
@@ -439,12 +482,11 @@ const DocumentManagement = () => {
           pagination={false}
           onRow={(record, rowIndex) => {
             return {
-              onClick: (event) => {
-                setAcid(record.acid);
-                setDocCid(record.document_hash)
-                setDocName(record.document_name);
-                setDocType(record.document_type);
-                setDocFileName(record.document_file_name);
+              onClick: () => {
+                setDocCid(record.cid)
+                setDocPartner(record.partner)
+                setDocument(record.document)
+                setSealMsg(record.message)
                 setIsDownModalOpen(true);
               }, // click row
             };
@@ -454,7 +496,6 @@ const DocumentManagement = () => {
           title="Compose new Document"
           open={isModalOpen}
           width={1000}
-          onOk={handleOk}
           onCancel={handleCancel}
           footer={
             <div
@@ -501,7 +542,7 @@ const DocumentManagement = () => {
                     type="primary"
                     shape="round"
                     size="large"
-                    className="margin-top-20" onClick={() => next()}>
+                    className="margin-top-20" onClick={() => handleSeal()}>
                     Seal
                   </Button>
                 </>
@@ -525,7 +566,7 @@ const DocumentManagement = () => {
                     type="primary"
                     shape="round"
                     size="large"
-                    className="margin-left-8 margin-top-20" onClick={() => message.success('Processing complete!')}>
+                    className="margin-left-8 margin-top-20" onClick={() => handleTransfer()}>
                     Transfer
                   </Button>
                 </>
@@ -747,6 +788,7 @@ const DocumentManagement = () => {
           title="Document"
           open={isDownModalOpen}
           onCancel={() => setIsDownModalOpen(false)}
+          width={1000}
           footer={
             <a href={"https://ipfs.io/ipfs/" + doc_cid} className="margin-left-8 margin-top-20" target={_default}>
               <Button
@@ -762,9 +804,10 @@ const DocumentManagement = () => {
           }
         >
           <Descriptions column={1} bordered>
-            <Descriptions.Item label="ACID">{acid}</Descriptions.Item>
-            <Descriptions.Item label="Document Name">{doc_name}</Descriptions.Item>
-            <Descriptions.Item label="Document Type">{doc_type}</Descriptions.Item>
+            <Descriptions.Item label="Partner">{doc_partner}</Descriptions.Item>
+            <Descriptions.Item label="Message">{seal_msg}</Descriptions.Item>
+            <Descriptions.Item label="Document">{document}</Descriptions.Item>
+            <Descriptions.Item label="IPFS">{"https://ipfs.io/ipfs/" + doc_cid}</Descriptions.Item>
           </Descriptions>
         </Modal>
       </Spin>
