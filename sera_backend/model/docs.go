@@ -9,7 +9,7 @@ import (
 type Document struct {
     gorm.Model
     Message string `gorm:"size:255"`
-    Document string `gorm:"size:255"`
+    Document string `gorm:"size:2047"`
     From string `gorm:"size:255"`
     Status uint `gorm:"size:255"`
 }
