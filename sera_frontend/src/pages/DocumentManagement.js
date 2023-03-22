@@ -50,14 +50,13 @@ const DocumentManagement = () => {
   const [seal_msg, setSealMsg] = useState("");
   const [seal_ipfs, setSealIpfs] = useState("");
   const [doc_cid, setDocCid] = useState("");
-  const [doc_name, setDocName] = useState("");
-  const [doc_type, setDocType] = useState([]);
+  const [doc_partner, setDocPartner] = useState("");
   const [busPartner, setBusPartner] = useState("")
   const [busPartnerOp, setBusPartnerOp] = useState([]);
-  const [doc_file_name, setDocFileName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDownModalOpen, setIsDownModalOpen] = useState(false);
   const [documentItems, setDocumentItems] = useState([{ doc_id: doc_id++ }]);
+  const [document, setDocument] = useState(null);
   const { account } = useWeb3React();
   let ProvContract = null;
   const steps = [
@@ -158,9 +157,9 @@ const DocumentManagement = () => {
     },
     {
       title: "Document Hash",
-      dataIndex: "document_hash",
+      dataIndex: "cid",
       sorter: {
-        compare: (a, b) => a.document_hash - b.document_hash,
+        compare: (a, b) => a.cid - b.cid,
         multiple: 3,
       },
     },
@@ -298,12 +297,13 @@ const DocumentManagement = () => {
         `${process.env.REACT_APP_IP_ADDRESS}/v1/getlistdocument`
       );
       let tmp = [];
-      console.log("-------------", res.data.data)
       for (let item of res.data.data) {
         if (type === "inbox") {
           let document = JSON.parse(item.Document);
           tmp.push({
+            cid: item.Cid,
             partner: item.From,
+            message: item.Message,
             document:
               document.map((it, index) => {
                 return (
@@ -323,7 +323,9 @@ const DocumentManagement = () => {
           if (item.From === account) {
             let document = JSON.parse(item.Document);
             tmp.push({
+              cid: item.Cid,
               partner: item.From,
+              message: item.Message,
               document:
                 document.map((it, index) => {
                   return (
@@ -480,12 +482,11 @@ const DocumentManagement = () => {
           pagination={false}
           onRow={(record, rowIndex) => {
             return {
-              onClick: (event) => {
-                setAcid(record.acid);
-                setDocCid(record.document_hash)
-                setDocName(record.document_name);
-                setDocType(record.document_type);
-                setDocFileName(record.document_file_name);
+              onClick: () => {
+                setDocCid(record.cid)
+                setDocPartner(record.partner)
+                setDocument(record.document)
+                setSealMsg(record.message)
                 setIsDownModalOpen(true);
               }, // click row
             };
@@ -787,6 +788,7 @@ const DocumentManagement = () => {
           title="Document"
           open={isDownModalOpen}
           onCancel={() => setIsDownModalOpen(false)}
+          width={1000}
           footer={
             <a href={"https://ipfs.io/ipfs/" + doc_cid} className="margin-left-8 margin-top-20" target={_default}>
               <Button
@@ -802,9 +804,10 @@ const DocumentManagement = () => {
           }
         >
           <Descriptions column={1} bordered>
-            <Descriptions.Item label="ACID">{acid}</Descriptions.Item>
-            <Descriptions.Item label="Document Name">{doc_name}</Descriptions.Item>
-            <Descriptions.Item label="Document Type">{doc_type}</Descriptions.Item>
+            <Descriptions.Item label="Partner">{doc_partner}</Descriptions.Item>
+            <Descriptions.Item label="Message">{seal_msg}</Descriptions.Item>
+            <Descriptions.Item label="Document">{document}</Descriptions.Item>
+            <Descriptions.Item label="IPFS">{"https://ipfs.io/ipfs/" + doc_cid}</Descriptions.Item>
           </Descriptions>
         </Modal>
       </Spin>
