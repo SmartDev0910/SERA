@@ -8,11 +8,8 @@ import (
 
 type Document struct {
     gorm.Model
-    Acid string `gorm:"size:255"`
-    DocumentCid string `gorm:"size:255"`
-    DocumentType string `gorm:"size:255"`
-    DocumentName string `gorm:"size:255"`
-    DocumentFileName string `gorm:"size:255"`
+    Message string `gorm:"size:255"`
+    Document string `gorm:"size:255"`
     From string `gorm:"size:255"`
     Status uint `gorm:"size:255"`
 }

@@ -47,6 +47,7 @@ const DocumentManagement = () => {
   const [acid, setAcid] = useState("");
   const [upload_id, setUploadID] = useState("");
   const [seal_msg, setSealMsg] = useState("");
+  const [seal_ipfs, setSealIpfs] = useState("");
   const [doc_cid, setDocCid] = useState("");
   const [doc_name, setDocName] = useState("");
   const [doc_type, setDocType] = useState([]);
@@ -175,30 +176,31 @@ const DocumentManagement = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = async () => {
+  const handleSeal = async () => {
+    setLoading(true)
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_IP_ADDRESS}/v1/composedoc`,
         {
-          Acid: acid,
-          DocumentCid: doc_cid,
-          DocumentName: doc_name,
-          DocumentType: doc_type,
-          DocumentFileName: doc_file_name,
+          Message: seal_msg,
+          Document: JSON.stringify(documentItems),
           From: account,
           Status: 0,
         }
       );
 
       if (res.data.status_code === 200) {
-        message.success(res.data.msg, 5);
-        updateData("inbox");
+        message.success("Sealed the document successfully", 5);
+        setSealIpfs(res.data.data)
+        console.log("E", seal_ipfs)
+        next();
       }
     } catch (e) {
       message.error(SERVER_ERROR, 5);
       console.log(e);
+      setLoading(false)
     }
-    setIsModalOpen(false);
+    setLoading(false)
   };
 
   const handleCancel = () => {
@@ -454,7 +456,6 @@ const DocumentManagement = () => {
           title="Compose new Document"
           open={isModalOpen}
           width={1000}
-          onOk={handleOk}
           onCancel={handleCancel}
           footer={
             <div
@@ -501,7 +502,7 @@ const DocumentManagement = () => {
                     type="primary"
                     shape="round"
                     size="large"
-                    className="margin-top-20" onClick={() => next()}>
+                    className="margin-top-20" onClick={() => handleSeal()}>
                     Seal
                   </Button>
                 </>

@@ -3,9 +3,12 @@ package controllers
 import (
 	"example/task/database"
 	"example/task/model"
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	shell "github.com/ipfs/go-ipfs-api"
 )
 
 func ComposeDocument(c *gin.Context) {
@@ -37,16 +40,24 @@ func ComposeDocument(c *gin.Context) {
 		return
 	}
 
+	sh := shell.NewShell("localhost:5001")
+
+	cid, err := sh.Add(strings.NewReader(savedDoc.Document))
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("File added to IPFS with CID:", cid)
+	
 	c.JSON(http.StatusCreated, gin.H{
 		"status_code": 200,
 		"api_version": "v1",
 		"endpoint": "/composedoc",
 		"status": "Success!",
 		"msg":    "Composed a document successfully",
-		"data": savedDoc, 
+		"data": cid, 
 	})
 }
-
 
 func GetListDocument(c *gin.Context) {
 	var input []model.Document
