@@ -63,53 +63,64 @@ const Materials = () => {
 
   const updateMaterials = async () => {
     setLoading(true);
-    const myProvider = new ethers.providers.Web3Provider(window.ethereum);
-    ProvContract = new ethers.Contract(
-      process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
-      provAbi,
-      myProvider.getSigner()
-    );
-    const multicall = new Multicall({
-      ethersProvider: myProvider,
-      tryAggregate: true,
-    });
+    try {
+      const myProvider = new ethers.providers.Web3Provider(window.ethereum);
+      ProvContract = new ethers.Contract(
+        process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
+        provAbi,
+        myProvider.getSigner()
+      );
+      const multicall = new Multicall({
+        ethersProvider: myProvider,
+        tryAggregate: true,
+      });
 
-    let tmp = [];
-    let pro_count = await ProvContract.product_count();
+      let tmp = [];
+      let pro_count = await ProvContract.product_count();
 
-    if (pro_count > 0)
-      for (let i = 1; i <= pro_count; i++) {
-        tmp.push({
-          reference: "product_list",
-          methodName: "product_list",
-          methodParameters: [i],
-        });
+      if (pro_count > 0)
+        for (let i = 1; i <= pro_count; i++) {
+          tmp.push({
+            reference: "product_list",
+            methodName: "product_list",
+            methodParameters: [i],
+          });
+        }
+
+      const contractCallContext = [
+        {
+          reference: "Provenance",
+          contractAddress: process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
+          abi: provAbi,
+          calls: tmp,
+        },
+      ];
+
+      const results = await multicall.call(contractCallContext);
+
+      let len = results.results.Provenance.callsReturnContext.length;
+
+      tmp = [];
+
+      for (let i = 0; i < len; i++) {
+        if (results.results.Provenance.callsReturnContext[i].returnValues.length) {
+          let pro_pub_number =
+            results.results.Provenance.callsReturnContext[i].returnValues[0];
+          let material = await ProvContract.products(pro_pub_number);
+          if (material.producer_address === account)
+            tmp.push({
+              material: material.name,
+              pub_number: pro_pub_number,
+              producer: material.producer_address,
+            });
+        }
       }
 
-    const contractCallContext = [
-      {
-        reference: "Provenance",
-        contractAddress: process.env.REACT_APP_PROVENANCE_CONTRACT_ADDRESS,
-        abi: provAbi,
-        calls: tmp,
-      },
-    ];
-
-    const results = await multicall.call(contractCallContext);
-    const len = results.results.Provenance.callsReturnContext.length;
-    tmp = [];
-    for (let i = 0; i < len; i++) {
-      let pro_pub_number =
-        results.results.Provenance.callsReturnContext[i].returnValues[0];
-      let material = await ProvContract.products(pro_pub_number);
-      if (material.producer_address === account)
-        tmp.push({
-          material: material.name,
-          pub_number: pro_pub_number,
-          producer: material.producer_address,
-        });
+      await setData(tmp);
+    } catch (e) {
+      console.log("ERROR", e)
+      setLoading(false)
     }
-    await setData(tmp);
     setLoading(false);
   };
 
