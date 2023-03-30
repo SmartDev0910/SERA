@@ -297,9 +297,6 @@ const DocumentManagement = () => {
         `${process.env.REACT_APP_IP_ADDRESS}/v1/getlistdocument`
       );
 
-      if (res.data.status_code === 204)
-        return;
-
       let tmp = [];
       for (let item of res.data.data) {
         if (type === "inbox") {
@@ -349,7 +346,7 @@ const DocumentManagement = () => {
       setData(tmp);
       setLoading(false);
     } catch (e) {
-      message.error(SERVER_ERROR, 5);
+      // message.error(SERVER_ERROR, 5);
       console.log(e);
       setLoading(false);
     }
