@@ -296,6 +296,10 @@ const DocumentManagement = () => {
       const res = await axios.get(
         `${process.env.REACT_APP_IP_ADDRESS}/v1/getlistdocument`
       );
+
+      if (res.data.status_code === 204)
+        return;
+
       let tmp = [];
       for (let item of res.data.data) {
         if (type === "inbox") {
