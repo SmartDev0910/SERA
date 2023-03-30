@@ -5,10 +5,13 @@ import (
 	"example/task/model"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
+	"example/task/utils"
+
 	"github.com/gin-gonic/gin"
-	shell "github.com/ipfs/go-ipfs-api"
+	ipfsApi "github.com/ipfs/go-ipfs-api"
 )
 
 func ComposeDocument(c *gin.Context) {
@@ -40,9 +43,12 @@ func ComposeDocument(c *gin.Context) {
 		return
 	}
 
-	sh := shell.NewShell("localhost:5001")
+	projectId := os.Getenv("INFURA_PROJECT_ID")
+	projectSecret := os.Getenv("INFURA_API_KEY_SECRET")
 
-	cid, err := sh.Add(strings.NewReader(savedDoc.Document))
+	shell := ipfsApi.NewShellWithClient("https://ipfs.infura.io:5001", utils.NewClient(projectId, projectSecret))
+
+	cid, err := shell.Add(strings.NewReader(savedDoc.Document))
 	if err != nil {
 		fmt.Println(err)
 	}

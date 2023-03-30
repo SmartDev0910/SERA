@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+
+	"example/task/utils"
 
 	"github.com/gin-gonic/gin"
-	shell "github.com/ipfs/go-ipfs-api"
+	ipfsApi "github.com/ipfs/go-ipfs-api"
 )
 
 func UploadDocument(c *gin.Context) {
@@ -15,7 +18,10 @@ func UploadDocument(c *gin.Context) {
 	files := form.File["document_account"]
 	cids := []string{}
 
-	sh := shell.NewShell("localhost:5001")
+	projectId := os.Getenv("INFURA_PROJECT_ID")
+	projectSecret := os.Getenv("INFURA_API_KEY_SECRET")
+
+	shell := ipfsApi.NewShellWithClient("https://ipfs.infura.io:5001", utils.NewClient(projectId, projectSecret))
 
 	for _, file := range files {
 		log.Println(file.Filename)
@@ -28,7 +34,7 @@ func UploadDocument(c *gin.Context) {
 		defer openedFile.Close()
 
 		// Add the file to IPFS
-		cid, err := sh.Add(openedFile)
+		cid, err := shell.Add(openedFile)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -43,9 +49,9 @@ func UploadDocument(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"status_code": 200,
 		"api_version": "v1",
-		"endpoint": "/uploaddocument",
-		"status": "Success!",
-		"msg":    "Uploaded a file.",
-		"data": cids, 
+		"endpoint":    "/uploaddocument",
+		"status":      "Success!",
+		"msg":         "Uploaded a file.",
+		"data":        cids,
 	})
 }
