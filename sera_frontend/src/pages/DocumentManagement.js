@@ -791,7 +791,7 @@ const DocumentManagement = () => {
           onCancel={() => setIsDownModalOpen(false)}
           width={1000}
           footer={
-            <a href={"https://ipfs.io/ipfs/" + doc_cid} className="margin-left-8 margin-top-20" target={_default}>
+            <a href={doc_cid} className="margin-left-8 margin-top-20" target={_default}>
               <Button
                 icon={<DownloadOutlined />}
                 type="primary"
@@ -808,7 +808,7 @@ const DocumentManagement = () => {
             <Descriptions.Item label="Partner">{doc_partner}</Descriptions.Item>
             <Descriptions.Item label="Message">{seal_msg}</Descriptions.Item>
             <Descriptions.Item label="Document">{document}</Descriptions.Item>
-            <Descriptions.Item label="IPFS">{"https://ipfs.io/ipfs/" + doc_cid}</Descriptions.Item>
+            <Descriptions.Item label="IPFS">{doc_cid}</Descriptions.Item>
           </Descriptions>
         </Modal>
       </Spin>
