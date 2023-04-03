@@ -131,26 +131,14 @@ func SignInUser(c *gin.Context) {
 
 	user, err := model.FindUserByWalletAddress(input.Wallet_address)
 
-	if len(user.Email) == 0 {
+	if len(user.Wallet_address) == 0 {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"status_code": 401,
 			"api_version": "v1",
 			"endpoint":    "/SignInUser",
-			"status":      "Wrong Email!",
-			"msg":         "You have entered wrong email!",
+			"status":      "Not exist!",
+			"msg":         "You are not registered",
 			"data":        err,
-		})
-		return
-	}
-
-	password, err := model.IsValidPassword(input.Password)
-	if len(password.Email) == 0 {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status_code": 401,
-			"api_version": "v1",
-			"endpoint":    "/SignInUser",
-			"status":      "Wrong Password!",
-			"msg":         "You have entered wrong password!",
 		})
 		return
 	}
