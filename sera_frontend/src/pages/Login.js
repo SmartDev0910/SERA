@@ -69,8 +69,7 @@ const Login = () => {
         const res = await axios.post(
           `${process.env.REACT_APP_IP_ADDRESS}/v1/signin`,
           {
-            email: state.email,
-            password: state.password,
+            wallet_address: account
           }
         );
         if (res.data.status_code === 200) {

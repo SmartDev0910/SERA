@@ -10,14 +10,14 @@ import (
 )
 
 type EmailBody struct {
-    From string
-    To string
-    Password string
+	From     string
+	To       string
+	Password string
 }
 
 func SendMail(c *gin.Context) {
 	var input EmailBody
-	
+
 	c.Bind(&input)
 	from := input.From
 	pass := input.Password
@@ -25,7 +25,7 @@ func SendMail(c *gin.Context) {
 
 	msg := "From: " + from + "\n" +
 		"To: " + to + "\n" +
-		"Subject: SERA Invitation\n\n" + 
+		"Subject: SERA Invitation\n\n" +
 		"Hi, there." + "\n" + "You are invited to SERA autherized partner by " + from + "\n"
 
 	err := smtp.SendMail("smtp.gmail.com:587",
@@ -36,6 +36,6 @@ func SendMail(c *gin.Context) {
 		log.Printf("smtp error: %s", err)
 		return
 	}
-	
+
 	log.Print("sent")
 }
