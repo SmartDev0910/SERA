@@ -159,11 +159,10 @@ const App = () => {
     );
     if (res.data.status_code === 200) {
       await setNotiCount(res.data.data.length);
-      console.log(res.data.data);
       let tmp = [];
       res.data.data.map((item) => {
         tmp.push({
-          label: item.Buspartner + " was added new RFQ." ,
+          label: item.Buspartner + " was added new RFQ.",
           key: item.MaterialId,
         });
       });
