@@ -31,9 +31,6 @@ const { Sider, Content } = Layout;
 
 const siderStyle = {
   height: "calc(100vh - 94px)",
-  position: "-webkit-sticky !important;",
-  position: "sticky !important;",
-  top: 0,
 };
 
 const contentStyle = {
