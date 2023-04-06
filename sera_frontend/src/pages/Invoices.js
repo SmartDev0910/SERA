@@ -158,7 +158,7 @@ const Invoices = () => {
       }
       await setData(tmp);
     } catch (e) {
-      message.error(TRANSACTION_ERROR, 5);
+      // message.error(TRANSACTION_ERROR, 5);
       console.log(e);
       setLoading(false);
     }

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import { Multicall } from "ethereum-multicall";
+import { useWeb3React } from "@web3-react/core";
 import {
   Row,
   Button,
@@ -11,11 +14,8 @@ import {
   Spin,
   message,
 } from "antd";
-import provAbi from "../abis/provenanceAbi.json";
-import { ethers } from "ethers";
-import { Multicall } from "ethereum-multicall";
-import { useWeb3React } from "@web3-react/core";
 import { TRANSACTION_ERROR } from "../utils/messages";
+import provAbi from "../abis/provenanceAbi.json";
 import "./page.css";
 
 const { Title } = Typography;

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import { useWeb3React } from "@web3-react/core";
 import {
   Row,
   Col,
@@ -14,13 +16,11 @@ import {
   Typography,
 } from "antd";
 import { FileAddOutlined } from "@ant-design/icons";
-import serafactoryAbi from "../abis/serafactoryAbi.json";
+import { TRANSACTION_ERROR } from "../utils/messages";
 import trackAbi from "../abis/trackingAbi.json";
-import { ethers } from "ethers";
-import { useWeb3React } from "@web3-react/core";
+import serafactoryAbi from "../abis/serafactoryAbi.json";
 
 import "./page.css";
-import { TRANSACTION_ERROR } from "../utils/messages";
 
 const { Title } = Typography;
 

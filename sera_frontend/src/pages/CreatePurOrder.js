@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import provAbi from "../abis/provenanceAbi.json";
-import trackAbi from "../abis/trackingAbi.json";
-import usdcAbi from "../abis/usdcAbi.json";
+import { useNavigate } from "react-router-dom";
+import { ethers } from "ethers";
+import { useWeb3React } from "@web3-react/core";
 import {
   Row,
   Col,
@@ -10,20 +10,17 @@ import {
   Typography,
   Divider,
   Select,
-  Collapse,
   Spin,
   message,
   Alert,
 } from "antd";
-import { useNavigate } from "react-router-dom";
-import { ethers } from "ethers";
-import { useWeb3React } from "@web3-react/core";
 import { CaretLeftOutlined } from "@ant-design/icons";
-
-import "./page.css";
+import trackAbi from "../abis/trackingAbi.json";
+import usdcAbi from "../abis/usdcAbi.json";
 import { TRANSACTION_ERROR } from "../utils/messages";
+import "./page.css";
+
 const { Title, Text } = Typography;
-const { Panel } = Collapse;
 
 const CreateContract = () => {
   const [contractOp, setContractOp] = useState([]);
