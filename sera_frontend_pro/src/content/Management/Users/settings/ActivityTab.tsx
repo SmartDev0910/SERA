@@ -66,7 +66,7 @@ function ActivityTab() {
       </Box>
       <CardMedia
         sx={{ minHeight: 280 }}
-        image="/static/images/placeholders/covers/6.jpg"
+        image="/static/images/placeholders/covers/cover.jpg"
         title="Card Cover"
       />
       <Box p={3}>
