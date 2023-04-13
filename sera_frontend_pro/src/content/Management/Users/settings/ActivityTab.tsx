@@ -30,7 +30,7 @@ function ActivityTab() {
   return (
     <Card>
       <CardHeader
-        avatar={<Avatar src="/static/images/avatars/5.jpg" />}
+        avatar={<Avatar src="/static/images/avatars/avatar.jpg" />}
         action={
           <IconButton color="primary">
             <MoreHorizTwoToneIcon fontSize="medium" />

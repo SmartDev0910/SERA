@@ -107,7 +107,7 @@ function Hero() {
         <Grid item md={10} lg={8} mx="auto">
           <LabelWrapper color="success">Version 1.0.0</LabelWrapper>
           <TypographyH1 sx={{ mb: 2 }} variant="h1">
-            Tokyo Free Black Next.js Typescript Admin Dashboard
+            SERA Dashboard
           </TypographyH1>
           <TypographyH2
             sx={{ lineHeight: 1.5, pb: 4 }}
@@ -115,9 +115,11 @@ function Hero() {
             color="text.secondary"
             fontWeight="normal"
           >
-            High performance React template built with lots of powerful
-            Material-UI components across multiple product niches for fast &
-            perfect apps development processes
+            Enhancing Supply Chain via DeFi and Blockchain. SERA is a
+            decentralized protocol that adds DeFi Power to ERP via blockchain.
+            SERA blockchain-based protocol reduces the cost of audits, enhances
+            data integrity, enables multiparty data sharing, and provides a
+            foundation for global DeFi-enabled commerce.
           </TypographyH2>
           <Button
             component={Link}
@@ -125,18 +127,7 @@ function Hero() {
             size="large"
             variant="contained"
           >
-            Browse Live Preview
-          </Button>
-          <Button
-            sx={{ ml: 2 }}
-            component="a"
-            target="_blank"
-            rel="noopener"
-            href="https://bloomui.com/product/tokyo-free-black-react-nextjs-material-ui-admin-dashboard"
-            size="large"
-            variant="text"
-          >
-            Key Features
+            Go To the Dashboard
           </Button>
           <Grid container spacing={3} mt={5}>
             <Grid item md={4}>
@@ -182,7 +173,8 @@ function Hero() {
                   <b>Built with Typescript</b>
                 </Box>
                 <Typography component="span" variant="subtitle2">
-                  Tokyo Free Black features a modern technology stack and is built with React + Typescript.
+                  Tokyo Free Black features a modern technology stack and is
+                  built with React + Typescript.
                 </Typography>
               </Typography>
             </Grid>

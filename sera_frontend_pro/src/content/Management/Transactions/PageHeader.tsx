@@ -5,7 +5,7 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 function PageHeader() {
   const user = {
     name: 'Rory Porter',
-    avatar: '/static/images/avatars/1.jpg'
+    avatar: '/static/images/avatars/avatar.jpg'
   };
   return (
     <Grid container justifyContent="space-between" alignItems="center">

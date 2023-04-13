@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 function PageHeader() {
   const user = {
     name: 'Rory Porter',
-    avatar: '/static/images/avatars/1.jpg'
+    avatar: '/static/images/avatars/avatar.jpg'
   };
 
   return (

@@ -78,7 +78,7 @@ function TeamOverview() {
             >
               <AvatarWrapper
                 alt="Remy Sharp"
-                src="/static/images/avatars/4.jpg"
+                src="/static/images/avatars/avatar.jpg"
               />
             </Badge>
             <Box
@@ -134,7 +134,7 @@ function TeamOverview() {
             >
               <AvatarWrapper
                 alt="Ann Saris"
-                src="/static/images/avatars/3.jpg"
+                src="/static/images/avatars/avatar.jpg"
               />
             </Badge>
             <Box
@@ -190,7 +190,7 @@ function TeamOverview() {
             >
               <AvatarWrapper
                 alt="James Stanton"
-                src="/static/images/avatars/5.jpg"
+                src="/static/images/avatars/avatar.jpg"
               />
             </Badge>
             <Box
