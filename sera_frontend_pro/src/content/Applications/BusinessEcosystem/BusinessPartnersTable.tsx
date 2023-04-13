@@ -1,38 +1,63 @@
-import { FC, ChangeEvent, useState } from 'react';
-import PropTypes from 'prop-types';
+import { ChangeEvent, useState, useEffect, useContext } from 'react';
 import {
   Box,
-  Card,
   Table,
   TableBody,
   TableCell,
+  TextField,
   TableHead,
   TablePagination,
   TableRow,
   TableContainer,
   Typography,
   Rating,
-  Tooltip
+  Tooltip,
+  Divider
 } from '@mui/material';
-
 import { BusinessPartner } from '@/models/business_partner';
+import { SeraContext } from '@/contexts/SeraContext';
 
-interface RecentOrdersTableProps {
-  className?: string;
-  businessPartner: BusinessPartner[];
-}
+const busPartner: BusinessPartner[] = [
+  {
+    id: '1',
+    t_name: 'Trade 3DC',
+    l_name: 'Legal 3DC',
+    country: 'Canada',
+    state_town: 'Toronto',
+    b_number: 'BDS332',
+    email: 'testman3dc@gmail.com',
+    phone: '(+1) 392 493 2933',
+    w_address: '0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc',
+    reputation: 2
+  },
+  {
+    id: '2',
+    t_name: 'Trade 166',
+    l_name: 'Legal 166',
+    country: 'Canada',
+    state_town: 'Toronto',
+    b_number: 'TR 166',
+    email: 'testman166@gmail.com',
+    phone: '(+1) 392 493 2933',
+    w_address: '0x1663CE5485ef8c7b8C390F1132e716d84fC357E8',
+    reputation: 2
+  }
+];
 
 const applyPagination = (
-  businessPartner: BusinessPartner[],
+  busPartners: BusinessPartner[],
   page: number,
   limit: number
 ): BusinessPartner[] => {
-  return businessPartner.slice(page * limit, page * limit + limit);
+  return busPartners.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
+const BusinessPartnersTable = () => {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
+  const [searchText, setSearchText] = useState<string>('');
+  const { busPartners, SetBusPartners } = useContext(SeraContext);
+  const [filteredPartner, setFilteredPartner] = useState<BusinessPartner[]>([]);
 
   const handlePageChange = (_event: any, newPage: number): void => {
     setPage(newPage);
@@ -42,14 +67,42 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
     setLimit(parseInt(event.target.value));
   };
 
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSearchText(event.target.value);
+    setFilteredPartner(
+      busPartners.filter((item) => item.w_address.includes(event.target.value))
+    );
+  };
+
   const paginatedBusinessPartner = applyPagination(
-    businessPartner,
+    filteredPartner,
     page,
     limit
   );
 
+  useEffect(() => {
+    SetBusPartners(busPartner);
+    setFilteredPartner(busPartner);
+  }, []);
+
   return (
     <>
+      <Box
+        component="form"
+        sx={{
+          '& > :not(style)': { m: 1, width: '30%', float: 'right' }
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <TextField
+          label="Search By Wallet Address."
+          variant="outlined"
+          value={searchText}
+          onChange={handleSearch}
+        />
+      </Box>
+      <Divider />
       <TableContainer>
         <Table>
           <TableHead>
@@ -66,9 +119,9 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedBusinessPartner.map((businessPartner) => {
+            {paginatedBusinessPartner.map((busPartner) => {
               return (
-                <TableRow hover key={businessPartner.id}>
+                <TableRow hover key={busPartner.id}>
                   <TableCell>
                     <Typography
                       variant="body1"
@@ -77,7 +130,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                       gutterBottom
                       noWrap
                     >
-                      {businessPartner.t_name}
+                      {busPartner.t_name}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -88,7 +141,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                       gutterBottom
                       noWrap
                     >
-                      {businessPartner.l_name}
+                      {busPartner.l_name}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -99,7 +152,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                       gutterBottom
                       noWrap
                     >
-                      {businessPartner.country}
+                      {busPartner.country}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -110,7 +163,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                       gutterBottom
                       noWrap
                     >
-                      {businessPartner.state_town}
+                      {busPartner.state_town}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -121,7 +174,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                       gutterBottom
                       noWrap
                     >
-                      {businessPartner.b_number}
+                      {busPartner.b_number}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -132,7 +185,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                       gutterBottom
                       noWrap
                     >
-                      {businessPartner.email}
+                      {busPartner.email}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -143,14 +196,11 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                       gutterBottom
                       noWrap
                     >
-                      {businessPartner.phone}
+                      {busPartner.phone}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Tooltip
-                      title={businessPartner.w_address}
-                      placement="top-start"
-                    >
+                    <Tooltip title={busPartner.w_address} placement="top-start">
                       <Typography
                         variant="body1"
                         fontWeight="bold"
@@ -158,9 +208,9 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                         gutterBottom
                         noWrap
                       >
-                        {businessPartner.w_address.substring(0, 5) +
+                        {busPartner.w_address.substring(0, 5) +
                           ' ... ' +
-                          businessPartner.w_address.substring(38)}
+                          busPartner.w_address.substring(38)}
                       </Typography>
                     </Tooltip>
                   </TableCell>
@@ -174,7 +224,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
                     >
                       <Rating
                         name="read-only"
-                        value={businessPartner.reputation}
+                        value={busPartner.reputation}
                         readOnly
                       />
                     </Typography>
@@ -188,7 +238,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={businessPartner.length}
+          count={busPartners.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -200,12 +250,4 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ businessPartner }) => {
   );
 };
 
-RecentOrdersTable.propTypes = {
-  businessPartner: PropTypes.array.isRequired
-};
-
-RecentOrdersTable.defaultProps = {
-  businessPartner: []
-};
-
-export default RecentOrdersTable;
+export default BusinessPartnersTable;
