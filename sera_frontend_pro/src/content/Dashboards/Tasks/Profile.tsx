@@ -29,7 +29,7 @@ function Profile() {
         }}
         variant="rounded"
         alt="Craig Donin"
-        src="/static/images/avatars/4.jpg"
+        src="/static/images/avatars/avatar.jpg"
       />
       <Typography align="center" variant="h4" gutterBottom>
         Craig Donin

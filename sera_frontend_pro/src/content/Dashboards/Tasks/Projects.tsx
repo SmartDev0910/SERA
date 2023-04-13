@@ -129,7 +129,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Remy Sharp"
-                    src="/static/images/avatars/1.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Travis Howard">
@@ -141,7 +141,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Travis Howard"
-                    src="/static/images/avatars/2.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Cindy Baker">
@@ -153,7 +153,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Cindy Baker"
-                    src="/static/images/avatars/3.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Agnes Walker">
@@ -165,7 +165,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Agnes Walker"
-                    src="/static/images/avatars/4.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Trevor Henderson">
@@ -177,7 +177,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Trevor Henderson"
-                    src="/static/images/avatars/5.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
               </AvatarGroup>
@@ -270,7 +270,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Remy Sharp"
-                    src="/static/images/avatars/4.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Travis Howard">
@@ -282,7 +282,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Travis Howard"
-                    src="/static/images/avatars/3.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Trevor Henderson">
@@ -294,7 +294,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Trevor Henderson"
-                    src="/static/images/avatars/1.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
               </AvatarGroup>
@@ -351,7 +351,10 @@ function Projects() {
                     </Tooltip>
                   }
                 >
-                  <Avatar alt="Remy Sharp" src="/static/images/avatars/1.jpg" />
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="/static/images/avatars/avatar.jpg"
+                  />
                 </Badge>
               }
               action={
@@ -396,7 +399,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Remy Sharp"
-                    src="/static/images/avatars/1.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Cindy Baker">
@@ -408,7 +411,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Cindy Baker"
-                    src="/static/images/avatars/3.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Agnes Walker">
@@ -420,7 +423,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Agnes Walker"
-                    src="/static/images/avatars/2.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Trevor Henderson">
@@ -432,7 +435,7 @@ function Projects() {
                     component={Link}
                     href="#"
                     alt="Trevor Henderson"
-                    src="/static/images/avatars/4.jpg"
+                    src="/static/images/avatars/avatar.jpg"
                   />
                 </Tooltip>
               </AvatarGroup>

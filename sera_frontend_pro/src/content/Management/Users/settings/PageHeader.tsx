@@ -2,8 +2,8 @@ import { Typography } from '@mui/material';
 
 function PageHeader() {
   const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
+    name: 'Rory Porter',
+    avatar: '/static/images/avatars/avatar.jpg'
   };
 
   return (

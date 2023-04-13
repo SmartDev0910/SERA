@@ -109,7 +109,7 @@ function TopBarContent() {
               height: 48
             }}
             alt="Zain Baptista"
-            src="/static/images/avatars/1.jpg"
+            src="/static/images/avatars/avatar.jpg"
           />
           <Box ml={1}>
             <Typography variant="h4">Zain Baptista</Typography>
@@ -172,7 +172,7 @@ function TopBarContent() {
               }}
               variant="rounded"
               alt="Zain Baptista"
-              src="/static/images/avatars/1.jpg"
+              src="/static/images/avatars/avatar.jpg"
             />
             <Typography variant="h4">Zain Baptista</Typography>
             <Typography variant="subtitle2">

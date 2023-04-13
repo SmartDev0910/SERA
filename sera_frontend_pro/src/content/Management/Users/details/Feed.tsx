@@ -17,31 +17,31 @@ function Feed() {
       name: 'Munroe Dacks',
       jobtitle: 'Senior Accountant',
       company: 'Trudoo',
-      avatar: '/static/images/avatars/1.jpg'
+      avatar: '/static/images/avatars/avatar.jpg'
     },
     {
       name: 'Gunilla Canario',
       jobtitle: 'Associate Professor',
       company: 'Buzzdog',
-      avatar: '/static/images/avatars/2.jpg'
+      avatar: '/static/images/avatars/avatar.jpg'
     },
     {
       name: 'Rowena Geistmann',
       jobtitle: 'Pharmacist',
       company: 'Yozio',
-      avatar: '/static/images/avatars/3.jpg'
+      avatar: '/static/images/avatars/avatar.jpg'
     },
     {
       name: 'Ede Stoving',
       jobtitle: 'VP Operations',
       company: 'Cogibox',
-      avatar: '/static/images/avatars/4.jpg'
+      avatar: '/static/images/avatars/avatar.jpg'
     },
     {
       name: 'Crissy Spere',
       jobtitle: 'Social Worker',
       company: 'Babbleblab',
-      avatar: '/static/images/avatars/5.jpg'
+      avatar: '/static/images/avatars/avatar.jpg'
     },
     {
       name: 'Michel Greatbanks',
