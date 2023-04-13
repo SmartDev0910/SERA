@@ -18,7 +18,7 @@ function Footer() {
       >
         <Box>
           <Typography variant="subtitle1">
-            &copy; 2022 - SERA Admin Dashboard
+            &copy; 2023 - SERA Admin Dashboard
           </Typography>
         </Box>
         <Typography
