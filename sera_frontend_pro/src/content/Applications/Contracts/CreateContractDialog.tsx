@@ -16,7 +16,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { SeraContext } from '@/contexts/SeraContext';
 
-const AddPartnerDialog = () => {
+const CreateContractDialog = () => {
   const { openAPDialog, busPartners, handleCloseAPDialog } =
     useContext(SeraContext);
   const [wallet_address, setWalletAddress] = useState<string>('');
@@ -229,4 +229,4 @@ const AddPartnerDialog = () => {
   );
 };
 
-export default AddPartnerDialog;
+export default CreateContractDialog;
