@@ -4,10 +4,9 @@ import PageHeader from '@/content/Applications/PurchaseOrders/PageHeader';
 import PageTitleWrapper from '@/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from '@/components/Footer';
+import PurhcaseOrdersTable from '@/content/Applications/PurchaseOrders/PurchaseOrdersTable';
 
-import RecentOrders from '@/content/Applications/PurchaseOrders/RecentOrders';
-
-function ApplicationsTransactions() {
+function PurchaseOrders() {
   return (
     <>
       <Head>
@@ -25,7 +24,7 @@ function ApplicationsTransactions() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <RecentOrders />
+            <PurhcaseOrdersTable />
           </Grid>
         </Grid>
       </Container>
@@ -34,8 +33,6 @@ function ApplicationsTransactions() {
   );
 }
 
-ApplicationsTransactions.getLayout = (page) => (
-  <SidebarLayout>{page}</SidebarLayout>
-);
+PurchaseOrders.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default ApplicationsTransactions;
+export default PurchaseOrders;

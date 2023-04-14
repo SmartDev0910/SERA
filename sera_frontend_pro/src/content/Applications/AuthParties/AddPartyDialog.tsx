@@ -1,19 +1,47 @@
-import React, { ChangeEvent, useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider/Divider';
 import Grid from '@mui/material/Grid';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 import { SeraContext } from '@/contexts/SeraContext';
 
 const AddPartyDialog = () => {
   const { openAPDialog, authParties, handleCloseAPDialog } =
     useContext(SeraContext);
   const [wallet_address, setWalletAddress] = useState<string>('');
-  console.log('----------', authParties);
+  const detailColumns = [
+    'Wallet Address:',
+    'Trade Name:',
+    'Country:',
+    'State/town:',
+    'Email:',
+    'Phone Number:'
+  ];
+  const showDetail = () => {
+    if (authParties.length) {
+      return authParties.filter((item) =>
+        item.w_address.includes(wallet_address)
+      )[0];
+    }
+    return null;
+  };
+
+  const handleWalletAddressChange = (event: SelectChangeEvent) => {
+    setWalletAddress(event.target.value);
+  };
+
+  useEffect(() => {
+    setWalletAddress('');
+  }, []);
+
   return (
     <div>
       <Dialog
@@ -23,107 +51,66 @@ const AddPartyDialog = () => {
       >
         <DialogTitle>Add Business Partner</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Wallet Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
+          <FormControl variant="standard" fullWidth={true}>
+            <InputLabel id="wallet_address_label">Wallet Address</InputLabel>
+            <Select
+              labelId="wallet_address_label"
+              value={wallet_address}
+              onChange={handleWalletAddressChange}
+              label="Wallet Address"
+            >
+              <MenuItem value={'0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc'}>
+                0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc
+              </MenuItem>
+              <MenuItem value={'0x3dc4696671ca3cb6c34674a0c1729bbfcc29edd1'}>
+                0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDd1
+              </MenuItem>
+            </Select>
+          </FormControl>
           <Divider style={{ marginTop: '12px', marginBottom: '24px' }} />
-          <Grid container spacing={2}>
-            <Grid item md={6} textAlign={'right'}>
-              <div>Wallet Address:</div>
-            </Grid>
-            <Grid item md={6}>
-              <div>
-                {authParties
-                  .filter((item) => item.w_address.includes(wallet_address))[0]
-                  .w_address.substring(0, 5) +
+          {detailColumns.map((item, index) => {
+            let data = showDetail();
+            let value = '';
+            switch (index) {
+              case 0:
+                value =
+                  data?.w_address.substring(0, 5) +
                   ' ... ' +
-                  authParties
-                    .filter((item) =>
-                      item.w_address.includes(wallet_address)
-                    )[0]
-                    .w_address.substring(38)}
-              </div>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item md={6} textAlign={'right'}>
-              <div>Trade Name:</div>
-            </Grid>
-            <Grid item md={6}>
-              <div>
-                {
-                  authParties.filter((item) =>
-                    item.w_address.includes(wallet_address)
-                  )[0].t_name
-                }
-              </div>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item md={6} textAlign={'right'}>
-              <div>Country:</div>
-            </Grid>
-            <Grid item md={6}>
-              <div>
-                {
-                  authParties.filter((item) =>
-                    item.w_address.includes(wallet_address)
-                  )[0].country
-                }
-              </div>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item md={6} textAlign={'right'}>
-              <div>State/town:</div>
-            </Grid>
-            <Grid item md={6}>
-              <div>
-                {
-                  authParties.filter((item) =>
-                    item.w_address.includes(wallet_address)
-                  )[0].state_town
-                }
-              </div>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item md={6} textAlign={'right'}>
-              <div>Email:</div>
-            </Grid>
-            <Grid item md={6}>
-              <div>
-                {
-                  authParties.filter((item) =>
-                    item.w_address.includes(wallet_address)
-                  )[0].email
-                }
-              </div>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item md={6} textAlign={'right'}>
-              <div>Phone Number:</div>
-            </Grid>
-            <Grid item md={6}>
-              <div>
-                {
-                  authParties.filter((item) =>
-                    item.w_address.includes(wallet_address)
-                  )[0].phone
-                }
-              </div>
-            </Grid>
-          </Grid>
+                  data?.w_address.substring(38);
+                break;
+              case 1:
+                value = data?.t_name;
+                break;
+              case 2:
+                value = data?.country;
+                break;
+              case 3:
+                value = data?.state_town;
+                break;
+              case 4:
+                value = data?.email;
+                break;
+              case 5:
+                value = data?.phone;
+                break;
+            }
+            return (
+              <Grid container spacing={2} key={index}>
+                <Grid item md={6} textAlign={'right'}>
+                  <div>{item}</div>
+                </Grid>
+                <Grid item md={6}>
+                  <div>{value}</div>
+                </Grid>
+              </Grid>
+            );
+          })}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAPDialog}>Close</Button>
-          <Button onClick={handleCloseAPDialog}>Send Invitation</Button>
+          <Button onClick={handleCloseAPDialog} variant="contained">
+            Add Party
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
