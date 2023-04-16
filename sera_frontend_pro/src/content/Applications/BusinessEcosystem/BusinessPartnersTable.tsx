@@ -1,6 +1,7 @@
 import { ChangeEvent, useState, useEffect, useContext } from 'react';
 import {
   Box,
+  Card,
   Table,
   TableBody,
   TableCell,
@@ -86,7 +87,7 @@ const BusinessPartnersTable = () => {
   }, []);
 
   return (
-    <>
+    <Card>
       <Box
         component="form"
         sx={{
@@ -246,7 +247,7 @@ const BusinessPartnersTable = () => {
           rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
-    </>
+    </Card>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Typography, Button, Grid } from '@mui/material';
 
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import AddPartnerDialog from './AddPartnerDialog';
+import PurchaseOrdersDialog from './PurchaseOrdersDialog';
 import { SeraContext } from '@/contexts/SeraContext';
 
 function PageHeader() {
@@ -17,7 +17,7 @@ function PageHeader() {
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
           <Typography variant="h3" component="h3" gutterBottom>
-            Business Ecosystem
+            Purchase Order
           </Typography>
           <Typography variant="subtitle2">
             {user.name}, these are your recent transactions
@@ -30,11 +30,11 @@ function PageHeader() {
             startIcon={<AddTwoToneIcon fontSize="small" />}
             onClick={() => handleOpenAPDialog()}
           >
-            Add Business Partner
+            Create Purhcase Order
           </Button>
         </Grid>
       </Grid>
-      <AddPartnerDialog />
+      <PurchaseOrdersDialog />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { ChangeEvent, useState, useEffect, useContext } from 'react';
 import {
   Box,
+  Card,
   Table,
   TableBody,
   TableCell,
@@ -75,7 +76,7 @@ const AuthPartysTable = () => {
   }, []);
 
   return (
-    <>
+    <Card>
       <Box
         component="form"
         sx={{
@@ -195,7 +196,7 @@ const AuthPartysTable = () => {
           rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
-    </>
+    </Card>
   );
 };
 

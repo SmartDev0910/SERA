@@ -1,6 +1,7 @@
 import { ChangeEvent, useState, useEffect, useContext } from 'react';
 import {
   Box,
+  Card,
   Table,
   TableBody,
   TableCell,
@@ -53,7 +54,7 @@ const RFQsTable = () => {
   const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchText(event.target.value);
     setFilteredRFQ(
-      rfqs.filter((item) => item.buyer.includes(event.target.value))
+      rfqs.filter((item) => item.w_address.includes(event.target.value))
     );
   };
 
@@ -65,7 +66,7 @@ const RFQsTable = () => {
   }, []);
 
   return (
-    <>
+    <Card>
       <Box
         component="form"
         sx={{
@@ -86,21 +87,27 @@ const RFQsTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Trade Name</TableCell>
-              <TableCell>Legal Name</TableCell>
-              <TableCell>Country</TableCell>
-              <TableCell>State/Town</TableCell>
-              <TableCell>Building Number</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone Number</TableCell>
+              <TableCell align="center">RFQ ID</TableCell>
+              <TableCell>Buyer</TableCell>
+              <TableCell>Material</TableCell>
               <TableCell>Wallet Address</TableCell>
-              <TableCell>Reputation</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedRFQ.map((rfq) => {
               return (
                 <TableRow hover key={rfq.id}>
+                  <TableCell align="center">
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {rfq.id}
+                    </Typography>
+                  </TableCell>
                   <TableCell>
                     <Typography
                       variant="body1"
@@ -111,6 +118,40 @@ const RFQsTable = () => {
                     >
                       {rfq.buyer}
                     </Typography>
+                    <Tooltip
+                      title={'0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc'}
+                      placement="top-start"
+                    >
+                      <Typography variant="body2" color="text.secondary" noWrap>
+                        0x3dC ... Ddc
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {rfq.buyer}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip title={rfq.w_address} placement="top-start">
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        color="text.primary"
+                        gutterBottom
+                        noWrap
+                      >
+                        {rfq.w_address.substring(0, 5) +
+                          ' ... ' +
+                          rfq.w_address.substring(38)}
+                      </Typography>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );
@@ -129,7 +170,7 @@ const RFQsTable = () => {
           rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
-    </>
+    </Card>
   );
 };
 

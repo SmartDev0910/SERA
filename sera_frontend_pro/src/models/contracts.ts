@@ -1,3 +1,5 @@
+export type ContractStatus = 'completed' | 'pending' | 'failed';
+
 export interface Proposals {
   id: string;
   buyer: string;
@@ -7,7 +9,7 @@ export interface Proposals {
   payment_term: string;
   start_date: string;
   end_date: string;
-  status: string;
+  status: ContractStatus;
 }
 
 export interface RFQ {

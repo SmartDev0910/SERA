@@ -1,6 +1,7 @@
 import { ChangeEvent, useState, useEffect, useContext } from 'react';
 import {
   Box,
+  Card,
   Table,
   TableBody,
   TableCell,
@@ -27,7 +28,7 @@ const materialsData: Materials[] = [
     id: '2',
     name: 'MATERIAL1',
     pub_number: 'MAT1',
-    producer: '0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc'
+    producer: '0x3dC4696671ca3cb6C34674A0c1729bbFcC2weDdc'
   }
 ];
 
@@ -56,8 +57,8 @@ const MaterialssTable = () => {
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchText(event.target.value);
-    filteredMaterials.filter((item) =>
-      item.producer.includes(event.target.value)
+    setFilteredMaterial(
+      materials.filter((item) => item.producer.includes(event.target.value))
     );
   };
 
@@ -69,7 +70,7 @@ const MaterialssTable = () => {
   }, []);
 
   return (
-    <>
+    <Card>
       <Box
         component="form"
         sx={{
@@ -90,21 +91,49 @@ const MaterialssTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Trade Name</TableCell>
-              <TableCell>Legal Name</TableCell>
-              <TableCell>Country</TableCell>
-              <TableCell>State/Town</TableCell>
-              <TableCell>Building Number</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone Number</TableCell>
-              <TableCell>Wallet Address</TableCell>
-              <TableCell>Reputation</TableCell>
+              <TableCell align="center">Material ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Publish Number</TableCell>
+              <TableCell>Producer</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedMaterials.map((material) => {
               return (
                 <TableRow hover key={material.id}>
+                  <TableCell align="center">
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {material.id}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {material.name}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {material.pub_number}
+                    </Typography>
+                  </TableCell>
                   <TableCell>
                     <Tooltip title={material.producer} placement="top-start">
                       <Typography
@@ -137,7 +166,7 @@ const MaterialssTable = () => {
           rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
-    </>
+    </Card>
   );
 };
 

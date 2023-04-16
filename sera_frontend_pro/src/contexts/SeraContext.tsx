@@ -3,6 +3,7 @@ import { BusinessPartner } from '@/models/business_partner';
 import { AuthParty } from '@/models/auth_parties';
 import { Proposals, RFQ } from '@/models/contracts';
 import { Materials } from '@/models/materials';
+import { PurhcaseOrder } from '@/models/purhcase_orders';
 
 type SeraContext = {
   openAPDialog: any;
@@ -11,11 +12,13 @@ type SeraContext = {
   proposals: Proposals[];
   rfqs: RFQ[];
   materials: Materials[];
+  purchaseOrders: PurhcaseOrder[];
   SetBusPartners: (data: BusinessPartner[]) => void;
   SetAuthParties: (data: AuthParty[]) => void;
   SetProposals: (data: Proposals[]) => void;
   SetRFQs: (data: RFQ[]) => void;
   SetMaterials: (data: Materials[]) => void;
+  SetPurchaseOrders: (data: PurhcaseOrder[]) => void;
   handleOpenAPDialog: () => void;
   handleCloseAPDialog: () => void;
 };
@@ -34,6 +37,11 @@ export function SeraContextProvider({ children }: Props) {
   const [proposals, setProposals] = useState<Proposals[]>([]);
   const [rfqs, setRFQs] = useState<RFQ[]>([]);
   const [materials, setMaterials] = useState<Materials[]>([]);
+  const [purchaseOrders, setPurchaseOrders] = useState<PurhcaseOrder[]>([]);
+
+  const SetPurchaseOrders = (data: PurhcaseOrder[]) => {
+    setPurchaseOrders(data);
+  };
 
   const SetMaterials = (data: Materials[]) => {
     setMaterials(data);
@@ -72,11 +80,13 @@ export function SeraContextProvider({ children }: Props) {
         proposals,
         rfqs,
         materials,
+        purchaseOrders,
         SetAuthParties,
         SetBusPartners,
         SetProposals,
         SetRFQs,
         SetMaterials,
+        SetPurchaseOrders,
         handleOpenAPDialog,
         handleCloseAPDialog
       }}
