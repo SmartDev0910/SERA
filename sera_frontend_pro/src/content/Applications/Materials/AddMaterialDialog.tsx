@@ -42,7 +42,7 @@ const AddMaterialDialog = () => {
         onClose={handleCloseAPDialog}
         fullWidth={true}
       >
-        <DialogTitle>Add Business Partner</DialogTitle>
+        <DialogTitle>Add Material</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -57,7 +57,7 @@ const AddMaterialDialog = () => {
           <Divider style={{ marginTop: '12px', marginBottom: '24px' }} />
           <TextField
             error={false}
-            label="Business Partner Email"
+            label="Material Email"
             variant="standard"
             fullWidth={true}
             style={{ marginBottom: '10px' }}
