@@ -1,12 +1,10 @@
+export type InvoiceStatus = 'completed' | 'pending' | 'failed';
+
 export interface Invoice {
   id: string;
-  t_name: string;
-  l_name: string;
-  country: string;
-  state_town: string;
-  b_number: string;
-  email: string;
-  phone: string;
-  w_address: string;
-  reputation: number;
+  bus_parter: string;
+  delivery_term: object;
+  payment_term: string;
+  due_date: string;
+  status: InvoiceStatus;
 }
