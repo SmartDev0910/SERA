@@ -60,7 +60,6 @@ function Logo() {
             <Avatar
               alt="SERA"
               src="/static/images/logo/logo.jpg"
-              sx={{ width: 56, height: 38 }}
               variant="square"
             />
           </Box>
