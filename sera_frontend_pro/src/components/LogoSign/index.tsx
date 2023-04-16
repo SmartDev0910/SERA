@@ -56,12 +56,14 @@ function Logo() {
           color="success"
           badgeContent="1.0"
         >
-          <Avatar
-            alt="SERA"
-            src="/static/images/logo/logo.jpg"
-            sx={{ width: 56, height: 38 }}
-            variant="square"
-          />
+          <Box>
+            <Avatar
+              alt="SERA"
+              src="/static/images/logo/logo.jpg"
+              sx={{ width: 56, height: 38 }}
+              variant="square"
+            />
+          </Box>
         </Badge>
       </LogoWrapper>
     </TooltipWrapper>
