@@ -11,7 +11,6 @@ import {
   TableRow,
   TableContainer,
   Typography,
-  Rating,
   Tooltip,
   Divider
 } from '@mui/material';
