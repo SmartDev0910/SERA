@@ -192,7 +192,7 @@ const ProposalssTable = () => {
             </FormControl>
           </Box>
         }
-        title="Recent Orders"
+        title="Recent Proposals"
       />
       <Divider />
       <TableContainer>
