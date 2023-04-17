@@ -14,6 +14,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Typography from '@mui/material/Typography';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const PurchaseOrderDialog = () => {
@@ -43,7 +44,9 @@ const PurchaseOrderDialog = () => {
         onClose={handleCloseAPDialog}
         fullWidth={true}
       >
-        <DialogTitle>Add Business Partner</DialogTitle>
+        <DialogTitle>
+          <Typography variant="h3">Create Purchase Order</Typography>
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus

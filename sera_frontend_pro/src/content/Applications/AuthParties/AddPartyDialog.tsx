@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import Typography from '@mui/material/Typography';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import { SeraContext } from '@/contexts/SeraContext';
@@ -49,24 +50,28 @@ const AddPartyDialog = () => {
         onClose={handleCloseAPDialog}
         fullWidth={true}
       >
-        <DialogTitle>Add Business Partner</DialogTitle>
+        <DialogTitle>
+          <Typography variant="h3">Add Party</Typography>
+        </DialogTitle>
         <DialogContent>
-          <FormControl variant="standard" fullWidth={true}>
-            <InputLabel id="wallet_address_label">Wallet Address</InputLabel>
-            <Select
-              labelId="wallet_address_label"
-              value={wallet_address}
-              onChange={handleWalletAddressChange}
-              label="Wallet Address"
-            >
-              <MenuItem value={'0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc'}>
-                0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc
-              </MenuItem>
-              <MenuItem value={'0x3dc4696671ca3cb6c34674a0c1729bbfcc29edd1'}>
-                0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDd1
-              </MenuItem>
-            </Select>
-          </FormControl>
+          <Grid item md={12}>
+            <FormControl fullWidth={true}>
+              <InputLabel id="wallet_address_label">Wallet Address</InputLabel>
+              <Select
+                labelId="wallet_address_label"
+                value={wallet_address}
+                onChange={handleWalletAddressChange}
+                label="Wallet Address"
+              >
+                <MenuItem value={'0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc'}>
+                  0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc
+                </MenuItem>
+                <MenuItem value={'0x3dc4696671ca3cb6c34674a0c1729bbfcc29edd1'}>
+                  0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDd1
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
           <Divider style={{ marginTop: '12px', marginBottom: '24px' }} />
           {detailColumns.map((item, index) => {
             let data = showDetail();
