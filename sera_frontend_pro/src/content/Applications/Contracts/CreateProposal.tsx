@@ -55,7 +55,9 @@ const CreateProposal = () => {
             inputFormat="MM/dd/yyyy"
             value={selectedDate}
             onChange={handleDateChange}
-            renderInput={(params) => <TextField size="small" {...params} />}
+            renderInput={(params) => (
+              <TextField size="small" {...params} fullWidth={true} />
+            )}
           />
         </Grid>
         <Grid item xs={6}>
@@ -64,7 +66,9 @@ const CreateProposal = () => {
             inputFormat="MM/dd/yyyy"
             value={selectedDate}
             onChange={handleDateChange}
-            renderInput={(params) => <TextField size="small" {...params} />}
+            renderInput={(params) => (
+              <TextField size="small" {...params} fullWidth={true} />
+            )}
           />
         </Grid>
       </Grid>
