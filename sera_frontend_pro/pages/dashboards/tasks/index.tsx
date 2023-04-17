@@ -123,7 +123,7 @@ function DashboardTasks() {
   return (
     <>
       <Head>
-        <title>Tasks Dashboard</title>
+        <title>SERA Dashboard</title>
       </Head>
       <PageTitleWrapper>
         <PageHeader />

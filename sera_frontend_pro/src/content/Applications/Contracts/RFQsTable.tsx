@@ -11,6 +11,7 @@ import {
   TableRow,
   TableContainer,
   Typography,
+  CardHeader,
   Tooltip,
   Divider
 } from '@mui/material';
@@ -82,6 +83,7 @@ const RFQsTable = () => {
           onChange={handleSearch}
         />
       </Box>
+      <CardHeader title="Recent RFQs" />
       <Divider />
       <TableContainer>
         <Table>

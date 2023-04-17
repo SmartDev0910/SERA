@@ -19,11 +19,11 @@ const TabsWrapper = styled(Tabs)(
 );
 
 function Contracts() {
-  const [currentTab, setCurrentTab] = useState<string>('proposal');
+  const [currentTab, setCurrentTab] = useState<string>('rfq');
 
   const tabs = [
-    { value: 'proposal', label: 'Proposal' },
-    { value: 'rfq', label: 'Request For Quotation' }
+    { value: 'rfq', label: 'Request For Quotation' },
+    { value: 'proposal', label: 'Proposal' }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -61,8 +61,8 @@ function Contracts() {
             </TabsWrapper>
           </Grid>
           <Grid item xs={12}>
-            {currentTab === 'proposal' && <ProposalsTable />}
             {currentTab === 'rfq' && <RFQsTable />}
+            {currentTab === 'proposal' && <ProposalsTable />}
           </Grid>
         </Grid>
       </Container>
