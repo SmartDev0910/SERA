@@ -1,4 +1,4 @@
-export type ContractStatus = 'completed' | 'pending' | 'failed';
+export type ContractStatus = 'received' | 'issued';
 
 export interface Proposals {
   id: string;

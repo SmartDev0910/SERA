@@ -12,11 +12,20 @@ import {
   TableContainer,
   Typography,
   Tooltip,
-  Divider
+  Divider,
+  CardHeader,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material';
 import Label from '@/components/Label';
 import { ContractStatus, Proposals } from '@/models/contracts';
 import { SeraContext } from '@/contexts/SeraContext';
+
+interface Filters {
+  status?: ContractStatus;
+}
 
 const contract: Proposals[] = [
   {
@@ -28,40 +37,65 @@ const contract: Proposals[] = [
     payment_term: '1123123',
     start_date: '2023/1/5',
     end_date: '2023/1/15',
-    status: 'pending'
+    status: 'issued'
   },
   {
     id: '2',
-    buyer: 'Trade 3DC',
+    buyer: 'Trade 166c',
     supplier: 'Trade 166',
     country: 'Canada',
     delivery_term: null,
     payment_term: '1123123',
     start_date: '2023/1/5',
     end_date: '2023/1/15',
-    status: 'completed'
+    status: 'received'
+  }
+];
+
+const statusOptions = [
+  {
+    id: 'all',
+    name: 'All'
+  },
+  {
+    id: 'received',
+    name: 'Received'
+  },
+  {
+    id: 'issued',
+    name: 'Issued'
   }
 ];
 
 const getStatusLabel = (contractStatus: ContractStatus): JSX.Element => {
   const map = {
-    failed: {
-      text: 'Failed',
-      color: 'error'
-    },
-    completed: {
-      text: 'Completed',
+    received: {
+      text: 'Received',
       color: 'success'
     },
-    pending: {
-      text: 'Pending',
+    issued: {
+      text: 'Issued',
       color: 'warning'
     }
   };
-
   const { text, color }: any = map[contractStatus];
 
   return <Label color={color}>{text}</Label>;
+};
+
+const applyFilters = (
+  proposals: Proposals[],
+  filters: Filters
+): Proposals[] => {
+  return proposals.filter((proposal) => {
+    let matches = true;
+
+    if (filters.status && proposal.status !== filters.status) {
+      matches = false;
+    }
+
+    return matches;
+  });
 };
 
 const applyPagination = (
@@ -77,7 +111,10 @@ const ProposalssTable = () => {
   const [limit, setLimit] = useState<number>(5);
   const [searchText, setSearchText] = useState<string>('');
   const { proposals, SetProposals } = useContext(SeraContext);
-  const [filteredPartner, setFilteredProposals] = useState<Proposals[]>([]);
+  const [filteredProposals, setFilteredProposals] = useState<Proposals[]>([]);
+  const [filters, setFilters] = useState<Filters>({
+    status: null
+  });
 
   const handlePageChange = (_event: any, newPage: number): void => {
     setPage(newPage);
@@ -94,7 +131,24 @@ const ProposalssTable = () => {
     );
   };
 
-  const paginatedProposals = applyPagination(filteredPartner, page, limit);
+  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    let value = null;
+
+    if (e.target.value !== 'all') {
+      value = e.target.value;
+    }
+
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      status: value
+    }));
+  };
+
+  const paginatedProposals = applyPagination(
+    applyFilters(filteredProposals, filters),
+    page,
+    limit
+  );
 
   useEffect(() => {
     SetProposals(contract);
@@ -118,6 +172,28 @@ const ProposalssTable = () => {
           onChange={handleSearch}
         />
       </Box>
+      <CardHeader
+        action={
+          <Box width={150}>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={filters.status || 'all'}
+                onChange={handleStatusChange}
+                label="Status"
+                autoWidth
+              >
+                {statusOptions.map((statusOption) => (
+                  <MenuItem key={statusOption.id} value={statusOption.id}>
+                    {statusOption.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        }
+        title="Recent Orders"
+      />
       <Divider />
       <TableContainer>
         <Table>
