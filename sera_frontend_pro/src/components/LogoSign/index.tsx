@@ -1,6 +1,5 @@
 import {
   Box,
-  Avatar,
   Tooltip,
   Badge,
   TooltipProps,
@@ -57,10 +56,10 @@ function Logo() {
           badgeContent="1.0"
         >
           <Box>
-            <Avatar
+            <img
               alt="SERA"
               src="/static/images/logo/logo.jpg"
-              variant="square"
+              style={{ width: '54px', height: '54px' }}
             />
           </Box>
         </Badge>
