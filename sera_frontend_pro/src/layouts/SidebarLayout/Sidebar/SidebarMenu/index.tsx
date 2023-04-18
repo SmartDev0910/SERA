@@ -178,62 +178,45 @@ function SidebarMenu() {
   return (
     <>
       <MenuWrapper>
-        <List component="div">
-          <SubMenuWrapper>
-            <List component="div">
-              <ListItem component="div">
-                <NextLink href="/" passHref>
-                  <Button
-                    className={currentRoute === '="/' ? 'active' : ''}
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<DesignServicesTwoToneIcon />}
-                  >
-                    Overview
-                  </Button>
-                </NextLink>
-              </ListItem>
-            </List>
-          </SubMenuWrapper>
-        </List>
         <List
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Dashboards
+              Accounts
             </ListSubheader>
           }
         >
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/dashboards/tasks" passHref>
+                <NextLink href="/management/profile" passHref>
                   <Button
                     className={
-                      currentRoute === '/dashboards/tasks' ? 'active' : ''
+                      currentRoute === '/management/profile' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
                     onClick={closeSidebar}
-                    startIcon={<BrightnessLowTwoToneIcon />}
+                    startIcon={<AccountCircleTwoToneIcon />}
                   >
-                    Manage Tasks
+                    User Profile
                   </Button>
                 </NextLink>
               </ListItem>
               <ListItem component="div">
-                <NextLink href="/applications/messenger" passHref>
+                <NextLink href="/management/profile/settings" passHref>
                   <Button
                     className={
-                      currentRoute === '/applications/messenger' ? 'active' : ''
+                      currentRoute === '/management/profile/settings'
+                        ? 'active'
+                        : ''
                     }
                     disableRipple
                     component="a"
                     onClick={closeSidebar}
-                    startIcon={<MmsTwoToneIcon />}
+                    startIcon={<DisplaySettingsTwoToneIcon />}
                   >
-                    Messenger
+                    Account Settings
                   </Button>
                 </NextLink>
               </ListItem>
@@ -445,41 +428,39 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Accounts
+              Dashboards
             </ListSubheader>
           }
         >
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/management/profile" passHref>
+                <NextLink href="/dashboards/tasks" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/profile' ? 'active' : ''
+                      currentRoute === '/dashboards/tasks' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
                     onClick={closeSidebar}
-                    startIcon={<AccountCircleTwoToneIcon />}
+                    startIcon={<BrightnessLowTwoToneIcon />}
                   >
-                    User Profile
+                    Manage Tasks
                   </Button>
                 </NextLink>
               </ListItem>
               <ListItem component="div">
-                <NextLink href="/management/profile/settings" passHref>
+                <NextLink href="/applications/messenger" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/profile/settings'
-                        ? 'active'
-                        : ''
+                      currentRoute === '/applications/messenger' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
                     onClick={closeSidebar}
-                    startIcon={<DisplaySettingsTwoToneIcon />}
+                    startIcon={<MmsTwoToneIcon />}
                   >
-                    Account Settings
+                    Messenger
                   </Button>
                 </NextLink>
               </ListItem>
