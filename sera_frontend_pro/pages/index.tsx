@@ -54,11 +54,11 @@ function Overview() {
               <Box>
                 <Button
                   component={Link}
-                  href="/dashboards/tasks"
+                  href="/applications/business-ecosystem"
                   variant="contained"
                   sx={{ ml: 2 }}
                 >
-                  Live Preview
+                  Launch the app
                 </Button>
               </Box>
             </Box>
