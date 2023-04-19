@@ -57,6 +57,7 @@ const getStatusLabel = (invoiceStatus: InvoiceStatus): JSX.Element => {
 
   return <Label color={color}>{text}</Label>;
 };
+
 const applyPagination = (
   invoices: Invoice[],
   page: number,
