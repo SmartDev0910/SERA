@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 
 import BusinessPartnersTable from '@/content/Applications/BusinessEcosystem/BusinessPartnersTable';
 
-function ApplicationsTransactions() {
+function ApplicationsBusinessEcosystem() {
   return (
     <>
       <Head>
@@ -34,8 +34,8 @@ function ApplicationsTransactions() {
   );
 }
 
-ApplicationsTransactions.getLayout = (page) => (
+ApplicationsBusinessEcosystem.getLayout = (page) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 
-export default ApplicationsTransactions;
+export default ApplicationsBusinessEcosystem;

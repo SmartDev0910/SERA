@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 
 import MaterialssTable from '@/content/Applications/Materials/MaterialsTable';
 
-function Materials() {
+function ApplicationsMaterials() {
   return (
     <>
       <Head>
@@ -34,6 +34,8 @@ function Materials() {
   );
 }
 
-Materials.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+ApplicationsMaterials.getLayout = (page) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
-export default Materials;
+export default ApplicationsMaterials;

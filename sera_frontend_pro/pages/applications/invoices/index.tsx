@@ -6,7 +6,7 @@ import { Grid, Container } from '@mui/material';
 import Footer from '@/components/Footer';
 import InvoicesTable from '@/content/Applications/Invoices/InvoicesTable';
 
-function Invoices() {
+function ApplicationsInvoices() {
   return (
     <>
       <Head>
@@ -33,6 +33,8 @@ function Invoices() {
   );
 }
 
-Invoices.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+ApplicationsInvoices.getLayout = (page) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
-export default Invoices;
+export default ApplicationsInvoices;
