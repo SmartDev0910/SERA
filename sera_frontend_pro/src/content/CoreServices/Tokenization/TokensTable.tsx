@@ -108,15 +108,12 @@ const TokensTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Trade Name</TableCell>
-              <TableCell>Legal Name</TableCell>
-              <TableCell>Country</TableCell>
-              <TableCell>State/Town</TableCell>
-              <TableCell>Building Number</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone Number</TableCell>
-              <TableCell>Wallet Address</TableCell>
-              <TableCell>Reputation</TableCell>
+              <TableCell>Invoice ID</TableCell>
+              <TableCell>Token Name</TableCell>
+              <TableCell>Token Symbol</TableCell>
+              <TableCell>Contract Type</TableCell>
+              <TableCell>Token Address</TableCell>
+              <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -187,47 +184,6 @@ const TokensTable = () => {
                       noWrap
                     >
                       {busPartner.email}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {busPartner.phone}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip title={busPartner.w_address} placement="top-start">
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        color="text.primary"
-                        gutterBottom
-                        noWrap
-                      >
-                        {busPartner.w_address.substring(0, 5) +
-                          ' ... ' +
-                          busPartner.w_address.substring(38)}
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      <Rating
-                        name="read-only"
-                        value={busPartner.reputation}
-                        readOnly
-                      />
                     </Typography>
                   </TableCell>
                 </TableRow>
