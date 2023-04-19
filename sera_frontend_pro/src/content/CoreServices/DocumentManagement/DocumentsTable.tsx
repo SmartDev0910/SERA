@@ -11,54 +11,57 @@ import {
   TableRow,
   TableContainer,
   Typography,
-  Rating,
   Tooltip,
   Divider
 } from '@mui/material';
-import { BusinessPartner } from '@/models/applications/business_partner';
+import Label from '@/components/Label';
+import { Document, DocumentStatus } from '@/models/core-services/documents';
 import { SeraContext } from '@/contexts/SeraContext';
 
-const busPartner: BusinessPartner[] = [
+const documentsData: Document[] = [
   {
-    id: '1',
-    t_name: 'Trade 3DC',
-    l_name: 'Legal 3DC',
-    country: 'Canada',
-    state_town: 'Toronto',
-    b_number: 'BDS332',
-    email: 'testman3dc@gmail.com',
-    phone: '(+1) 392 493 2933',
-    w_address: '0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc',
-    reputation: 2
-  },
-  {
-    id: '2',
-    t_name: 'Trade 166',
-    l_name: 'Legal 166',
-    country: 'Canada',
-    state_town: 'Toronto',
-    b_number: 'TR 166',
-    email: 'testman166@gmail.com',
-    phone: '(+1) 392 493 2933',
-    w_address: '0x1663CE5485ef8c7b8C390F1132e716d84fC357E8',
-    reputation: 2
+    partner: '0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc',
+    document: null,
+    document_hash: 'QmaZe7nXMoatJ9vHSdwQmejKhPNAqc7CMWJoBbuSzRoVts',
+    status: 'pending'
   }
 ];
 
+const getStatusLabel = (documentStatus: DocumentStatus): JSX.Element => {
+  const map = {
+    failed: {
+      text: 'Failed',
+      color: 'error'
+    },
+    completed: {
+      text: 'Completed',
+      color: 'success'
+    },
+    pending: {
+      text: 'Pending',
+      color: 'warning'
+    }
+  };
+
+  const { text, color }: any = map[documentStatus];
+
+  return <Label color={color}>{text}</Label>;
+};
+
 const applyPagination = (
-  busPartners: BusinessPartner[],
+  documents: Document[],
   page: number,
   limit: number
-): BusinessPartner[] => {
-  return busPartners.slice(page * limit, page * limit + limit);
+): Document[] => {
+  return documents.slice(page * limit, page * limit + limit);
 };
 
 const DocumentsTable = () => {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [searchText, setSearchText] = useState<string>('');
-  const { busPartners, SetBusPartners } = useContext(SeraContext);
-  const [filteredPartner, setFilteredPartner] = useState<BusinessPartner[]>([]);
+  const { documents, SetDocuments } = useContext(SeraContext);
+  const [filteredPartner, setFilteredPartner] = useState<Document[]>([]);
 
   const handlePageChange = (_event: any, newPage: number): void => {
     setPage(newPage);
@@ -71,7 +74,7 @@ const DocumentsTable = () => {
   const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchText(event.target.value);
     setFilteredPartner(
-      busPartners.filter((item) => item.w_address.includes(event.target.value))
+      documents.filter((item) => item.partner.includes(event.target.value))
     );
   };
 
@@ -82,8 +85,8 @@ const DocumentsTable = () => {
   );
 
   useEffect(() => {
-    SetBusPartners(busPartner);
-    setFilteredPartner(busPartner);
+    SetDocuments(documentsData);
+    setFilteredPartner(documentsData);
   }, []);
 
   return (
@@ -108,16 +111,31 @@ const DocumentsTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Partner</TableCell>
+              <TableCell align="center">Partner</TableCell>
               <TableCell>Document</TableCell>
               <TableCell>Document Hash</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedBusinessPartner.map((busPartner) => {
+            {paginatedBusinessPartner.map((document, index) => {
               return (
-                <TableRow hover key={busPartner.id}>
+                <TableRow hover key={index}>
+                  <TableCell align="center">
+                    <Tooltip title={document.partner} placement="top-start">
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        color="text.primary"
+                        gutterBottom
+                        noWrap
+                      >
+                        {document.partner.substring(0, 5) +
+                          ' ... ' +
+                          document.partner.substring(38)}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
                   <TableCell>
                     <Typography
                       variant="body1"
@@ -126,7 +144,7 @@ const DocumentsTable = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.t_name}
+                      {document.document}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -137,7 +155,7 @@ const DocumentsTable = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.l_name}
+                      {document.document_hash}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -148,18 +166,7 @@ const DocumentsTable = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.country}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {busPartner.state_town}
+                      {getStatusLabel(document.status)}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -171,7 +178,7 @@ const DocumentsTable = () => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={busPartners.length}
+          count={documents.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
