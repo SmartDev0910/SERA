@@ -30,7 +30,7 @@ function PageHeader() {
             startIcon={<AddTwoToneIcon fontSize="small" />}
             onClick={() => handleOpenAPDialog()}
           >
-            New Shipment
+            Create Shipment
           </Button>
         </Grid>
       </Grid>
