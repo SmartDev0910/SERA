@@ -108,15 +108,11 @@ const ShipmentsDialog = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Trade Name</TableCell>
-              <TableCell>Legal Name</TableCell>
-              <TableCell>Country</TableCell>
-              <TableCell>State/Town</TableCell>
-              <TableCell>Building Number</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone Number</TableCell>
-              <TableCell>Wallet Address</TableCell>
-              <TableCell>Reputation</TableCell>
+              <TableCell>Purchase Order ID</TableCell>
+              <TableCell>Importer</TableCell>
+              <TableCell>Delivery Term</TableCell>
+              <TableCell>Payment Term</TableCell>
+              <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -176,58 +172,6 @@ const ShipmentsDialog = () => {
                       noWrap
                     >
                       {busPartner.b_number}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {busPartner.email}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {busPartner.phone}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip title={busPartner.w_address} placement="top-start">
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        color="text.primary"
-                        gutterBottom
-                        noWrap
-                      >
-                        {busPartner.w_address.substring(0, 5) +
-                          ' ... ' +
-                          busPartner.w_address.substring(38)}
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      <Rating
-                        name="read-only"
-                        value={busPartner.reputation}
-                        readOnly
-                      />
                     </Typography>
                   </TableCell>
                 </TableRow>
