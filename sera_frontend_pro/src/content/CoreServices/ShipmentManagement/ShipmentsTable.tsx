@@ -11,54 +11,58 @@ import {
   TableRow,
   TableContainer,
   Typography,
-  Rating,
   Tooltip,
   Divider
 } from '@mui/material';
-import { BusinessPartner } from '@/models/applications/business_partner';
+import Label from '@/components/Label';
+import { Shipment, ShipmentStatus } from '@/models/core-services/shipment';
 import { SeraContext } from '@/contexts/SeraContext';
 
-const busPartner: BusinessPartner[] = [
+const shipmentsData: Shipment[] = [
   {
-    id: '1',
-    t_name: 'Trade 3DC',
-    l_name: 'Legal 3DC',
-    country: 'Canada',
-    state_town: 'Toronto',
-    b_number: 'BDS332',
-    email: 'testman3dc@gmail.com',
-    phone: '(+1) 392 493 2933',
-    w_address: '0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc',
-    reputation: 2
-  },
-  {
-    id: '2',
-    t_name: 'Trade 166',
-    l_name: 'Legal 166',
-    country: 'Canada',
-    state_town: 'Toronto',
-    b_number: 'TR 166',
-    email: 'testman166@gmail.com',
-    phone: '(+1) 392 493 2933',
-    w_address: '0x1663CE5485ef8c7b8C390F1132e716d84fC357E8',
-    reputation: 2
+    po_id: '1',
+    importer: 'Trade 3DC',
+    delivery_term: null,
+    payment_term: '12000',
+    status: 'pending'
   }
 ];
 
+const getStatusLabel = (shipmentStatus: ShipmentStatus): JSX.Element => {
+  const map = {
+    failed: {
+      text: 'Failed',
+      color: 'error'
+    },
+    completed: {
+      text: 'Completed',
+      color: 'success'
+    },
+    pending: {
+      text: 'Pending',
+      color: 'warning'
+    }
+  };
+
+  const { text, color }: any = map[shipmentStatus];
+
+  return <Label color={color}>{text}</Label>;
+};
+
 const applyPagination = (
-  busPartners: BusinessPartner[],
+  shipments: Shipment[],
   page: number,
   limit: number
-): BusinessPartner[] => {
-  return busPartners.slice(page * limit, page * limit + limit);
+): Shipment[] => {
+  return shipments.slice(page * limit, page * limit + limit);
 };
 
 const ShipmentsDialog = () => {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [searchText, setSearchText] = useState<string>('');
-  const { busPartners, SetBusPartners } = useContext(SeraContext);
-  const [filteredPartner, setFilteredPartner] = useState<BusinessPartner[]>([]);
+  const { shipments, SetShipments } = useContext(SeraContext);
+  const [filteredPartner, setFilteredPartner] = useState<Shipment[]>([]);
 
   const handlePageChange = (_event: any, newPage: number): void => {
     setPage(newPage);
@@ -71,19 +75,15 @@ const ShipmentsDialog = () => {
   const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchText(event.target.value);
     setFilteredPartner(
-      busPartners.filter((item) => item.w_address.includes(event.target.value))
+      shipments.filter((item) => item.importer.includes(event.target.value))
     );
   };
 
-  const paginatedBusinessPartner = applyPagination(
-    filteredPartner,
-    page,
-    limit
-  );
+  const paginatedShipment = applyPagination(filteredPartner, page, limit);
 
   useEffect(() => {
-    SetBusPartners(busPartner);
-    setFilteredPartner(busPartner);
+    SetShipments(shipmentsData);
+    setFilteredPartner(shipmentsData);
   }, []);
 
   return (
@@ -108,7 +108,7 @@ const ShipmentsDialog = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Purchase Order ID</TableCell>
+              <TableCell align="center">Purchase Order ID</TableCell>
               <TableCell>Importer</TableCell>
               <TableCell>Delivery Term</TableCell>
               <TableCell>Payment Term</TableCell>
@@ -116,10 +116,10 @@ const ShipmentsDialog = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedBusinessPartner.map((busPartner) => {
+            {paginatedShipment.map((shipment, index) => {
               return (
-                <TableRow hover key={busPartner.id}>
-                  <TableCell>
+                <TableRow hover key={index}>
+                  <TableCell align="center">
                     <Typography
                       variant="body1"
                       fontWeight="bold"
@@ -127,7 +127,7 @@ const ShipmentsDialog = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.t_name}
+                      {shipment.po_id}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -138,7 +138,7 @@ const ShipmentsDialog = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.l_name}
+                      {shipment.importer}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -149,7 +149,7 @@ const ShipmentsDialog = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.country}
+                      {shipment.delivery_term}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -160,7 +160,7 @@ const ShipmentsDialog = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.state_town}
+                      {shipment.payment_term}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -171,7 +171,7 @@ const ShipmentsDialog = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.b_number}
+                      {getStatusLabel(shipment.status)}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -183,7 +183,7 @@ const ShipmentsDialog = () => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={busPartners.length}
+          count={shipments.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
