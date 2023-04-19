@@ -15,7 +15,10 @@ import {
   Divider
 } from '@mui/material';
 import Label from '@/components/Label';
-import { PurhcaseOrder, PurchaseOrderStatus } from '@/models/purhcase_orders';
+import {
+  PurhcaseOrder,
+  PurchaseOrderStatus
+} from '@/models/applications/purhcase_orders';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const purOrderData: PurhcaseOrder[] = [

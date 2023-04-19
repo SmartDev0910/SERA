@@ -14,7 +14,7 @@ import {
   Tooltip,
   Divider
 } from '@mui/material';
-import { AuthParty } from '@/models/auth_parties';
+import { AuthParty } from '@/models/applications/auth_parties';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const authPartiesData: AuthParty[] = [

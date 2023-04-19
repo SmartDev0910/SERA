@@ -11,54 +11,80 @@ import {
   TableRow,
   TableContainer,
   Typography,
-  Rating,
   Tooltip,
   Divider
 } from '@mui/material';
-import { BusinessPartner } from '@/models/business_partner';
+import Label from '@/components/Label';
+import { ContractType, TokenStatus, Token } from '@/models/core-services/token';
 import { SeraContext } from '@/contexts/SeraContext';
 
-const busPartner: BusinessPartner[] = [
+const tokenData: Token[] = [
   {
-    id: '1',
-    t_name: 'Trade 3DC',
-    l_name: 'Legal 3DC',
-    country: 'Canada',
-    state_town: 'Toronto',
-    b_number: 'BDS332',
-    email: 'testman3dc@gmail.com',
-    phone: '(+1) 392 493 2933',
-    w_address: '0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc',
-    reputation: 2
-  },
-  {
-    id: '2',
-    t_name: 'Trade 166',
-    l_name: 'Legal 166',
-    country: 'Canada',
-    state_town: 'Toronto',
-    b_number: 'TR 166',
-    email: 'testman166@gmail.com',
-    phone: '(+1) 392 493 2933',
-    w_address: '0x1663CE5485ef8c7b8C390F1132e716d84fC357E8',
-    reputation: 2
+    invoice_id: '1',
+    name: 'SERA TOKEN',
+    symbol: 'SERA',
+    contract_type: 'fungible',
+    address: '0x3dC4696671ca3cb6C34674A0c1729bbFcC29EDdc',
+    status: 'pending'
   }
 ];
 
+const getStatusLabel = (tokenStatus: TokenStatus): JSX.Element => {
+  const map = {
+    failed: {
+      text: 'Failed',
+      color: 'error'
+    },
+    completed: {
+      text: 'Completed',
+      color: 'success'
+    },
+    pending: {
+      text: 'Pending',
+      color: 'warning'
+    }
+  };
+
+  const { text, color }: any = map[tokenStatus];
+
+  return <Label color={color}>{text}</Label>;
+};
+
+const getContractTypeLabel = (contractType: ContractType): JSX.Element => {
+  const map = {
+    non_fungible: {
+      text: 'Non Fungible',
+      color: 'error'
+    },
+    fungible: {
+      text: 'Fungible',
+      color: 'success'
+    },
+    semi_fungible: {
+      text: 'Semi Fungible',
+      color: 'warning'
+    }
+  };
+
+  const { text, color }: any = map[contractType];
+
+  return <Label color={color}>{text}</Label>;
+};
+
 const applyPagination = (
-  busPartners: BusinessPartner[],
+  tokens: Token[],
   page: number,
   limit: number
-): BusinessPartner[] => {
-  return busPartners.slice(page * limit, page * limit + limit);
+): Token[] => {
+  return tokens.slice(page * limit, page * limit + limit);
 };
 
 const TokensTable = () => {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [searchText, setSearchText] = useState<string>('');
-  const { busPartners, SetBusPartners } = useContext(SeraContext);
-  const [filteredPartner, setFilteredPartner] = useState<BusinessPartner[]>([]);
+  const { tokens, SetTokens } = useContext(SeraContext);
+  const [filteredPartner, setFilteredPartner] = useState<Token[]>([]);
 
   const handlePageChange = (_event: any, newPage: number): void => {
     setPage(newPage);
@@ -71,19 +97,15 @@ const TokensTable = () => {
   const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchText(event.target.value);
     setFilteredPartner(
-      busPartners.filter((item) => item.w_address.includes(event.target.value))
+      tokens.filter((item) => item.address.includes(event.target.value))
     );
   };
 
-  const paginatedBusinessPartner = applyPagination(
-    filteredPartner,
-    page,
-    limit
-  );
+  const paginatedToken = applyPagination(filteredPartner, page, limit);
 
   useEffect(() => {
-    SetBusPartners(busPartner);
-    setFilteredPartner(busPartner);
+    SetTokens(tokenData);
+    setFilteredPartner(tokenData);
   }, []);
 
   return (
@@ -108,19 +130,19 @@ const TokensTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Invoice ID</TableCell>
+              <TableCell align="center">Invoice ID</TableCell>
               <TableCell>Token Name</TableCell>
-              <TableCell>Token Symbol</TableCell>
+              <TableCell align="center">Token Symbol</TableCell>
               <TableCell>Contract Type</TableCell>
               <TableCell>Token Address</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedBusinessPartner.map((busPartner) => {
+            {paginatedToken.map((token, index) => {
               return (
-                <TableRow hover key={busPartner.id}>
-                  <TableCell>
+                <TableRow hover key={index}>
+                  <TableCell align="center">
                     <Typography
                       variant="body1"
                       fontWeight="bold"
@@ -128,7 +150,7 @@ const TokensTable = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.t_name}
+                      {token.invoice_id}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -139,7 +161,18 @@ const TokensTable = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.l_name}
+                      {token.name}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {token.symbol}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -150,8 +183,23 @@ const TokensTable = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.country}
+                      {getContractTypeLabel(token.contract_type)}
                     </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip title={token.address} placement="top-start">
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        color="text.primary"
+                        gutterBottom
+                        noWrap
+                      >
+                        {token.address.substring(0, 5) +
+                          ' ... ' +
+                          token.address.substring(38)}
+                      </Typography>
+                    </Tooltip>
                   </TableCell>
                   <TableCell>
                     <Typography
@@ -161,29 +209,7 @@ const TokensTable = () => {
                       gutterBottom
                       noWrap
                     >
-                      {busPartner.state_town}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {busPartner.b_number}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {busPartner.email}
+                      {getStatusLabel(token.status)}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -195,7 +221,7 @@ const TokensTable = () => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={busPartners.length}
+          count={tokens.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
