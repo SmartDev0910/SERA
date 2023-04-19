@@ -7,6 +7,7 @@ import { PurhcaseOrder } from '@/models/applications/purhcase_orders';
 import { Invoice } from '@/models/applications/invoices';
 import { Token } from '@/models/core-services/token';
 import { Shipment } from '@/models/core-services/shipment';
+import { Document } from '@/models/core-services/documents';
 
 type SeraContext = {
   openAPDialog: any;
@@ -19,6 +20,7 @@ type SeraContext = {
   invoices: Invoice[];
   tokens: Token[];
   shipments: Shipment[];
+  documents: Document[];
   SetBusPartners: (data: BusinessPartner[]) => void;
   SetAuthParties: (data: AuthParty[]) => void;
   SetProposals: (data: Proposals[]) => void;
@@ -28,6 +30,7 @@ type SeraContext = {
   SetInvoices: (data: Invoice[]) => void;
   SetTokens: (data: Token[]) => void;
   SetShipments: (data: Shipment[]) => void;
+  SetDocuments: (data: Document[]) => void;
   handleOpenAPDialog: () => void;
   handleCloseAPDialog: () => void;
 };
@@ -50,6 +53,11 @@ export function SeraContextProvider({ children }: Props) {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [shipments, setShipments] = useState<Shipment[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
+
+  const SetDocuments = (data: Document[]) => {
+    setDocuments(data);
+  };
 
   const SetShipments = (data: Shipment[]) => {
     setShipments(data);
@@ -108,6 +116,7 @@ export function SeraContextProvider({ children }: Props) {
         invoices,
         tokens,
         shipments,
+        documents,
         SetAuthParties,
         SetBusPartners,
         SetProposals,
@@ -117,6 +126,7 @@ export function SeraContextProvider({ children }: Props) {
         SetPurchaseOrders,
         SetTokens,
         SetShipments,
+        SetDocuments,
         handleOpenAPDialog,
         handleCloseAPDialog
       }}
