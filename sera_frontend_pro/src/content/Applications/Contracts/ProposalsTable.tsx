@@ -20,7 +20,7 @@ import {
   MenuItem
 } from '@mui/material';
 import Label from '@/components/Label';
-import { ContractStatus, Proposals } from '@/models/contracts';
+import { ContractStatus, Proposals } from '@/models/applications/contracts';
 import { SeraContext } from '@/contexts/SeraContext';
 
 interface Filters {

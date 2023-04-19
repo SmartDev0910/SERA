@@ -15,7 +15,7 @@ import {
   Divider
 } from '@mui/material';
 import Label from '@/components/Label';
-import { Invoice, InvoiceStatus } from '@/models/invoices';
+import { Invoice, InvoiceStatus } from '@/models/applications/invoices';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const invoicesData: Invoice[] = [

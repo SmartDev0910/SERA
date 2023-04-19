@@ -15,7 +15,7 @@ import {
   Tooltip,
   Divider
 } from '@mui/material';
-import { BusinessPartner } from '@/models/business_partner';
+import { BusinessPartner } from '@/models/applications/business_partner';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const busPartner: BusinessPartner[] = [

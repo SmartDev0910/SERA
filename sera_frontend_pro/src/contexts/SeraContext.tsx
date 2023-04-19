@@ -1,10 +1,10 @@
 import { useState, ReactNode, createContext } from 'react';
-import { BusinessPartner } from '@/models/business_partner';
-import { AuthParty } from '@/models/auth_parties';
-import { Proposals, RFQ } from '@/models/contracts';
-import { Materials } from '@/models/materials';
-import { PurhcaseOrder } from '@/models/purhcase_orders';
-import { Invoice } from '@/models/invoices';
+import { BusinessPartner } from '@/models/applications/business_partner';
+import { AuthParty } from '@/models/applications/auth_parties';
+import { Proposals, RFQ } from '@/models/applications/contracts';
+import { Materials } from '@/models/applications/materials';
+import { PurhcaseOrder } from '@/models/applications/purhcase_orders';
+import { Invoice } from '@/models/applications/invoices';
 
 type SeraContext = {
   openAPDialog: any;

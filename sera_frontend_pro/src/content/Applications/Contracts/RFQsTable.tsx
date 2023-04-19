@@ -14,7 +14,7 @@ import {
   Tooltip,
   Divider
 } from '@mui/material';
-import { RFQ } from '@/models/contracts';
+import { RFQ } from '@/models/applications/contracts';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const rfq: RFQ[] = [

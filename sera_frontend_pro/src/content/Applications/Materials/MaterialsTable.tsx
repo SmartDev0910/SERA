@@ -15,7 +15,7 @@ import {
   Divider
 } from '@mui/material';
 import { SeraContext } from '@/contexts/SeraContext';
-import { Materials } from '@/models/materials';
+import { Materials } from '@/models/applications/materials';
 
 const materialsData: Materials[] = [
   {
