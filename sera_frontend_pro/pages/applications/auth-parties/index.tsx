@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 
 import AuthPartysTable from '@/content/Applications/AuthParties/AuthPartysTable';
 
-function ApplicationsTransactions() {
+function ApplicationsAuthParties() {
   return (
     <>
       <Head>
@@ -34,8 +34,8 @@ function ApplicationsTransactions() {
   );
 }
 
-ApplicationsTransactions.getLayout = (page) => (
+ApplicationsAuthParties.getLayout = (page) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 
-export default ApplicationsTransactions;
+export default ApplicationsAuthParties;

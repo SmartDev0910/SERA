@@ -7,11 +7,11 @@ import Footer from '@/components/Footer';
 
 import DocumentsTable from '@/content/CoreServices/DocumentManagement/DocumentsTable';
 
-function ApplicationsTransactions() {
+function CoreServicesDocumentManagement() {
   return (
     <>
       <Head>
-        <title>Document Management - Applications</title>
+        <title>Document Management - Core Services</title>
       </Head>
       <PageTitleWrapper>
         <PageHeader />
@@ -34,8 +34,8 @@ function ApplicationsTransactions() {
   );
 }
 
-ApplicationsTransactions.getLayout = (page) => (
+CoreServicesDocumentManagement.getLayout = (page) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 
-export default ApplicationsTransactions;
+export default CoreServicesDocumentManagement;

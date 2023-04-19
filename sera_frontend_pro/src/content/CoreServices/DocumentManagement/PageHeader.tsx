@@ -30,7 +30,7 @@ function PageHeader() {
             startIcon={<AddTwoToneIcon fontSize="small" />}
             onClick={() => handleOpenAPDialog()}
           >
-            Add Business Partner
+            Compose
           </Button>
         </Grid>
       </Grid>

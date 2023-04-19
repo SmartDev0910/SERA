@@ -18,7 +18,7 @@ const TabsWrapper = styled(Tabs)(
 `
 );
 
-function Contracts() {
+function ApplicationsContracts() {
   const [currentTab, setCurrentTab] = useState<string>('rfq');
 
   const tabs = [
@@ -71,6 +71,8 @@ function Contracts() {
   );
 }
 
-Contracts.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+ApplicationsContracts.getLayout = (page) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
-export default Contracts;
+export default ApplicationsContracts;

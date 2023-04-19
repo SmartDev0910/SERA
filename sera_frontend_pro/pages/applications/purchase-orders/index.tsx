@@ -6,7 +6,7 @@ import { Grid, Container } from '@mui/material';
 import Footer from '@/components/Footer';
 import PurhcaseOrdersTable from '@/content/Applications/PurchaseOrders/PurchaseOrdersTable';
 
-function PurchaseOrders() {
+function ApplicationsPurchaseOrders() {
   return (
     <>
       <Head>
@@ -33,6 +33,8 @@ function PurchaseOrders() {
   );
 }
 
-PurchaseOrders.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+ApplicationsPurchaseOrders.getLayout = (page) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
-export default PurchaseOrders;
+export default ApplicationsPurchaseOrders;
