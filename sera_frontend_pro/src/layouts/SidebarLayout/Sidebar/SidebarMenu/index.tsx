@@ -18,7 +18,7 @@ import MmsTwoToneIcon from '@mui/icons-material/MmsTwoTone';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
+import ArticleIcon from '@mui/icons-material/Article';
 import TokenIcon from '@mui/icons-material/Token';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import RiceBowlIcon from '@mui/icons-material/RiceBowl';
@@ -414,7 +414,7 @@ function SidebarMenu() {
                     disableRipple
                     component="a"
                     onClick={closeSidebar}
-                    startIcon={<DocumentScannerIcon />}
+                    startIcon={<ArticleIcon />}
                   >
                     Document Management
                   </Button>
