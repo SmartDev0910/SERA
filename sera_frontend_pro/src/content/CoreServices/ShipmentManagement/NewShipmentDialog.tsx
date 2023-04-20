@@ -18,8 +18,7 @@ import Typography from '@mui/material/Typography';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const NewShipmentDialog = () => {
-  const { openAPDialog, busPartners, handleCloseAPDialog } =
-    useContext(SeraContext);
+  const { openFlag, busPartners, handleCloseFlag } = useContext(SeraContext);
   const [wallet_address, setWalletAddress] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,11 +38,7 @@ const NewShipmentDialog = () => {
 
   return (
     <div>
-      <Dialog
-        open={openAPDialog}
-        onClose={handleCloseAPDialog}
-        fullWidth={true}
-      >
+      <Dialog open={openFlag} onClose={handleCloseFlag} fullWidth={true}>
         <DialogTitle>
           <Typography variant="h3">Add Business Partner</Typography>
         </DialogTitle>
@@ -222,8 +217,8 @@ const NewShipmentDialog = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAPDialog}>Close</Button>
-          <Button onClick={handleCloseAPDialog} variant="contained">
+          <Button onClick={handleCloseFlag}>Close</Button>
+          <Button onClick={handleCloseFlag} variant="contained">
             Send Invitation
           </Button>
         </DialogActions>

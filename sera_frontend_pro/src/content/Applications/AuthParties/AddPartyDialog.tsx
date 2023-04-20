@@ -15,8 +15,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const AddPartyDialog = () => {
-  const { openAPDialog, authParties, handleCloseAPDialog } =
-    useContext(SeraContext);
+  const { openFlag, authParties, handleCloseFlag } = useContext(SeraContext);
   const [wallet_address, setWalletAddress] = useState<string>('');
   const detailColumns = [
     'Wallet Address:',
@@ -45,11 +44,7 @@ const AddPartyDialog = () => {
 
   return (
     <div>
-      <Dialog
-        open={openAPDialog}
-        onClose={handleCloseAPDialog}
-        fullWidth={true}
-      >
+      <Dialog open={openFlag} onClose={handleCloseFlag} fullWidth={true}>
         <DialogTitle>
           <Typography variant="h3">Add Party</Typography>
         </DialogTitle>
@@ -112,8 +107,8 @@ const AddPartyDialog = () => {
           })}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAPDialog}>Close</Button>
-          <Button onClick={handleCloseAPDialog} variant="contained">
+          <Button onClick={handleCloseFlag}>Close</Button>
+          <Button onClick={handleCloseFlag} variant="contained">
             Add Party
           </Button>
         </DialogActions>

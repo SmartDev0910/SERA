@@ -10,7 +10,7 @@ import { Shipment } from '@/models/core-services/shipment';
 import { Document } from '@/models/core-services/documents';
 
 type SeraContext = {
-  openAPDialog: any;
+  openFlag: any;
   busPartners: BusinessPartner[];
   authParties: AuthParty[];
   proposals: Proposals[];
@@ -31,8 +31,8 @@ type SeraContext = {
   SetTokens: (data: Token[]) => void;
   SetShipments: (data: Shipment[]) => void;
   SetDocuments: (data: Document[]) => void;
-  handleOpenAPDialog: () => void;
-  handleCloseAPDialog: () => void;
+  handleOpenFlag: () => void;
+  handleCloseFlag: () => void;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -43,7 +43,7 @@ type Props = {
 };
 
 export function SeraContextProvider({ children }: Props) {
-  const [openAPDialog, setOpenAPDialog] = useState<boolean>(false);
+  const [openFlag, setopenFlag] = useState<boolean>(false);
   const [busPartners, setBusPartners] = useState<BusinessPartner[]>([]);
   const [authParties, setAuthParties] = useState<AuthParty[]>([]);
   const [proposals, setProposals] = useState<Proposals[]>([]);
@@ -95,18 +95,18 @@ export function SeraContextProvider({ children }: Props) {
     setBusPartners(data);
   };
 
-  const handleOpenAPDialog = () => {
-    setOpenAPDialog(true);
+  const handleOpenFlag = () => {
+    setopenFlag(true);
   };
 
-  const handleCloseAPDialog = () => {
-    setOpenAPDialog(false);
+  const handleCloseFlag = () => {
+    setopenFlag(false);
   };
 
   return (
     <SeraContext.Provider
       value={{
-        openAPDialog,
+        openFlag,
         busPartners,
         authParties,
         proposals,
@@ -127,8 +127,8 @@ export function SeraContextProvider({ children }: Props) {
         SetTokens,
         SetShipments,
         SetDocuments,
-        handleOpenAPDialog,
-        handleCloseAPDialog
+        handleOpenFlag,
+        handleCloseFlag
       }}
     >
       {children}

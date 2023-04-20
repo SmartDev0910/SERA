@@ -10,7 +10,7 @@ function PageHeader() {
     name: 'Rory Porter',
     avatar: '/static/images/avatars/avatar.jpg'
   };
-  const { handleOpenAPDialog } = useContext(SeraContext);
+  const { handleOpenFlag } = useContext(SeraContext);
 
   return (
     <>
@@ -28,7 +28,7 @@ function PageHeader() {
             sx={{ mt: { xs: 2, md: 0 } }}
             variant="contained"
             startIcon={<AddTwoToneIcon fontSize="small" />}
-            onClick={() => handleOpenAPDialog()}
+            onClick={() => handleOpenFlag()}
           >
             Add Business Partner
           </Button>
