@@ -20,7 +20,7 @@ const TabsWrapper = styled(Tabs)(
 );
 
 const CreateContractDialog = () => {
-  const { openAPDialog, handleCloseAPDialog } = useContext(SeraContext);
+  const { openFlag, handleCloseFlag } = useContext(SeraContext);
   const [currentTab, setCurrentTab] = useState<string>('rfq');
 
   const tabs = [
@@ -35,8 +35,8 @@ const CreateContractDialog = () => {
   return (
     <div>
       <Dialog
-        open={openAPDialog}
-        onClose={handleCloseAPDialog}
+        open={openFlag}
+        onClose={handleCloseFlag}
         fullWidth={true}
         maxWidth={'md'}
       >
@@ -77,8 +77,8 @@ const CreateContractDialog = () => {
           </Container>
         </DialogContent>
         <DialogActions style={{ padding: '20px' }}>
-          <Button onClick={handleCloseAPDialog}>Cancel</Button>
-          <Button onClick={handleCloseAPDialog} variant="contained">
+          <Button onClick={handleCloseFlag}>Cancel</Button>
+          <Button onClick={handleCloseFlag} variant="contained">
             Submit {currentTab === 'rfq' && 'RFQ'}
             {currentTab === 'proposal' && 'Proposal'}
           </Button>

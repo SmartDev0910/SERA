@@ -9,16 +9,12 @@ import Typography from '@mui/material/Typography';
 import { SeraContext } from '@/contexts/SeraContext';
 
 const AddMaterialDialog = () => {
-  const { openAPDialog, handleCloseAPDialog } = useContext(SeraContext);
+  const { openFlag, handleCloseFlag } = useContext(SeraContext);
   const [material_name, setMaterialName] = useState<string>('');
 
   return (
     <div>
-      <Dialog
-        open={openAPDialog}
-        onClose={handleCloseAPDialog}
-        fullWidth={true}
-      >
+      <Dialog open={openFlag} onClose={handleCloseFlag} fullWidth={true}>
         <DialogTitle>
           <Typography variant="h3">Add Material</Typography>
         </DialogTitle>
@@ -67,8 +63,8 @@ const AddMaterialDialog = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAPDialog}>Close</Button>
-          <Button onClick={handleCloseAPDialog} variant="contained">
+          <Button onClick={handleCloseFlag}>Close</Button>
+          <Button onClick={handleCloseFlag} variant="contained">
             Add Material
           </Button>
         </DialogActions>

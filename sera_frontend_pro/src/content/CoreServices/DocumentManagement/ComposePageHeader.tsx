@@ -1,42 +1,40 @@
 import React, { useContext } from 'react';
 import { Typography, Button, Grid } from '@mui/material';
 
-import CreateIcon from '@mui/icons-material/Create';
-import DeployTokenDialog from './DeployTokenDialog';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SeraContext } from '@/contexts/SeraContext';
 
-function PageHeader() {
+function ComposePageHeader() {
   const user = {
     name: 'Rory Porter',
     avatar: '/static/images/avatars/avatar.jpg'
   };
-  const { handleOpenFlag } = useContext(SeraContext);
+  const { handleCloseFlag } = useContext(SeraContext);
 
   return (
     <>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
           <Typography variant="h3" component="h3" gutterBottom>
-            Tokenization
+            Compose Document
           </Typography>
           <Typography variant="subtitle2">
-            {user.name}, these are your recent transactions
+            {user.name}, please operate step by step.
           </Typography>
         </Grid>
         <Grid item>
           <Button
             sx={{ mt: { xs: 2, md: 0 } }}
             variant="contained"
-            startIcon={<CreateIcon fontSize="small" />}
-            onClick={() => handleOpenFlag()}
+            startIcon={<ArrowBackIcon />}
+            onClick={() => handleCloseFlag()}
           >
-            Deploy New Token
+            Back
           </Button>
         </Grid>
       </Grid>
-      <DeployTokenDialog />
     </>
   );
 }
 
-export default PageHeader;
+export default ComposePageHeader;

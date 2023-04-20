@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { Typography, Button, Grid } from '@mui/material';
 
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import ComposeDialog from './ComposeDialog';
+import CreateIcon from '@mui/icons-material/Create';
 import { SeraContext } from '@/contexts/SeraContext';
 
 function PageHeader() {
@@ -10,7 +9,7 @@ function PageHeader() {
     name: 'Rory Porter',
     avatar: '/static/images/avatars/avatar.jpg'
   };
-  const { handleOpenAPDialog } = useContext(SeraContext);
+  const { handleOpenFlag } = useContext(SeraContext);
 
   return (
     <>
@@ -27,14 +26,13 @@ function PageHeader() {
           <Button
             sx={{ mt: { xs: 2, md: 0 } }}
             variant="contained"
-            startIcon={<AddTwoToneIcon fontSize="small" />}
-            onClick={() => handleOpenAPDialog()}
+            startIcon={<CreateIcon />}
+            onClick={() => handleOpenFlag()}
           >
             Compose
           </Button>
         </Grid>
       </Grid>
-      <ComposeDialog />
     </>
   );
 }

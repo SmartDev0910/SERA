@@ -10,7 +10,8 @@ import { Shipment } from '@/models/core-services/shipment';
 import { Document } from '@/models/core-services/documents';
 
 type SeraContext = {
-  openAPDialog: any;
+  openFlag: boolean;
+  currentTab: string;
   busPartners: BusinessPartner[];
   authParties: AuthParty[];
   proposals: Proposals[];
@@ -31,8 +32,9 @@ type SeraContext = {
   SetTokens: (data: Token[]) => void;
   SetShipments: (data: Shipment[]) => void;
   SetDocuments: (data: Document[]) => void;
-  handleOpenAPDialog: () => void;
-  handleCloseAPDialog: () => void;
+  SetCurrentTab: (tab: string) => void;
+  handleOpenFlag: () => void;
+  handleCloseFlag: () => void;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -43,7 +45,8 @@ type Props = {
 };
 
 export function SeraContextProvider({ children }: Props) {
-  const [openAPDialog, setOpenAPDialog] = useState<boolean>(false);
+  const [openFlag, setopenFlag] = useState<boolean>(false);
+  const [currentTab, setCurrentTab] = useState<string>('inbox');
   const [busPartners, setBusPartners] = useState<BusinessPartner[]>([]);
   const [authParties, setAuthParties] = useState<AuthParty[]>([]);
   const [proposals, setProposals] = useState<Proposals[]>([]);
@@ -95,18 +98,23 @@ export function SeraContextProvider({ children }: Props) {
     setBusPartners(data);
   };
 
-  const handleOpenAPDialog = () => {
-    setOpenAPDialog(true);
+  const SetCurrentTab = (tab: string) => {
+    setCurrentTab(tab);
   };
 
-  const handleCloseAPDialog = () => {
-    setOpenAPDialog(false);
+  const handleOpenFlag = () => {
+    setopenFlag(true);
+  };
+
+  const handleCloseFlag = () => {
+    setopenFlag(false);
   };
 
   return (
     <SeraContext.Provider
       value={{
-        openAPDialog,
+        openFlag,
+        currentTab,
         busPartners,
         authParties,
         proposals,
@@ -127,8 +135,9 @@ export function SeraContextProvider({ children }: Props) {
         SetTokens,
         SetShipments,
         SetDocuments,
-        handleOpenAPDialog,
-        handleCloseAPDialog
+        SetCurrentTab,
+        handleOpenFlag,
+        handleCloseFlag
       }}
     >
       {children}

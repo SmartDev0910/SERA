@@ -7,6 +7,9 @@ import { Container, Tabs, Tab, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Footer from '@/components/Footer';
 
+import HailIcon from '@mui/icons-material/Hail';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+
 import ProposalsTable from '@/content/Applications/Contracts/ProposalsTable';
 import RFQsTable from '@/content/Applications/Contracts/RFQsTable';
 
@@ -22,8 +25,12 @@ function ApplicationsContracts() {
   const [currentTab, setCurrentTab] = useState<string>('rfq');
 
   const tabs = [
-    { value: 'rfq', label: 'Request For Quotation' },
-    { value: 'proposal', label: 'Proposal' }
+    {
+      value: 'rfq',
+      label: 'Request For Quotation',
+      icon: <HailIcon />
+    },
+    { value: 'proposal', label: 'Proposal', icon: <DeliveryDiningIcon /> }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -56,7 +63,13 @@ function ApplicationsContracts() {
               indicatorColor="primary"
             >
               {tabs.map((tab) => (
-                <Tab key={tab.value} label={tab.label} value={tab.value} />
+                <Tab
+                  key={tab.value}
+                  label={tab.label}
+                  value={tab.value}
+                  icon={tab.icon}
+                  iconPosition="start"
+                />
               ))}
             </TabsWrapper>
           </Grid>
