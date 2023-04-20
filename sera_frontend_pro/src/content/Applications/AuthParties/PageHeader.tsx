@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Typography, Button, Grid } from '@mui/material';
 
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import CreateIcon from '@mui/icons-material/Create';
 import { SeraContext } from '@/contexts/SeraContext';
 import AddPartyDialog from './AddPartyDialog';
 
@@ -28,7 +28,7 @@ function PageHeader() {
           <Button
             sx={{ mt: { xs: 2, md: 0 } }}
             variant="contained"
-            startIcon={<AddTwoToneIcon fontSize="small" />}
+            startIcon={<CreateIcon fontSize="small" />}
             onClick={() => handleOpenFlag()}
           >
             Add Party

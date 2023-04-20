@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import PropTypes from 'prop-types';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import CreateIcon from '@mui/icons-material/Create';
 import { Typography, Button, Grid } from '@mui/material';
 
 interface PageTitleProps {
@@ -35,7 +35,7 @@ const PageTitle: FC<PageTitleProps> = ({
           rel="noopener noreferrer"
           sx={{ mt: { xs: 2, md: 0 } }}
           variant="contained"
-          startIcon={<AddTwoToneIcon fontSize="small" />}
+          startIcon={<CreateIcon fontSize="small" />}
         >
           {heading} Documentation
         </Button>

@@ -10,6 +10,10 @@ import { useContext } from 'react';
 import { SeraContext } from '@/contexts/SeraContext';
 import { Grid, Container, Tabs, Tab } from '@mui/material';
 
+import InboxIcon from '@mui/icons-material/Inbox';
+import DraftsIcon from '@mui/icons-material/Drafts';
+import SendIcon from '@mui/icons-material/Send';
+
 import DocumentsTable from '@/content/CoreServices/DocumentManagement/DocumentsTable';
 import ComposeDocument from '@/content/CoreServices/DocumentManagement/ComposeDocument';
 
@@ -25,9 +29,9 @@ function CoreServicesDocumentManagement() {
   const { openFlag, currentTab, SetCurrentTab } = useContext(SeraContext);
 
   const tabs = [
-    { value: 'inbox', label: 'Inbox' },
-    { value: 'drafts', label: 'Drafts' },
-    { value: 'sent', label: 'Sent' }
+    { value: 'inbox', label: 'Inbox', icon: <InboxIcon /> },
+    { value: 'drafts', label: 'Drafts', icon: <DraftsIcon /> },
+    { value: 'sent', label: 'Sent', icon: <SendIcon /> }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -65,7 +69,13 @@ function CoreServicesDocumentManagement() {
                 indicatorColor="primary"
               >
                 {tabs.map((tab) => (
-                  <Tab key={tab.value} label={tab.label} value={tab.value} />
+                  <Tab
+                    key={tab.value}
+                    label={tab.label}
+                    value={tab.value}
+                    icon={tab.icon}
+                    iconPosition="start"
+                  />
                 ))}
               </TabsWrapper>
             </Grid>

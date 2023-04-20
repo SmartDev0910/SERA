@@ -17,7 +17,7 @@ import {
   styled
 } from '@mui/material';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import CreateIcon from '@mui/icons-material/Create';
 
 const AvatarAddWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -199,7 +199,7 @@ function MyCards() {
                 <CardActionArea sx={{ px: 1 }}>
                   <CardContent>
                     <AvatarAddWrapper>
-                      <AddTwoToneIcon fontSize="large" />
+                      <CreateIcon fontSize="large" />
                     </AvatarAddWrapper>
                   </CardContent>
                 </CardActionArea>

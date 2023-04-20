@@ -9,7 +9,7 @@ import {
   Button
 } from '@mui/material';
 
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import CreateIcon from '@mui/icons-material/Create';
 
 function Feed() {
   const feed = [
@@ -74,7 +74,7 @@ function Feed() {
                   <Button
                     variant="outlined"
                     size="small"
-                    startIcon={<AddTwoToneIcon />}
+                    startIcon={<CreateIcon />}
                   >
                     Follow
                   </Button>

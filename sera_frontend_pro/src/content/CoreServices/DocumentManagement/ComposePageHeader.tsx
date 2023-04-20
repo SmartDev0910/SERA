@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Typography, Button, Grid } from '@mui/material';
 
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SeraContext } from '@/contexts/SeraContext';
 
 function ComposePageHeader() {
@@ -26,7 +26,7 @@ function ComposePageHeader() {
           <Button
             sx={{ mt: { xs: 2, md: 0 } }}
             variant="contained"
-            startIcon={<AddTwoToneIcon fontSize="small" />}
+            startIcon={<ArrowBackIcon />}
             onClick={() => handleCloseFlag()}
           >
             Back
