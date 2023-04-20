@@ -10,7 +10,8 @@ import { Shipment } from '@/models/core-services/shipment';
 import { Document } from '@/models/core-services/documents';
 
 type SeraContext = {
-  openFlag: any;
+  openFlag: boolean;
+  currentTab: string;
   busPartners: BusinessPartner[];
   authParties: AuthParty[];
   proposals: Proposals[];
@@ -31,6 +32,7 @@ type SeraContext = {
   SetTokens: (data: Token[]) => void;
   SetShipments: (data: Shipment[]) => void;
   SetDocuments: (data: Document[]) => void;
+  SetCurrentTab: (tab: string) => void;
   handleOpenFlag: () => void;
   handleCloseFlag: () => void;
 };
@@ -44,6 +46,7 @@ type Props = {
 
 export function SeraContextProvider({ children }: Props) {
   const [openFlag, setopenFlag] = useState<boolean>(false);
+  const [currentTab, setCurrentTab] = useState<string>('inbox');
   const [busPartners, setBusPartners] = useState<BusinessPartner[]>([]);
   const [authParties, setAuthParties] = useState<AuthParty[]>([]);
   const [proposals, setProposals] = useState<Proposals[]>([]);
@@ -95,6 +98,10 @@ export function SeraContextProvider({ children }: Props) {
     setBusPartners(data);
   };
 
+  const SetCurrentTab = (tab: string) => {
+    setCurrentTab(tab);
+  };
+
   const handleOpenFlag = () => {
     setopenFlag(true);
   };
@@ -107,6 +114,7 @@ export function SeraContextProvider({ children }: Props) {
     <SeraContext.Provider
       value={{
         openFlag,
+        currentTab,
         busPartners,
         authParties,
         proposals,
@@ -127,6 +135,7 @@ export function SeraContextProvider({ children }: Props) {
         SetTokens,
         SetShipments,
         SetDocuments,
+        SetCurrentTab,
         handleOpenFlag,
         handleCloseFlag
       }}
